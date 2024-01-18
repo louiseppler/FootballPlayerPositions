@@ -22,8 +22,6 @@ canvas.on("mouseup", function(event) {
     mouseClick();
 });
 
-var x = 0;
-
 function drawHandler() {
     
     draw();
@@ -36,3 +34,10 @@ function drawDot(x, y, r) {
     ctx.arc(x, y, r, 0, 2 * Math.PI);
     ctx.fill();
 }
+
+function clearCanvas() {
+    ctx.fillStyle = "lightgray"
+    ctx.fillRect(0,0,width,height);
+}
+
+clearCanvas()
