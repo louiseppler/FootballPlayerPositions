@@ -1,6 +1,6 @@
 var mouseX;
 var mouseY;
-var mouseIsDown = false;
+var mouseIsPressed = false;
 
 var width = 750, height = 400; 
 
@@ -19,8 +19,14 @@ canvas.on("mousemove", function(event) {
 });
 
 canvas.on("mouseup", function(event) {
+    mouseIsPressed = false;
     mouseClick();
 });
+
+canvas.on("mousedown", function(event) {
+    mouseIsPressed = true;
+    mouseDown();
+})
 
 function drawHandler() {
     

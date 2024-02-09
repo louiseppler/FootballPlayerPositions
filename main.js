@@ -1,16 +1,58 @@
 var dots = [];
+var selectedIndex = 0;
+
+function mouseDown() {
+    getClosestDot();
+}
 
 function mouseClick() {
-    dots.push({x: mouseX, y: mouseY})
-
-    clearCanvas();
-    getTriangulation();
-    drawDots();
 }
 
 function draw() { 
 
+    if(mouseIsPressed) {
+        moveDots();
+    }
+
+    clearCanvas();
+    drawDots();
+    getTriangulation();
+
 }
+
+function moveDots() {
+    dots[selectedIndex].x = mouseX;
+    dots[selectedIndex].y = mouseY;
+}
+
+function getClosestDot() {
+    var minIndex = 0;
+    var minDist = 1_000_000_000;
+
+    for(var i = 0; i < dots.length; i++) {
+        const dist = getSquaredDist(mouseX, mouseY, dots[i].x, dots[i].y);
+        console.log(dist);
+        if(dist < minDist) {
+            minDist = dist;
+            minIndex = i;
+        }
+    }   
+
+    console.log("minDist = ",minDist)
+
+    if(minDist > 40*40) {
+        console.log("adding new point")
+        console.log("at:",mouseX,mouseY)
+
+        dots.push({x: mouseX, y: mouseY});
+        selectedIndex = dots.length-1;
+    }
+    else {
+        selectedIndex = minIndex;
+    }
+
+}
+
 
 function drawDots() {
 
@@ -30,11 +72,7 @@ function getTriangulation() {
         array.push(dot.y)
     }
 
-    console.log(array);
-
     const delaunay = new d3.Delaunay(array);
-
-    console.log(delaunay)
 
     //code snippet from https://d3js.org/d3-delaunay/delaunay#delaunay_halfedges
     const {points, halfedges, triangles} = delaunay;
@@ -62,4 +100,8 @@ function getTriangulation() {
         ctx.lineTo(points[index * 2], points[index * 2 + 1]);
         ctx.stroke()
     }
+}
+
+function getSquaredDist(x1, y1, x2, y2) {
+    return (x1-x2)*(x1-x2)+(y1-y2)*(y1-y2);
 }
