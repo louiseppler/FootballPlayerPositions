@@ -41,9 +41,22 @@ function drawDot(x, y, r) {
     ctx.fill();
 }
 
+function drawCircle(x, y, r) {
+    ctx.beginPath();
+    ctx.arc(x, y, r, 0, 2 * Math.PI);
+    ctx.stroke();
+}
+
 function clearCanvas() {
     ctx.fillStyle = "lightgray"
     ctx.fillRect(0,0,width,height);
+}
+
+function logLive(text) {
+    ctx.fillStyle = "#fff"
+    ctx.fillRect(0,0,200,20);
+    ctx.fillStyle = "#000"
+    ctx.fillText(text, 15, 15);
 }
 
 clearCanvas()
