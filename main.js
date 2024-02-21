@@ -2,6 +2,7 @@
 
 var showCircles = false;
 var showDotNumbers = false;
+var showCenters = true;
 
 // Function Variables
 
@@ -98,8 +99,12 @@ function main() {
 
     surfaces = []
 
-    triangulationComputation(delaunay, surfaces)
+    triangulationComputation(delaunay, surfaces);
 
+    if(showCenters) {
+        ctx.strokeStyle = "#000"
+        drawSurfaceCenters(surfaces, delaunay.points);
+    }
 
     var s = ""
     for(const surface of surfaces) {
@@ -121,6 +126,28 @@ function main() {
     if(showCircles) {
         ctx.strokeStyle = "#aaa"
         drawCircles(voronoi, delaunay.triangles)
+    }
+}
+
+function drawSurfaceCenters(surfaces, points) {
+    for(const surface of surfaces) {
+        var sum_x = 0;
+        var sum_y = 0;
+        var count = 0;
+
+        for(var i = 0; i < surface.length; i++) {
+            if(surface[i]) {
+                count += 1;
+                sum_x += points[i*2];
+                sum_y += points[i*2+1];
+            }
+        }
+
+        var x = sum_x/count;
+        var y = sum_y/count;
+        drawCircle(x, y, 3);
+
+        if(doPrint) console.log("drawing circle at " + x + " " + y);
     }
 }
 
