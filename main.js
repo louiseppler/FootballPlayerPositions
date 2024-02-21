@@ -94,10 +94,25 @@ function getTriangulation() {
         
         const intersection = neighborsA.filter(value => neighborsB.includes(value));
 
-        const angle1 = getAngle(tj, intersection[0], ti, points);
-        const angle2 = getAngle(ti, intersection[1], tj, points);
+        //minimum angle on either side of the line
+        var maxPositiveAngle = 0;
+        var maxNegativeAngle = 0;
 
-        const alpha = angle1 + angle2;
+        for(var k = 0; k < intersection.length; k++) {
+            const angle = getAngle(tj, intersection[k], ti, points);
+            if(angle < 0) {
+                if(angle < maxNegativeAngle) {
+                    maxNegativeAngle = angle;
+                }
+            }
+            else {
+                if(angle > maxPositiveAngle) {
+                    maxPositiveAngle = angle;
+                }
+            }
+        }
+
+        const alpha = maxPositiveAngle + (-maxNegativeAngle);
         
         if(Math.abs(alpha) > 135/180*Math.PI) {
             //instable
