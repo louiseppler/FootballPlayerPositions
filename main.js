@@ -1,3 +1,10 @@
+// UI parameters
+
+var showCircles = false;
+var showDotNumbers = false;
+
+// Function Variables
+
 var dots = [];
 var selectedIndex = 0;
 
@@ -21,7 +28,7 @@ function draw() {
 
     clearCanvas();
     drawDots();
-    getTriangulation();
+    main();
 
     doPrint = false;
 }
@@ -70,7 +77,7 @@ function drawDots() {
 }
 
 
-function getTriangulation() {
+function main() {
 
     var array = []
     for(const dot of dots) {
@@ -79,20 +86,46 @@ function getTriangulation() {
     }
 
     const delaunay = new d3.Delaunay(array);
-    const {points, halfedges, triangles} = delaunay;
 
     const voronoi = delaunay.voronoi([0, 0, width, height]);
-
-
-    for (var i = 0; i < points.length/2; i += 1) {
-        ctx.fillStyle = "#000"
-        ctx.fillText("" + i, points[i*2]+5, points[i*2+1]+5);        
+    
+    if(drawPointNumbers) {
+        drawPointNumbers(delaunay.points)
     }
 
 
     ctx.strokeStyle = "#f00"
 
     surfaces = []
+
+    triangulationComputation(delaunay, surfaces)
+
+
+    var s = ""
+    for(const surface of surfaces) {
+        for(var i = 0; i < surface.length; i++) {
+            if(surface[i]) {
+                s += "" + i + ",";
+            }
+        }
+
+        s += "  "
+    }
+    logLive(s)
+
+
+    //console.log("===================");
+    ctx.strokeStyle = "#000"
+    drawHull(delaunay);
+
+    if(showCircles) {
+        ctx.strokeStyle = "#aaa"
+        drawCircles(voronoi, delaunay.triangles)
+    }
+}
+
+function triangulationComputation(delaunay, surfaces) {
+    const {points, halfedges, triangles} = delaunay;
 
     // code snippet from https://d3js.org/d3-delaunay/delaunay#delaunay_halfedges
     // drawing the edges in between
@@ -150,32 +183,24 @@ function getTriangulation() {
 
         }
 
-
-
         ctx.beginPath();
         ctx.moveTo(points[ti * 2], points[ti * 2 + 1]);
         ctx.lineTo(points[tj * 2], points[tj * 2 + 1]);
         ctx.stroke();
     }
 
-    var s = ""
-    for(const surface of surfaces) {
-        for(var i = 0; i < surface.length; i++) {
-            if(surface[i]) {
-                s += "" + i + ",";
-            }
-        }
+}
 
-        s += "  "
+function drawPointNumbers(points) {
+    for (var i = 0; i < points.length/2; i += 1) {
+        ctx.fillStyle = "#000"
+        ctx.fillText("" + i, points[i*2]+5, points[i*2+1]+5);        
     }
-    logLive(s)
+}
 
+function drawHull(delaunay) {
+    const points = delaunay.points;
 
-    //console.log("===================");
-
-    ctx.strokeStyle = "#000"
-
-    // drawing the hull around the edges
     for (let i = 0; i < delaunay.hull.length; i++ ) {
         let index = delaunay.hull[i];
         if(i != 0) {
@@ -190,21 +215,19 @@ function getTriangulation() {
         ctx.lineTo(points[index * 2], points[index * 2 + 1]);
         ctx.stroke()
     }
+}
 
+function drawCircles(voronoi, triangles) {
+   for(var i = 0; i < voronoi.circumcenters.length; i += 2) {
 
-    ctx.strokeStyle = "#aaa"
+    drawDot(voronoi.circumcenters[i],voronoi.circumcenters[i+1],2);
+    
+    const t0 = triangles[i];
+    //const radius = getDist(voronoi.circumcenters[i],voronoi.circumcenters[i+1], points[t0*2], points[t0*2+1])
+    const radius = getSmallestRadius(voronoi.circumcenters[i],voronoi.circumcenters[i+1]);
+    drawCircle(voronoi.circumcenters[i],voronoi.circumcenters[i+1], radius)
 
-    //draws the circles
-    for(var i = 0; i < voronoi.circumcenters.length; i += 2) {
-
-        drawDot(voronoi.circumcenters[i],voronoi.circumcenters[i+1],2);
-        
-        const t0 = triangles[i];
-        //const radius = getDist(voronoi.circumcenters[i],voronoi.circumcenters[i+1], points[t0*2], points[t0*2+1])
-        const radius = getSmallestRadius(voronoi.circumcenters[i],voronoi.circumcenters[i+1]);
-        drawCircle(voronoi.circumcenters[i],voronoi.circumcenters[i+1], radius)
-
-    }
+}
 }
 
 function addSurfaceFromPoints(points, surfaces) {
