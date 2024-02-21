@@ -1,11 +1,16 @@
 var dots = [];
 var selectedIndex = 0;
 
+var doPrint = false;
+
+var surfaces = []
+
 function mouseDown() {
     getClosestDot();
 }
 
 function mouseClick() {
+    doPrint = true;
 }
 
 function draw() { 
@@ -17,6 +22,8 @@ function draw() {
     clearCanvas();
     drawDots();
     getTriangulation();
+
+    doPrint = false;
 }
 
 function moveDots() {
@@ -72,14 +79,23 @@ function getTriangulation() {
     }
 
     const delaunay = new d3.Delaunay(array);
+    const {points, halfedges, triangles} = delaunay;
 
     const voronoi = delaunay.voronoi([0, 0, width, height]);
 
+
+    for (var i = 0; i < points.length/2; i += 1) {
+        ctx.fillStyle = "#000"
+        ctx.fillText("" + i, points[i*2]+5, points[i*2+1]+5);        
+    }
+
+
     ctx.strokeStyle = "#f00"
+
+    surfaces = []
 
     // code snippet from https://d3js.org/d3-delaunay/delaunay#delaunay_halfedges
     // drawing the edges in between
-    const {points, halfedges, triangles} = delaunay;
     for (let i = 0, n = halfedges.length; i < n; ++i) {
         const j = halfedges[i];
         if (j < i) continue;
@@ -117,11 +133,23 @@ function getTriangulation() {
         if(Math.abs(alpha) > 135/180*Math.PI) {
             //instable
             ctx.strokeStyle = "#f88"
+
+            addSurfaceFromPoints([tj, intersection[0], ti, intersection[1]], surfaces)
+            //surfaces.push([tj, intersection[0], ti, intersection[1]])
         }
         else {
             //stable
             ctx.strokeStyle = "#000"
+
+            //adjacencyList[ti].push
+            //surfaces.push([tj, intersection[0], ti])
+            //surfaces.push([tj, intersection[1], ti])
+
+            addSurfaceFromPoints([tj, intersection[0], ti], surfaces)
+            addSurfaceFromPoints([tj, intersection[1], ti], surfaces)
+
         }
+
 
 
         ctx.beginPath();
@@ -129,6 +157,21 @@ function getTriangulation() {
         ctx.lineTo(points[tj * 2], points[tj * 2 + 1]);
         ctx.stroke();
     }
+
+    var s = ""
+    for(const surface of surfaces) {
+        for(var i = 0; i < surface.length; i++) {
+            if(surface[i]) {
+                s += "" + i + ",";
+            }
+        }
+
+        s += "  "
+    }
+    logLive(s)
+
+
+    //console.log("===================");
 
     ctx.strokeStyle = "#000"
 
@@ -163,6 +206,81 @@ function getTriangulation() {
 
     }
 }
+
+function addSurfaceFromPoints(points, surfaces) {
+    var newSurface = [] //surface[i] == true iff dot i is included in surface
+    for(var i = 0; i < dots.length; i++) {
+        newSurface.push(false);
+    }
+    for(const d of points) {
+        newSurface[d] = true
+    }
+
+    addSurface(newSurface, surfaces);
+
+}
+
+function addSurface(newSurface, surfaces) {
+
+
+    //if(doPrint) console.log("adding surface " + boolArrayToString(newSurface));
+
+
+    for(var i = 0; i < surfaces.length; i++) {
+        var didMerge = false;
+
+        var surface = surfaces[i];
+        //if(doPrint) console.log("  checking merge of " + boolArrayToString(surface) + " with " + boolArrayToString(newSurface));
+
+
+        //check if at least 3 points of a surface are in common
+        //if so, merge the two surfaces
+        var inCommon = surface.map(function(elm, i) {
+            return (elm && newSurface[i]);
+        });
+
+        var sum = inCommon.reduce((accumulator, currentValue) => {
+            if(currentValue) {
+                return accumulator + 1;
+            }
+            else {
+                return accumulator;
+            }
+        },0);
+
+        if(doPrint) console.log("  sum of " + sum);
+
+        if (sum >= 3) {
+            var union = surface.map(function(elm, i) {
+                return (elm || newSurface[i]);
+            });
+
+            //if(doPrint) console.log("  union of " + boolArrayToString(union));
+
+            surfaces[i] = union;
+
+            //since surface was merged, we have to check if it needs merging again
+            surfaces.splice(i, 1);
+            addSurface(union, surfaces);
+
+            return;
+        }
+    }   
+
+    surfaces.push(newSurface)
+    //console.log("added surface:");
+    //console.log(surfaces);
+}
+
+function boolArrayToString(arr) {
+    var s = ""
+    for(var i = 0; i < arr.length; i++) {
+        if(arr[i]) {
+            s += "" + i + ",";
+        }
+    }
+    return s
+}   
 
 function getAngle(i1, i2, i3, points) {
     const delta_x1 = points[i1 * 2]-points[i2 * 2];
