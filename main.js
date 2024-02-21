@@ -1,17 +1,25 @@
-// UI parameters
+// ============= UI parameters =============
 
 var showCircles = false;
 var showDotNumbers = false;
 var showCenters = true;
+var showExtremaLines = true;
 
-// Function Variables
+// ============= Function Variables =============
 
-var dots = [];
+//only used before calculation of triangles, use delaunay.points
+var dots = []; 
 var selectedIndex = 0;
+
+var extremaLines = {}
+
+var roles = [];
 
 var doPrint = false;
 
 var surfaces = []
+//saves neighbors of the triangulation without instable edges
+var neighbors = []
 
 function mouseDown() {
     getClosestDot();
@@ -28,7 +36,7 @@ function draw() {
     }
 
     clearCanvas();
-    drawDots();
+    drawDotsSimple();
     main();
 
     doPrint = false;
@@ -68,7 +76,7 @@ function getClosestDot() {
 }
 
 
-function drawDots() {
+function drawDotsSimple() {
 
     ctx.fillStyle = "black"
 
@@ -98,13 +106,29 @@ function main() {
     ctx.strokeStyle = "#f00"
 
     surfaces = []
-
-    triangulationComputation(delaunay, surfaces);
-
-    if(showCenters) {
-        ctx.strokeStyle = "#000"
-        drawSurfaceCenters(surfaces, delaunay.points);
+    neighbors = []
+    for(var i = 0; i < delaunay.points.length/2; i++) {
+        neighbors.push([])
     }
+    if (doPrint) console.log(neighbors);
+
+
+    triangulationComputation(delaunay, surfaces, extremaLines);
+    addHullEdges(delaunay)
+
+    ctx.strokeStyle = "#000"
+    drawHull(delaunay);
+
+    if(showCircles) {
+        ctx.strokeStyle = "#aaa"
+        drawCircles(voronoi, delaunay.triangles)
+    }
+
+    ctx.strokeStyle = "#000"
+    drawSurfaceCenters(surfaces, delaunay.points, extremaLines);
+
+    if(doPrint) console.log("setting xmin " + extremaLines.min_x);
+
 
     var s = ""
     for(const surface of surfaces) {
@@ -118,18 +142,75 @@ function main() {
     }
     logLive(s)
 
+    if (doPrint) console.log("neighbors:");
+    if (doPrint) console.log(neighbors);
 
     //console.log("===================");
-    ctx.strokeStyle = "#000"
-    drawHull(delaunay);
 
-    if(showCircles) {
-        ctx.strokeStyle = "#aaa"
-        drawCircles(voronoi, delaunay.triangles)
+
+
+    computeRoles(delaunay.points, extremaLines)
+    drawDotsRoles(delaunay.points);
+}
+
+function drawDotsRoles(points) {
+    for(var i = 0; i < roles.length; i++) {
+        ctx.fillStyle = roles[i].getColor()
+        if(doPrint) console.log(roles[i].getColor());
+        drawDot(points[i*2],points[i*2+1], 6);
     }
 }
 
-function drawSurfaceCenters(surfaces, points) {
+function computeRoles(points, extremaLines) {
+    roles = []
+    const N = points.length/2
+    for(var i = 0; i < N; i++) {
+        roles.push(new Role())
+    }
+
+    for(var i = 0; i < N; i++) {
+        if(points[i*2] < extremaLines.min_x) {
+            roles[i].x_role = 1;
+            if(doPrint) console.log("adding role 1");
+        }
+        if(points[i*2] > extremaLines.max_x) {
+            roles[i].x_role = 5;
+            if(doPrint) console.log("adding role 5");
+        }
+    }
+
+    for(var i = 0; i < N; i++) {
+        if(roles[i].x_role != -1) continue;
+
+        var has_1_neighbor = false;
+        var has_5_neighbor = false;
+
+        for(const j of neighbors[i]) {
+            if(roles[j].x_role == 1) has_1_neighbor = true
+            if(roles[j].x_role == 5) has_5_neighbor = true
+        }
+
+        if (has_1_neighbor && has_5_neighbor) {
+            roles[i].x_role = 3;
+        }
+        else if(has_1_neighbor) {
+            roles[i].x_role = 2;
+        }
+        else if(has_5_neighbor) {
+            roles[i].x_role = 4;
+        }
+        else {
+            roles[i].x_role = 3;
+        }
+    }
+
+
+}
+
+function drawSurfaceCenters(surfaces, points, extremaLines) {
+    var min_x = width;
+    var max_x = 0;
+
     for(const surface of surfaces) {
         var sum_x = 0;
         var sum_y = 0;
@@ -145,9 +226,26 @@ function drawSurfaceCenters(surfaces, points) {
 
         var x = sum_x/count;
         var y = sum_y/count;
-        drawCircle(x, y, 3);
+        if(showCenters) drawCircle(x, y, 3);
+
+        if(x < min_x) {
+            min_x = x;
+        }
+        if(x > max_x) {
+            max_x = x;
+        }
 
         if(doPrint) console.log("drawing circle at " + x + " " + y);
+    }
+
+    extremaLines.min_x = min_x;
+    extremaLines.max_x = max_x;
+
+    if(showExtremaLines) {
+        ctx.setLineDash([5, 15]);
+        drawLine(min_x, 0, min_x, height);
+        drawLine(max_x, 0, max_x, height);
+        ctx.setLineDash([]);
     }
 }
 
@@ -201,13 +299,14 @@ function triangulationComputation(delaunay, surfaces) {
             //stable
             ctx.strokeStyle = "#000"
 
-            //adjacencyList[ti].push
             //surfaces.push([tj, intersection[0], ti])
             //surfaces.push([tj, intersection[1], ti])
 
             addSurfaceFromPoints([tj, intersection[0], ti], surfaces)
             addSurfaceFromPoints([tj, intersection[1], ti], surfaces)
 
+            neighbors[ti].push(tj);
+            neighbors[tj].push(ti);
         }
 
         ctx.beginPath();
@@ -221,8 +320,33 @@ function triangulationComputation(delaunay, surfaces) {
 function drawPointNumbers(points) {
     for (var i = 0; i < points.length/2; i += 1) {
         ctx.fillStyle = "#000"
-        ctx.fillText("" + i, points[i*2]+5, points[i*2+1]+5);        
+        ctx.fillText("" + i, points[i*2]+8, points[i*2+1]+8);        
     }
+}
+
+function addHullEdges(delaunay) {
+    if ( delaunay.points.length < 4) return;
+    const points = delaunay.points;
+    const hull = delaunay.hull;
+
+    var prev = 0;
+    for (let i = 0; i < delaunay.hull.length; i++ ) {
+
+        let index = delaunay.hull[i];
+        
+        if(i != 0) {
+            neighbors[index].push(prev);
+            neighbors[prev].push(index);
+
+            prev = index;
+        }
+    }
+    { //last edge
+        let index = delaunay.hull[0];
+        neighbors[index].push(prev);
+        neighbors[prev].push(index);
+    }
+
 }
 
 function drawHull(delaunay) {
