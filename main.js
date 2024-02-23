@@ -39,6 +39,7 @@ function draw() {
     drawDotsSimple();
     main();
 
+    if(doPrint) console.log("========================");
     doPrint = false;
 }
 
@@ -337,9 +338,9 @@ function addHullEdges(delaunay) {
         if(i != 0) {
             neighbors[index].push(prev);
             neighbors[prev].push(index);
-
-            prev = index;
         }
+
+        prev = index;
     }
     { //last edge
         let index = delaunay.hull[0];
