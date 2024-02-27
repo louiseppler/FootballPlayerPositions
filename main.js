@@ -4,6 +4,7 @@ var showCircles = false;
 var showDotNumbers = false;
 var showCenters = true;
 var showExtremaLines = true;
+var showAxisType = 1; //0: x, 1: y
 
 // ============= Function Variables =============
 
@@ -156,8 +157,12 @@ function main() {
 
 function drawDotsRoles(points) {
     for(var i = 0; i < roles.length; i++) {
-        ctx.fillStyle = roles[i].getColor()
-        if(doPrint) console.log(roles[i].getColor());
+        if(showAxisType == 0) {
+            ctx.fillStyle = roles[i].getColorX()
+        }
+        else {
+            ctx.fillStyle = roles[i].getColorY()
+        }
         drawDot(points[i*2],points[i*2+1], 6);
     }
 }
@@ -172,11 +177,15 @@ function computeRoles(points, extremaLines) {
     for(var i = 0; i < N; i++) {
         if(points[i*2] < extremaLines.min_x) {
             roles[i].x_role = 1;
-            if(doPrint) console.log("adding role 1");
         }
         if(points[i*2] > extremaLines.max_x) {
             roles[i].x_role = 5;
-            if(doPrint) console.log("adding role 5");
+        }
+        if(points[i*2+1] < extremaLines.min_y) {
+            roles[i].y_role = 1;
+        }
+        if(points[i*2+1] > extremaLines.max_y) {
+            roles[i].y_role = 5;
         }
     }
 
@@ -205,12 +214,39 @@ function computeRoles(points, extremaLines) {
         }
     }
 
+    for(var i = 0; i < N; i++) {
+        if(roles[i].y_role != -1) continue;
+
+        var has_1_neighbor = false;
+        var has_5_neighbor = false;
+
+        for(const j of neighbors[i]) {
+            if(roles[j].y_role == 1) has_1_neighbor = true
+            if(roles[j].y_role == 5) has_5_neighbor = true
+        }
+
+        if (has_1_neighbor && has_5_neighbor) {
+            roles[i].y_role = 3;
+        }
+        else if(has_1_neighbor) {
+            roles[i].y_role = 2;
+        }
+        else if(has_5_neighbor) {
+            roles[i].y_role = 4;
+        }
+        else {
+            roles[i].y_role = 3;
+        }
+    }
+
 
 }
 
 function drawSurfaceCenters(surfaces, points, extremaLines) {
     var min_x = width;
     var max_x = 0;
+    var min_y = height;
+    var max_y = 0;
 
     for(const surface of surfaces) {
         var sum_x = 0;
@@ -236,16 +272,32 @@ function drawSurfaceCenters(surfaces, points, extremaLines) {
             max_x = x;
         }
 
+        if(y < min_y) {
+            min_y = y;
+        }
+        if(y > max_y) {
+            max_y = y;
+        }
+
         if(doPrint) console.log("drawing circle at " + x + " " + y);
     }
 
     extremaLines.min_x = min_x;
     extremaLines.max_x = max_x;
+    extremaLines.min_y = min_y;
+    extremaLines.max_y = max_y;
 
     if(showExtremaLines) {
         ctx.setLineDash([5, 15]);
-        drawLine(min_x, 0, min_x, height);
-        drawLine(max_x, 0, max_x, height);
+
+        if(showAxisType == 0) {
+            drawLine(min_x, 0, min_x, height);
+            drawLine(max_x, 0, max_x, height);
+        }
+        else {
+            drawLine(0, min_y, width, min_y);
+            drawLine(0, max_y, width, max_y);
+        }
         ctx.setLineDash([]);
     }
 }

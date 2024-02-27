@@ -8,15 +8,37 @@ class Role {
     getRoleLabel() {
         //TODO: return "LF","LCM", etc
 
-        return "--";
+        if(this.x_role == -1 || this.y_role == -1) {
+            return ""
+        }
+
+        var names = [
+            [],
+            ["","LF","LCF","CF","RCF","RF"],
+            ["","LF","LAM","CAM","RAM","RF"],
+            ["","LM","LCM","CM","RCM","RM"],
+            ["","LB","LDM","CDM","RDM","RB"],
+            ["","LB","LCB","CB","RCB","RB"]
+        ];
+
+        return names[this.x_role][this.y_role];
     }
 
-    getColor() {
+    getColorX() {
         if(this.x_role == -1) {
             return "#000"
         }
         
-        const colors = ["#000","#8E6713","#BBA471","#A9A9A9","#A1AB71","#627313"]
-        return colors[this.x_role]
+        const colors = ["#000","#8E6713","#BBA471","#A9A9A9","#A1AB71","#627313"];
+        return colors[this.x_role];
+    }
+
+    getColorY() {
+        if(this.y_role == -1) {
+            return "#000"
+        }
+        
+        const colors = ["#000","#B7352D","#D48681","#A9A9A9","#7A9DCF","#215CAF"];
+        return colors[this.y_role];
     }
 }
