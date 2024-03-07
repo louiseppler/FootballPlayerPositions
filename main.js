@@ -3,8 +3,8 @@
 var showCircles = false;
 var showDotNumbers = false;
 var showCenters = true;
-var showExtremaLines = true;
-var showAxisType = 1; //0: x, 1: y
+var showExtremaLines = false;
+var showAxisType = 0; //0: x, 1: y
 
 // ============= Function Variables =============
 
@@ -99,6 +99,8 @@ function main() {
     const delaunay = new d3.Delaunay(array);
 
     const voronoi = delaunay.voronoi([0, 0, width, height]);
+
+    computeShapeGraph(delaunay);
     
     if(drawPointNumbers) {
         drawPointNumbers(delaunay.points)
@@ -115,11 +117,11 @@ function main() {
     if (doPrint) console.log(neighbors);
 
 
-    triangulationComputation(delaunay, surfaces, extremaLines);
+    //triangulationComputation(delaunay, surfaces, extremaLines);
     addHullEdges(delaunay)
 
-    ctx.strokeStyle = "#000"
-    drawHull(delaunay);
+    //ctx.strokeStyle = "#000"
+    //drawHull(delaunay);
 
     if(showCircles) {
         ctx.strokeStyle = "#aaa"
@@ -142,10 +144,9 @@ function main() {
 
         s += "  "
     }
-    logLive(s)
 
-    if (doPrint) console.log("neighbors:");
-    if (doPrint) console.log(neighbors);
+    // if (doPrint) console.log("neighbors:");
+    // if (doPrint) console.log(neighbors);
 
     //console.log("===================");
 
@@ -279,7 +280,7 @@ function drawSurfaceCenters(surfaces, points, extremaLines) {
             max_y = y;
         }
 
-        if(doPrint) console.log("drawing circle at " + x + " " + y);
+        // if(doPrint) console.log("drawing circle at " + x + " " + y);
     }
 
     extremaLines.min_x = min_x;
@@ -319,6 +320,10 @@ function triangulationComputation(delaunay, surfaces) {
         const neighborsA = Array.from(delaunay.neighbors(ti))
         const neighborsB = Array.from(delaunay.neighbors(tj))
         
+        // if(doPrint) console.log("EDGE: " + ti + " " + tj);
+        // if(doPrint) console.log(ti + ": " + neighborsA);
+        // if(doPrint) console.log(tj + ": " + neighborsB);
+
         const intersection = neighborsA.filter(value => neighborsB.includes(value));
 
         //minimum angle on either side of the line
@@ -435,6 +440,7 @@ function drawCircles(voronoi, triangles) {
 }
 
 function addSurfaceFromPoints(points, surfaces) {
+    //if(doPrint) console.log("Adding Surface " + points);
     var newSurface = [] //surface[i] == true iff dot i is included in surface
     for(var i = 0; i < dots.length; i++) {
         newSurface.push(false);
@@ -449,8 +455,6 @@ function addSurfaceFromPoints(points, surfaces) {
 
 function addSurface(newSurface, surfaces) {
 
-
-    //if(doPrint) console.log("adding surface " + boolArrayToString(newSurface));
 
 
     for(var i = 0; i < surfaces.length; i++) {
@@ -475,14 +479,12 @@ function addSurface(newSurface, surfaces) {
             }
         },0);
 
-        if(doPrint) console.log("  sum of " + sum);
-
         if (sum >= 3) {
             var union = surface.map(function(elm, i) {
                 return (elm || newSurface[i]);
             });
 
-            //if(doPrint) console.log("  union of " + boolArrayToString(union));
+            //if(doPrint) console.log("  new merge of " + boolArrayToString(union));
 
             surfaces[i] = union;
 
@@ -495,8 +497,14 @@ function addSurface(newSurface, surfaces) {
     }   
 
     surfaces.push(newSurface)
-    //console.log("added surface:");
-    //console.log(surfaces);
+
+    // if(doPrint) {
+    //     var temp = ""
+    //     for(surface of surfaces) {
+    //         temp += boolArrayToString(surface) + ",";
+    //     }
+    //     console.log(temp);
+    // }
 }
 
 function boolArrayToString(arr) {
@@ -515,10 +523,20 @@ function getAngle(i1, i2, i3, points) {
     const delta_x2 = points[i3 * 2]-points[i2 * 2];
     const delta_y2 = points[i3 * 2 + 1]-points[i2 * 2 + 1];
 
-    const a1 = Math.atan2(delta_x1, delta_y1);
-    const a2 = Math.atan2(delta_x2, delta_y2);
+    const a1 = Math.atan2(delta_x1, delta_y1)+Math.PI;
+    const a2 = Math.atan2(delta_x2, delta_y2)+Math.PI;
 
-    return a1 - a2;
+    var a = a2-a1;
+
+    const TWO_PI = Math.PI*2
+
+    a += TWO_PI
+
+    a = ((a % TWO_PI) + TWO_PI ) % TWO_PI;
+
+    if(a > Math.PI) return 2*Math.PI-a;
+
+    return a;
 }
 
 function getSmallestRadius(x1, y1) {
