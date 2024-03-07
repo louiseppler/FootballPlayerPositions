@@ -1,8 +1,151 @@
 var graph = []
 var surfaces = []
+var extremaLines = {}
+var roles = [];
 
 //used for debugging, an array of strings
 var logString = [];
+
+// ---------------- Compute Roles ----------------
+
+function computeRoles(points, extremaLines) {
+    roles = []
+    const N = points.length/2
+    for(var i = 0; i < N; i++) {
+        roles.push(new Role())
+    }
+
+    for(var i = 0; i < N; i++) {
+        if(points[i*2] < extremaLines.min_x) {
+            roles[i].x_role = 1;
+        }
+        if(points[i*2] > extremaLines.max_x) {
+            roles[i].x_role = 5;
+        }
+        if(points[i*2+1] < extremaLines.min_y) {
+            roles[i].y_role = 1;
+        }
+        if(points[i*2+1] > extremaLines.max_y) {
+            roles[i].y_role = 5;
+        }
+    }
+
+    for(var i = 0; i < N; i++) {
+        if(roles[i].x_role != -1) continue;
+
+        var has_1_neighbor = false;
+        var has_5_neighbor = false;
+
+        for(const j of graph[i]) {
+            if(roles[j].x_role == 1) has_1_neighbor = true
+            if(roles[j].x_role == 5) has_5_neighbor = true
+        }
+
+        if (has_1_neighbor && has_5_neighbor) {
+            roles[i].x_role = 3;
+        }
+        else if(has_1_neighbor) {
+            roles[i].x_role = 2;
+        }
+        else if(has_5_neighbor) {
+            roles[i].x_role = 4;
+        }
+        else {
+            roles[i].x_role = 3;
+        }
+    }
+
+    for(var i = 0; i < N; i++) {
+        if(roles[i].y_role != -1) continue;
+
+        var has_1_neighbor = false;
+        var has_5_neighbor = false;
+
+        for(const j of graph[i]) {
+            if(roles[j].y_role == 1) has_1_neighbor = true
+            if(roles[j].y_role == 5) has_5_neighbor = true
+        }
+
+        if (has_1_neighbor && has_5_neighbor) {
+            roles[i].y_role = 3;
+        }
+        else if(has_1_neighbor) {
+            roles[i].y_role = 2;
+        }
+        else if(has_5_neighbor) {
+            roles[i].y_role = 4;
+        }
+        else {
+            roles[i].y_role = 3;
+        }
+    }
+}
+
+// ---------------- Surface Centers + ExtremaLines ----------------
+
+
+function computeExtremaLines(surfaces, points, extremaLines) {
+    var centers = [];
+
+    var min_x = width+5;
+    var max_x = -5;
+    var min_y = height+5;
+    var max_y = -5;
+
+    for(const surface of surfaces) {
+        var sum_x = 0;
+        var sum_y = 0;
+        var count = 0;
+
+        for(var i of surface) {
+            count += 1;
+            sum_x += points[i*2];
+            sum_y += points[i*2+1];
+        }
+
+        var x = sum_x/count;
+        var y = sum_y/count;
+
+
+        centers.push(x, y)
+       
+        if(x < min_x) {
+            min_x = x;
+        }
+        if(x > max_x) {
+            max_x = x;
+        }
+
+        if(y < min_y) {
+            min_y = y;
+        }
+        if(y > max_y) {
+            max_y = y;
+        }
+    }
+
+    extremaLines.min_x = min_x;
+    extremaLines.max_x = max_x;
+    extremaLines.min_y = min_y;
+    extremaLines.max_y = max_y;
+
+    if(showExtremaLines) {
+        ctx.setLineDash([5, 15]);
+
+        if(showAxisType == 0) {
+            drawLine(min_x, 0, min_x, height);
+            drawLine(max_x, 0, max_x, height);
+        }
+        else {
+            drawLine(0, min_y, width, min_y);
+            drawLine(0, max_y, width, max_y);
+        }
+        ctx.setLineDash([]);
+    }
+
+    return centers;
+}
+
 
 // ---------------- Compute Surfaces ----------------
 
@@ -54,28 +197,20 @@ function compressEdge(a, b) {
 
 // ---------------- Compute Shape Graph ----------------
 
+function computeBaseGraph(delaunay) {
+    for (var i = 0; i < delaunay.points.length/2; i++) {
+        const neighbors = Array.from(delaunay.neighbors(i));
+        graph.push(neighbors)
+    }
+}
+
 function computeShapeGraph(delaunay) {
 
     let queue = new PriorityQueue();
 
     const {points, halfedges, triangles, hull} = delaunay;
 
-    if(points.length == 6) {
-        const alpha = getAngle(0, 1, 2, points);
-        logLive("" + alpha/Math.PI*180);
-    }
-
-    for (var i = 0; i < points.length/2; i++) {
-        const neighbors = Array.from(delaunay.neighbors(i));
-        graph.push(neighbors)
-    }
-
-    if(doPrint) console.log(graph);
-
-    ctx.strokeStyle = "#d3c3c3"
-    drawGraph(points)
-    ctx.strokeStyle = "#000"
-
+  
 
     for (let i = 0, n = halfedges.length; i < n; ++i) {
         const j = halfedges[i];
@@ -252,21 +387,6 @@ function isHullEdgeOneWay(a, b, hull) {
             }
             else {
                 return (hull[i+1] == b);
-            }
-        }
-    }
-}
-
-
-// ---------------- Drawing ----------------
-
-function drawGraph(points) {
-    for(var i = 0; i < graph.length; i++) {
-        for(var j = 0; j < graph[i].length; j++) {
-            const k = graph[i][j];
-
-            if(i < k) {
-                drawLine(points[i*2],points[i*2+1],points[k*2],points[k*2+1])
             }
         }
     }
