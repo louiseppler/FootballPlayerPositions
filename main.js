@@ -3,7 +3,7 @@
 var showCircles = false;
 var showDotNumbers = false;
 var showCenters = true;
-var showExtremaLines = false;
+var showExtremaLines = true;
 var showAxisType = 0; //0: x, 1: y
 
 // ============= Function Variables =============
@@ -98,7 +98,10 @@ function main() {
 
     const voronoi = delaunay.voronoi([0, 0, width, height]);
 
+    resetVariables();
+
     computeShapeGraph(delaunay);
+    computeSurfaces(delaunay);
     drawGraph(delaunay.points)
 
     if(drawPointNumbers) {
@@ -107,7 +110,6 @@ function main() {
 
     ctx.strokeStyle = "#f00"
 
-    surfaces = []
 
     if(showCircles) {
         ctx.strokeStyle = "#aaa"
@@ -132,6 +134,12 @@ function main() {
 
     computeRoles(delaunay.points, extremaLines)
     drawDotsRoles(delaunay.points);
+}
+
+function resetVariables() {
+    surfaces = []
+    graph = []
+    logString = [];
 }
 
 function drawDotsRoles(points) {
@@ -230,12 +238,10 @@ function drawSurfaceCenters(surfaces, points, extremaLines) {
         var sum_y = 0;
         var count = 0;
 
-        for(var i = 0; i < surface.length; i++) {
-            if(surface[i]) {
-                count += 1;
-                sum_x += points[i*2];
-                sum_y += points[i*2+1];
-            }
+        for(var i of surface) {
+            count += 1;
+            sum_x += points[i*2];
+            sum_y += points[i*2+1];
         }
 
         var x = sum_x/count;
@@ -314,76 +320,7 @@ function drawCircles(voronoi, triangles) {
     //const radius = getDist(voronoi.circumcenters[i],voronoi.circumcenters[i+1], points[t0*2], points[t0*2+1])
     const radius = getSmallestRadius(voronoi.circumcenters[i],voronoi.circumcenters[i+1]);
     drawCircle(voronoi.circumcenters[i],voronoi.circumcenters[i+1], radius)
-
-}
-}
-
-function addSurfaceFromPoints(points, surfaces) {
-    //if(doPrint) console.log("Adding Surface " + points);
-    var newSurface = [] //surface[i] == true iff dot i is included in surface
-    for(var i = 0; i < dots.length; i++) {
-        newSurface.push(false);
-    }
-    for(const d of points) {
-        newSurface[d] = true
-    }
-
-    addSurface(newSurface, surfaces);
-
-}
-
-function addSurface(newSurface, surfaces) {
-
-
-
-    for(var i = 0; i < surfaces.length; i++) {
-        var didMerge = false;
-
-        var surface = surfaces[i];
-        //if(doPrint) console.log("  checking merge of " + boolArrayToString(surface) + " with " + boolArrayToString(newSurface));
-
-
-        //check if at least 3 points of a surface are in common
-        //if so, merge the two surfaces
-        var inCommon = surface.map(function(elm, i) {
-            return (elm && newSurface[i]);
-        });
-
-        var sum = inCommon.reduce((accumulator, currentValue) => {
-            if(currentValue) {
-                return accumulator + 1;
-            }
-            else {
-                return accumulator;
-            }
-        },0);
-
-        if (sum >= 3) {
-            var union = surface.map(function(elm, i) {
-                return (elm || newSurface[i]);
-            });
-
-            //if(doPrint) console.log("  new merge of " + boolArrayToString(union));
-
-            surfaces[i] = union;
-
-            //since surface was merged, we have to check if it needs merging again
-            surfaces.splice(i, 1);
-            addSurface(union, surfaces);
-
-            return;
-        }
-    }   
-
-    surfaces.push(newSurface)
-
-    // if(doPrint) {
-    //     var temp = ""
-    //     for(surface of surfaces) {
-    //         temp += boolArrayToString(surface) + ",";
-    //     }
-    //     console.log(temp);
-    // }
+   }
 }
 
 function boolArrayToString(arr) {

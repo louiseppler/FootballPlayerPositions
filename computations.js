@@ -1,12 +1,60 @@
 var graph = []
+var surfaces = []
 
 //used for debugging, an array of strings
 var logString = [];
 
+// ---------------- Compute Surfaces ----------------
+
+function computeSurfaces(delaunay) {
+    const {points, hull} = delaunay;
+    if(points.length < 5) {
+        return;
+    }
+
+    var processedEdges = [];
+
+    for(var i = 0; i < graph.length; i++) {
+        for(var j = 0; j < graph[i].length; j++) {
+            var k = graph[i][j];
+            if(!processedEdges.includes(compressEdge(i, k)) && !isHullEdge(i,k,hull)) {
+                findSurface(i,k, processedEdges);
+            }
+        }
+    }
+}
+
+function findSurface(a, b, processedEdges) {
+    var cnt = 0;
+    var nodes = [a];
+
+    var prevNode = a
+    var node = getNextEdge(graph[a], b)
+
+    var s = "";
+
+    while (node != a && cnt < 100) {
+        processedEdges.push(compressEdge(node, prevNode));
+        s += node + " "
+        nodes.push(node)
+        cnt ++;
+            
+        const nextNode = getNextEdge(graph[node], prevNode)
+
+        prevNode = node
+        node = nextNode
+    }
+
+    surfaces.push(nodes)
+}
+
+function compressEdge(a, b) {
+    return a*100+b;
+}
+
+// ---------------- Compute Shape Graph ----------------
+
 function computeShapeGraph(delaunay) {
-    //resetting the parameters
-    graph = []
-    logString = [];
 
     let queue = new PriorityQueue();
 
@@ -159,6 +207,8 @@ function getStabilityAngle(a, b, points) {
     return Math.abs(minAngle)
 }
 
+// ---------------- Helpers ----------------
+
 function removeEdge(a, b) {
     graph[a] = graph[a].filter(item => item != b);
     graph[b] = graph[b].filter(item => item != a);
@@ -208,7 +258,7 @@ function isHullEdgeOneWay(a, b, hull) {
 }
 
 
-// MARK: - drawing
+// ---------------- Drawing ----------------
 
 function drawGraph(points) {
     for(var i = 0; i < graph.length; i++) {
