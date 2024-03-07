@@ -1,27 +1,14 @@
 var graph = []
 
+//used for debugging, an array of strings
 var logString = [];
 
 function computeShapeGraph(delaunay) {
-
-
-
+    //resetting the parameters
     graph = []
     logString = [];
 
-    if(doPrint) console.log("hi?");
-
     let queue = new PriorityQueue();
-
-    // priorityQueue.enqueueFunction("a",1);
-    // priorityQueue.enqueueFunction("c",3);
-    // priorityQueue.enqueueFunction("b",2);
-
-    // if (doPrint) {
-    //     while(!priorityQueue.isPriorityQueueEmpty()) {
-    //         console.log(priorityQueue.dequeueFunction().element);
-    //     }
-    // }
 
     const {points, halfedges, triangles, hull} = delaunay;
 
@@ -40,7 +27,6 @@ function computeShapeGraph(delaunay) {
     ctx.strokeStyle = "#d3c3c3"
     drawGraph(points)
     ctx.strokeStyle = "#000"
-
 
 
     for (let i = 0, n = halfedges.length; i < n; ++i) {
@@ -77,8 +63,6 @@ function computeShapeGraph(delaunay) {
             continue;
         }
 
-        if(doPrint) console.log("edge " + edge.a + " " + edge.b + " angle",angle/Math.PI*180);
-
         logString.push( "at edge " + edge.a + " " + edge.b + " with angle " + angle/Math.PI*180)
 
 
@@ -97,7 +81,6 @@ function computeShapeGraph(delaunay) {
 
             while (node != edge.a && cnt < 100) {
                 //update angle
-                if(doPrint) console.log("at edge " + prevNode + " " + node);
             
                 var angle = 0
 
@@ -111,6 +94,12 @@ function computeShapeGraph(delaunay) {
 
 
 
+
+                    if(doPrint) console.log("new angle at " + prevNode + " " + node + " of " + angleA + " and " + angleB);
+                
+                
+
+
                     if(doPrint) console.log("new angle at " + prevNode + " " + node + " of " + angleA + " and " + angleB);
                 
                     logString.push( "  updating " + prevNode + " " + node + " with angle " + angle/Math.PI*180)
@@ -119,29 +108,18 @@ function computeShapeGraph(delaunay) {
                 
                 }
 
-
-
-
-
                 s += node + " "
                 cnt ++;
                 const nextNode = getNextEdge(graph[node], prevNode)
                 prevNode = node
                 node = nextNode
             }
-
-            if(doPrint) console.log("circle of " + s);
         }
     }
 
-    if(doPrint) console.log("new graph");
     if(doPrint) console.log(graph);
 
-
     var logStringLoc = logString
-
-    drawGraph(points)
-
 }
 
 function getStabilityAngle(a, b, points) {

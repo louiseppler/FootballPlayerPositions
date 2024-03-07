@@ -19,8 +19,6 @@ var roles = [];
 var doPrint = false;
 
 var surfaces = []
-//saves neighbors of the triangulation without instable edges
-var neighbors = []
 
 function mouseDown() {
     getClosestDot();
@@ -101,27 +99,15 @@ function main() {
     const voronoi = delaunay.voronoi([0, 0, width, height]);
 
     computeShapeGraph(delaunay);
-    
+    drawGraph(delaunay.points)
+
     if(drawPointNumbers) {
         drawPointNumbers(delaunay.points)
     }
 
-
     ctx.strokeStyle = "#f00"
 
     surfaces = []
-    neighbors = []
-    for(var i = 0; i < delaunay.points.length/2; i++) {
-        neighbors.push([])
-    }
-    if (doPrint) console.log(neighbors);
-
-
-    //triangulationComputation(delaunay, surfaces, extremaLines);
-    addHullEdges(delaunay)
-
-    //ctx.strokeStyle = "#000"
-    //drawHull(delaunay);
 
     if(showCircles) {
         ctx.strokeStyle = "#aaa"
@@ -133,7 +119,6 @@ function main() {
 
     if(doPrint) console.log("setting xmin " + extremaLines.min_x);
 
-
     var s = ""
     for(const surface of surfaces) {
         for(var i = 0; i < surface.length; i++) {
@@ -144,13 +129,6 @@ function main() {
 
         s += "  "
     }
-
-    // if (doPrint) console.log("neighbors:");
-    // if (doPrint) console.log(neighbors);
-
-    //console.log("===================");
-
-
 
     computeRoles(delaunay.points, extremaLines)
     drawDotsRoles(delaunay.points);
@@ -196,7 +174,7 @@ function computeRoles(points, extremaLines) {
         var has_1_neighbor = false;
         var has_5_neighbor = false;
 
-        for(const j of neighbors[i]) {
+        for(const j of graph[i]) {
             if(roles[j].x_role == 1) has_1_neighbor = true
             if(roles[j].x_role == 5) has_5_neighbor = true
         }
@@ -221,7 +199,7 @@ function computeRoles(points, extremaLines) {
         var has_1_neighbor = false;
         var has_5_neighbor = false;
 
-        for(const j of neighbors[i]) {
+        for(const j of graph[i]) {
             if(roles[j].y_role == 1) has_1_neighbor = true
             if(roles[j].y_role == 5) has_5_neighbor = true
         }
@@ -239,8 +217,6 @@ function computeRoles(points, extremaLines) {
             roles[i].y_role = 3;
         }
     }
-
-
 }
 
 function drawSurfaceCenters(surfaces, points, extremaLines) {
@@ -303,108 +279,11 @@ function drawSurfaceCenters(surfaces, points, extremaLines) {
     }
 }
 
-function triangulationComputation(delaunay, surfaces) {
-    const {points, halfedges, triangles} = delaunay;
-
-    // code snippet from https://d3js.org/d3-delaunay/delaunay#delaunay_halfedges
-    // drawing the edges in between
-    for (let i = 0, n = halfedges.length; i < n; ++i) {
-        const j = halfedges[i];
-        if (j < i) continue;
-        const ti = triangles[i];
-        const tj = triangles[j];
-
-        
-        // Determine Instable Edges
-
-        const neighborsA = Array.from(delaunay.neighbors(ti))
-        const neighborsB = Array.from(delaunay.neighbors(tj))
-        
-        // if(doPrint) console.log("EDGE: " + ti + " " + tj);
-        // if(doPrint) console.log(ti + ": " + neighborsA);
-        // if(doPrint) console.log(tj + ": " + neighborsB);
-
-        const intersection = neighborsA.filter(value => neighborsB.includes(value));
-
-        //minimum angle on either side of the line
-        var maxPositiveAngle = 0;
-        var maxNegativeAngle = 0;
-
-        for(var k = 0; k < intersection.length; k++) {
-            const angle = getAngle(tj, intersection[k], ti, points);
-            if(angle < 0) {
-                if(angle < maxNegativeAngle) {
-                    maxNegativeAngle = angle;
-                }
-            }
-            else {
-                if(angle > maxPositiveAngle) {
-                    maxPositiveAngle = angle;
-                }
-            }
-        }
-
-        const alpha = maxPositiveAngle + (-maxNegativeAngle);
-        
-        if(Math.abs(alpha) > 135/180*Math.PI) {
-            //instable
-            ctx.strokeStyle = "#f88"
-
-            addSurfaceFromPoints([tj, intersection[0], ti, intersection[1]], surfaces)
-            //surfaces.push([tj, intersection[0], ti, intersection[1]])
-        }
-        else {
-            //stable
-            ctx.strokeStyle = "#000"
-
-            //surfaces.push([tj, intersection[0], ti])
-            //surfaces.push([tj, intersection[1], ti])
-
-            addSurfaceFromPoints([tj, intersection[0], ti], surfaces)
-            addSurfaceFromPoints([tj, intersection[1], ti], surfaces)
-
-            neighbors[ti].push(tj);
-            neighbors[tj].push(ti);
-        }
-
-        ctx.beginPath();
-        ctx.moveTo(points[ti * 2], points[ti * 2 + 1]);
-        ctx.lineTo(points[tj * 2], points[tj * 2 + 1]);
-        ctx.stroke();
-    }
-
-}
-
 function drawPointNumbers(points) {
     for (var i = 0; i < points.length/2; i += 1) {
         ctx.fillStyle = "#000"
         ctx.fillText("" + i, points[i*2]+8, points[i*2+1]+8);        
     }
-}
-
-function addHullEdges(delaunay) {
-    if ( delaunay.points.length < 4) return;
-    const points = delaunay.points;
-    const hull = delaunay.hull;
-
-    var prev = 0;
-    for (let i = 0; i < delaunay.hull.length; i++ ) {
-
-        let index = delaunay.hull[i];
-        
-        if(i != 0) {
-            neighbors[index].push(prev);
-            neighbors[prev].push(index);
-        }
-
-        prev = index;
-    }
-    { //last edge
-        let index = delaunay.hull[0];
-        neighbors[index].push(prev);
-        neighbors[prev].push(index);
-    }
-
 }
 
 function drawHull(delaunay) {
