@@ -23,18 +23,28 @@ function mouseClick() {
     doPrint = true;
 }
 
+var t = 0;
+
 function draw() { 
 
-    if(mouseIsPressed) {
-        moveDots();
-    }
 
     clearCanvas();
-    drawDotsSimple();
-    main();
+    drawGame(t);
 
-    if(doPrint) console.log("========================");
-    doPrint = false;
+     if(mouseIsPressed) {
+       t++;
+    }
+
+    // if(mouseIsPressed) {
+    //     moveDots();
+    // }
+
+    // clearCanvas();
+    // drawDotsSimple();
+    // main();
+
+    // if(doPrint) console.log("========================");
+    // doPrint = false;
 }
 
 function moveDots() {
