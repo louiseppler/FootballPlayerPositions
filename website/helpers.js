@@ -4,29 +4,39 @@ var mouseIsPressed = false;
 
 var width = 750, height = 400; 
 
-var canvas = d3.select('#container') 
-.append('canvas') 
-.attr('width', width) 
-.attr('height', height); 
-var ctx = canvas.node().getContext('2d')
 
-window.requestAnimationFrame(drawHandler);
+var canvas;
+var ctx;
 
+function setup() {
 
-canvas.on("mousemove", function(event) {
-    mouseX = event.offsetX;
-    mouseY = event.offsetY;
-});
+    var canvas = d3.select('#container') 
+    .append('canvas') 
+    .attr('width', width) 
+    .attr('height', height); 
+    
+    ctx = canvas.node().getContext('2d')
+    
+    window.requestAnimationFrame(drawHandler);
+    
+    canvas.on("mousemove", function(event) {
+        mouseX = event.offsetX;
+        mouseY = event.offsetY;
+    });
+    
+    canvas.on("mouseup", function(event) {
+        mouseIsPressed = false;
+        mouseClick();
+    });
+    
+    canvas.on("mousedown", function(event) {
+        mouseIsPressed = true;
+        mouseDown();
+    })
 
-canvas.on("mouseup", function(event) {
-    mouseIsPressed = false;
-    mouseClick();
-});
+    clearCanvas()
+}
 
-canvas.on("mousedown", function(event) {
-    mouseIsPressed = true;
-    mouseDown();
-})
 
 function drawHandler() {
     
@@ -65,5 +75,3 @@ function logLive(text) {
     ctx.fillStyle = "#000"
     ctx.fillText(text, 15, 15);
 }
-
-clearCanvas()

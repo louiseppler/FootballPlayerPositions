@@ -11,7 +11,7 @@ function drawGame(frame) {
     }
 
     for(var i = 0; i < 23; i++) {
-        var dataLine = tracking_data[i+frame*23];
+        var dataLine = tracking_data[1+i+frame*23];
 
         var x = dataLine[6]
         var y = dataLine[7]
