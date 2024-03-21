@@ -1,79 +1,102 @@
-var mouseX;
-var mouseY;
-var mouseIsPressed = false;
 
-var width = 750, height = 400; 
+// var canvas;
+// var ctx;
+
+var gameCanvas;
+
+class CanvasHelper {
+    constructor(id, width, height, mouseClick, mouseDown, draw) {
+        this.mouseX = 0;
+        this.mouseY = 0;
+        this.mouseIsPressed = false;
+
+        this.width = width;
+        this.height = height; 
+
+        console.log("setting up");
+        draw()
 
 
-var canvas;
-var ctx;
+
+        this.draw = draw
+
+        this.draw()
+
+
+        var canvas = d3.select('#' + id) 
+        .append('canvas') 
+        .attr('width', width) 
+        .attr('height', height); 
+        
+        this.ctx = canvas.node().getContext('2d')
+        
+        window.requestAnimationFrame(() => {this.drawHandler()});
+        
+        canvas.on("mousemove", function(event) {
+            this.mouseX = event.offsetX;
+            this.mouseY = event.offsetY;
+        });
+        
+        canvas.on("mouseup", function(event) {
+            this.mouseIsPressed = false;
+            mouseClick();
+        });
+        
+        canvas.on("mousedown", function(event) {
+            this.mouseIsPressed = true;
+            mouseDown();
+        })
+    
+        this.clearCanvas()
+    }
+
+    drawHandler() {    
+        this.draw();
+
+        window.requestAnimationFrame(() => {this.drawHandler()});
+    }
+
+    drawDot(x, y, r) {
+        this.ctx.beginPath();
+        this.ctx.arc(x, y, r, 0, 2 * Math.PI);
+        this.ctx.fill();
+    }
+
+    drawCircle(x, y, r) {
+        this.ctx.beginPath();
+        this.ctx.arc(x, y, r, 0, 2 * Math.PI);
+        this.ctx.stroke();
+    }
+
+    drawLine(x1, y1, x2, y2) {
+        this.ctx.beginPath();
+        this.ctx.moveTo(x1, y1);
+        this.ctx.lineTo(x2, y2);
+        this.ctx.stroke();
+    }
+
+    clearCanvas() {
+        this.ctx.fillStyle = "lightgray"
+        this.ctx.fillRect(0,0,this.width,this.height);
+    }
+
+    logLive(text) {
+        this.ctx.fillStyle = "#fff"
+        this.ctx.fillRect(0,0,200,20);
+        this.ctx.fillStyle = "#000"
+        this.ctx.fillText(text, 15, 15);
+    }
+}
 
 function setup() {
 
+    gameCanvas = new CanvasHelper("container", 750, 500, () => {mouseClick();}, () => {mouseDown();}, () => {draw();});
+
+    gameCanvas.clearCanvas()
+
+    console.log("gamecanvas of " + gameCanvas);
+
+
     setupUIElements()
 
-    var canvas = d3.select('#container') 
-    .append('canvas') 
-    .attr('width', width) 
-    .attr('height', height); 
-    
-    ctx = canvas.node().getContext('2d')
-    
-    window.requestAnimationFrame(drawHandler);
-    
-    canvas.on("mousemove", function(event) {
-        mouseX = event.offsetX;
-        mouseY = event.offsetY;
-    });
-    
-    canvas.on("mouseup", function(event) {
-        mouseIsPressed = false;
-        mouseClick();
-    });
-    
-    canvas.on("mousedown", function(event) {
-        mouseIsPressed = true;
-        mouseDown();
-    })
-
-    clearCanvas()
-}
-
-
-function drawHandler() {
-    
-    draw();
-
-    window.requestAnimationFrame(drawHandler);
-}
-
-function drawDot(x, y, r) {
-    ctx.beginPath();
-    ctx.arc(x, y, r, 0, 2 * Math.PI);
-    ctx.fill();
-}
-
-function drawCircle(x, y, r) {
-    ctx.beginPath();
-    ctx.arc(x, y, r, 0, 2 * Math.PI);
-    ctx.stroke();
-}
-
-function drawLine(x1, y1, x2, y2) {
-    ctx.beginPath();
-    ctx.moveTo(x1, y1);
-    ctx.lineTo(x2, y2);
-    ctx.stroke();
-}
-
-function clearCanvas() {
-    ctx.fillStyle = "lightgray"
-    ctx.fillRect(0,0,width,height);
-}
-
-function logLive(text) {
-    ctx.fillStyle = "#fff"
-    ctx.fillRect(0,0,200,20);
-    ctx.fillStyle = "#000"
-    ctx.fillText(text, 15, 15);
 }

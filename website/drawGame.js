@@ -10,11 +10,11 @@ function convertY(y) {
 
 function drawGame(frame) {
 
-    ctx.fillStyle = "#000"
-    ctx.strokeStyle = "#000"
+    gameCanvas.ctx.fillStyle = "#000"
+    gameCanvas.ctx.strokeStyle = "#000"
 
     if(tracking_data == null) {
-        logLive("loading tracking data")
+        gameCanvas.logLive("loading tracking data")
         return;
     }
 
@@ -34,7 +34,7 @@ function drawGame(frame) {
             continue;
         }
 
-        drawDot(convertX(x),convertY(y),3);
+        gameCanvas.drawDot(convertX(x),convertY(y),3);
 
         //drawDot((game.pitch.width+x)*scaling,(game.pitch.height+y)*scaling,3);
     }
@@ -57,6 +57,8 @@ function getGamePoints(frame, team) {
         }
         if(team == 2 && game.players.teamB.includes(playerId)) {
             points.push(convertX(x),convertY(y));
+
+            points.push(+x,+y)
         }
     }
 

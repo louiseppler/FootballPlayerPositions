@@ -37,15 +37,16 @@ var t = 0;
 
 function draw() { 
 
+    if(gameCanvas == null) return;
 
-    clearCanvas();
-    logLive("frame: " + frameNr);
+    gameCanvas.clearCanvas();
+    gameCanvas.logLive("frame: " + frameNr);
 
     handleFrameNr();
     drawGame(frameNr);
 
 
-    if(mouseIsPressed) {
+    if(gameCanvas.mouseIsPressed) {
        t++;
     }
 
@@ -77,8 +78,8 @@ function handleFrameNr() {
 }
 
 function moveDots() {
-    dots[selectedIndex].x = mouseX;
-    dots[selectedIndex].y = mouseY;
+    dots[selectedIndex].x = gameCanvas.mouseX;
+    dots[selectedIndex].y = gameCanvas.mouseY;
 }
 
 function getClosestDot() {
@@ -86,7 +87,7 @@ function getClosestDot() {
     var minDist = 1_000_000_000;
 
     for(var i = 0; i < dots.length; i++) {
-        const dist = getSquaredDist(mouseX, mouseY, dots[i].x, dots[i].y);
+        const dist = getSquaredDist(gameCanvas.mouseX, gameCanvas.mouseY, dots[i].x, dots[i].y);
         console.log(dist);
         if(dist < minDist) {
             minDist = dist;
@@ -98,9 +99,9 @@ function getClosestDot() {
 
     if(minDist > 40*40) {
         console.log("adding new point")
-        console.log("at:",mouseX,mouseY)
+        console.log("at:",gameCanvas.mouseX,gameCanvas.mouseY)
 
-        dots.push({x: mouseX, y: mouseY});
+        dots.push({x: gameCanvas.mouseX, y: gameCanvas.mouseY});
         selectedIndex = dots.length-1;
     }
     else {
@@ -112,7 +113,7 @@ function getClosestDot() {
 
 function drawDotsSimple() {
 
-    ctx.fillStyle = "black"
+    gameCanvas.ctx.fillStyle = "black"
 
     for(const dot of dots) {
         drawDot(dot.x,dot.y,3)
@@ -130,16 +131,16 @@ function shapeGraphMain(array) {
 
     const delaunay = new d3.Delaunay(array);
 
-    const voronoi = delaunay.voronoi([0, 0, width, height]);
+    const voronoi = delaunay.voronoi([0, 0, gameCanvas.width, gameCanvas.height]);
 
     resetVariables();
 
     computeBaseGraph(delaunay);
 
     if(showBaseGraph) {
-        ctx.strokeStyle = "#d3c3c3"
+        gameCanvas.ctx.strokeStyle = "#d3c3c3"
         drawGraph(delaunay.points)
-        ctx.strokeStyle = "#000"
+        gameCanvas.ctx.strokeStyle = "#000"
     }
 
 
@@ -160,11 +161,11 @@ function shapeGraphMain(array) {
     }
 
     if(showCircles) {
-        ctx.strokeStyle = "#aaa"
+        gameCanvas.ctx.strokeStyle = "#aaa"
         drawCircles(voronoi, delaunay.triangles)
     }
 
-    ctx.strokeStyle = "#000"
+    gameCanvas.ctx.strokeStyle = "#000"
 
     drawDotsRoles(delaunay.points);
 }
@@ -181,7 +182,7 @@ function drawGraph(points) {
             const k = graph[i][j];
 
             if(i < k) {
-                drawLine(points[i*2],points[i*2+1],points[k*2],points[k*2+1])
+                gameCanvas.drawLine(points[i*2],points[i*2+1],points[k*2],points[k*2+1])
             }
         }
     }
@@ -190,25 +191,25 @@ function drawGraph(points) {
 function drawDotsRoles(points) {
     for(var i = 0; i < roles.length; i++) {
         if(showAxisType == 0) {
-            ctx.fillStyle = roles[i].getColorX()
+            gameCanvas.ctx.fillStyle = roles[i].getColorX()
         }
         else {
-            ctx.fillStyle = roles[i].getColorY()
+            gameCanvas.ctx.fillStyle = roles[i].getColorY()
         }
-        drawDot(points[i*2],points[i*2+1], 6);
+        gameCanvas.drawDot(points[i*2],points[i*2+1], 6);
     }
 }
 
 function drawCenters(centers) {
     for(var i = 0; i < centers.length; i += 2) {
-        drawCircle(centers[i],centers[i+1],3);
+        gameCanvas.drawCircle(centers[i],centers[i+1],3);
     }
 }
 
 function drawPointNumbers(points) {
     for (var i = 0; i < points.length/2; i += 1) {
-        ctx.fillStyle = "#000"
-        ctx.fillText("" + i, points[i*2]+8, points[i*2+1]+8);        
+        gameCanvas.ctx.fillStyle = "#000"
+        gameCanvas.ctx.fillText("" + i, points[i*2]+8, points[i*2+1]+8);        
     }
 }
 
@@ -218,28 +219,28 @@ function drawHull(delaunay) {
     for (let i = 0; i < delaunay.hull.length; i++ ) {
         let index = delaunay.hull[i];
         if(i != 0) {
-            ctx.lineTo(points[index * 2], points[index * 2 + 1]);
-            ctx.stroke()
+            gameCanvas.ctx.lineTo(points[index * 2], points[index * 2 + 1]);
+            gameCanvas.ctx.stroke()
         }
-        ctx.beginPath();
-        ctx.moveTo(points[index * 2], points[index * 2 + 1]);   
+        gameCanvas.ctx.beginPath();
+        gameCanvas.ctx.moveTo(points[index * 2], points[index * 2 + 1]);   
     }
     { //last edge
         let index = delaunay.hull[0];
-        ctx.lineTo(points[index * 2], points[index * 2 + 1]);
-        ctx.stroke()
+        gameCanvas.ctx.lineTo(points[index * 2], points[index * 2 + 1]);
+        gameCanvas.ctx.stroke()
     }
 }
 
 function drawCircles(voronoi, triangles) {
    for(var i = 0; i < voronoi.circumcenters.length; i += 2) {
 
-    drawDot(voronoi.circumcenters[i],voronoi.circumcenters[i+1],2);
+    gameCanvas.drawDot(voronoi.circumcenters[i],voronoi.circumcenters[i+1],2);
     
     const t0 = triangles[i];
     //const radius = getDist(voronoi.circumcenters[i],voronoi.circumcenters[i+1], points[t0*2], points[t0*2+1])
     const radius = getSmallestRadius(voronoi.circumcenters[i],voronoi.circumcenters[i+1]);
-    drawCircle(voronoi.circumcenters[i],voronoi.circumcenters[i+1], radius)
+    gameCanvas.drawCircle(voronoi.circumcenters[i],voronoi.circumcenters[i+1], radius)
    }
 }
 
