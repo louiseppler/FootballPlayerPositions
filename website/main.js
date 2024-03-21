@@ -7,6 +7,11 @@ var showCenters = true;
 var showExtremaLines = true;
 var showAxisType = 0; //0: x, 1: y
 
+// ============= Animations Parameters =============
+
+var isPlaying = false;
+var frameNr = 0;
+
 // ============= Function Variables =============
 
 //only used before calculation of triangles, use delaunay.points
@@ -29,11 +34,16 @@ function draw() {
 
 
     clearCanvas();
-    drawGame(t);
+    logLive("frame: " + frameNr);
 
-     if(mouseIsPressed) {
+    handleFrameNr();
+    drawGame(frameNr);
+
+
+    if(mouseIsPressed) {
        t++;
     }
+
 
     // if(mouseIsPressed) {
     //     moveDots();
@@ -45,6 +55,16 @@ function draw() {
 
     // if(doPrint) console.log("========================");
     // doPrint = false;
+}
+
+function handleFrameNr() {
+    frameNr = $('#duration_slider').val()
+
+    if(isPlaying && frameNr < maxFrame) {
+        frameNr++;
+
+        $('#duration_slider').val(frameNr);
+    }
 }
 
 function moveDots() {

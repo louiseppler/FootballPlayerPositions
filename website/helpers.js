@@ -10,6 +10,8 @@ var ctx;
 
 function setup() {
 
+    setupUIElements()
+
     var canvas = d3.select('#container') 
     .append('canvas') 
     .attr('width', width) 
