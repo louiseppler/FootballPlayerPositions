@@ -10,12 +10,35 @@ function setupUIElements() {
         isPlaying = !isPlaying;
 
         if(isPlaying) {
-            $("#play_button").html("Stop")
+            $("#play_button").html("Pause")
         }
         else {
             $("#play_button").html("Play")
         }
-
-
     });
+
+    $("#button_team_a").click(function() {
+        showTeamA = true;
+        showTeamB = false;
+    });
+    $("#button_team_b").click(function() {
+        showTeamA = false;
+        showTeamB = true;  
+    });
+    $("#button_team_both").click(function() {
+        showTeamA = true;
+        showTeamB = true;
+    });
+
+    
+
+    $("#button_show_graph_a").click(function() {
+        showGraphForTeam = 1
+    });    
+    $("#button_show_graph_b").click(function() {
+        showGraphForTeam = 2
+    });
+    $("#button_show_graph_none").click(function() {
+        showGraphForTeam = 0
+    });   
 }

@@ -1,5 +1,13 @@
 var scaling = 5;
 
+function convertX(x) {
+    return (+x+game.pitch.width/2)*scaling
+}
+
+function convertY(y) {
+    return (+y+game.pitch.height/2)*scaling
+}
+
 function drawGame(frame) {
 
     ctx.fillStyle = "#000"
@@ -13,6 +21,12 @@ function drawGame(frame) {
     for(var i = 0; i < 23; i++) {
         var dataLine = tracking_data[1+i+frame*23];
 
+        var playerId = dataLine[5];
+
+        
+        if(showTeamA == false && game.players.teamA.includes(playerId)) continue;
+        if(showTeamB == false && game.players.teamB.includes(playerId)) continue;
+        
         var x = dataLine[6]
         var y = dataLine[7]
 
@@ -20,9 +34,31 @@ function drawGame(frame) {
             continue;
         }
 
-        drawDot((+x+game.pitch.width/2)*scaling,(+y+game.pitch.height/2)*scaling,3);
+        drawDot(convertX(x),convertY(y),3);
 
         //drawDot((game.pitch.width+x)*scaling,(game.pitch.height+y)*scaling,3);
     }
+}
 
+function getGamePoints(frame, team) {
+    if(tracking_data == null) return null
+
+    var points = [];
+
+    for(var i = 0; i < 23; i++) {
+        var dataLine = tracking_data[1+i+frame*23];
+
+        var playerId = dataLine[5];
+        var x = dataLine[6]
+        var y = dataLine[7]
+
+        if(team == 1 && game.players.teamA.includes(playerId)) {
+            points.push(convertX(x),convertY(y));
+        }
+        if(team == 2 && game.players.teamB.includes(playerId)) {
+            points.push(convertX(x),convertY(y));
+        }
+    }
+
+    return points;
 }

@@ -12,6 +12,11 @@ var showAxisType = 0; //0: x, 1: y
 var isPlaying = false;
 var frameNr = 0;
 
+var showTeamA = true;
+var showTeamB = true;
+
+var showGraphForTeam = 0; //0 nothing, 1: team a, 2: team b
+
 // ============= Function Variables =============
 
 //only used before calculation of triangles, use delaunay.points
@@ -44,6 +49,10 @@ function draw() {
        t++;
     }
 
+    const points = getGamePoints(frameNr, showGraphForTeam);
+    if(points != null) {
+        shapeGraphMain(points)
+    }
 
     // if(mouseIsPressed) {
     //     moveDots();
@@ -111,13 +120,13 @@ function drawDotsSimple() {
 }
 
 
-function main() {
+function shapeGraphMain(array) {
 
-    var array = []
-    for(const dot of dots) {
-        array.push(dot.x)
-        array.push(dot.y)
-    }
+    // var array = []
+    // for(const dot of dots) {
+    //     array.push(dot.x)
+    //     array.push(dot.y)
+    // }
 
     const delaunay = new d3.Delaunay(array);
 
