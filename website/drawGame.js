@@ -52,13 +52,13 @@ function getGamePoints(frame, team) {
         var x = dataLine[6]
         var y = dataLine[7]
 
+        if(game.goalKeepers.includes(playerId)) continue;
+
         if(team == 1 && game.players.teamA.includes(playerId)) {
             points.push(convertX(x),convertY(y));
         }
         if(team == 2 && game.players.teamB.includes(playerId)) {
             points.push(convertX(x),convertY(y));
-
-            points.push(+x,+y)
         }
     }
 
