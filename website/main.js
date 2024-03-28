@@ -17,6 +17,8 @@ var showTeamB = true;
 
 var showGraphForTeam = 0; //0 nothing, 1: team a, 2: team b
 
+var debugFlagSet = false;
+
 // ============= Function Variables =============
 
 //only used before calculation of triangles, use delaunay.points

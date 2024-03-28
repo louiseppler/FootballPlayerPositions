@@ -40,5 +40,9 @@ function setupUIElements() {
     });
     $("#button_show_graph_none").click(function() {
         showGraphForTeam = 0
-    });   
+    });  
+    
+    $("#dubug_button").click(function() {
+        debugFlagSet = true;
+    });
 }
