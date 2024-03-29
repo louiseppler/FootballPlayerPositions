@@ -54,7 +54,7 @@ function draw() {
 
     const points = getGamePoints(frameNr, showGraphForTeam);
     if(points != null) {
-        shapeGraphMain(points)
+        shapeGraphMain(points, true)
     }
 
     // if(mouseIsPressed) {
@@ -123,7 +123,7 @@ function drawDotsSimple() {
 }
 
 
-function shapeGraphMain(array) {
+function shapeGraphMain(array, showDrawings = true) {
 
     // var array = []
     // for(const dot of dots) {
@@ -139,7 +139,7 @@ function shapeGraphMain(array) {
 
     computeBaseGraph(delaunay);
 
-    if(showBaseGraph) {
+    if(showBaseGraph && showDrawings) {
         gameCanvas.ctx.strokeStyle = "#d3c3c3"
         drawGraph(delaunay.points)
         gameCanvas.ctx.strokeStyle = "#000"
@@ -148,8 +148,10 @@ function shapeGraphMain(array) {
 
     computeShapeGraph(delaunay);
     computeSurfaces(delaunay);
-    const centers = computeExtremaLines(surfaces, delaunay.points, extremaLines);
+    const centers = computeExtremaLines(surfaces, delaunay.points, extremaLines, showDrawings);
     computeRoles(delaunay.points, extremaLines)
+
+    if(!showDrawings) return;
 
     drawGraph(delaunay.points)
 

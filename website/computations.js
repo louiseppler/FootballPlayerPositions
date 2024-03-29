@@ -84,7 +84,7 @@ function computeRoles(points, extremaLines) {
 // ---------------- Surface Centers + ExtremaLines ----------------
 
 
-function computeExtremaLines(surfaces, points, extremaLines) {
+function computeExtremaLines(surfaces, points, extremaLines, showDrawings) {
     var centers = [];
 
     var min_x = gameCanvas.width+5;
@@ -129,7 +129,7 @@ function computeExtremaLines(surfaces, points, extremaLines) {
     extremaLines.min_y = min_y;
     extremaLines.max_y = max_y;
 
-    if(showExtremaLines) {
+    if(showExtremaLines && showDrawings) {
         gameCanvas.ctx.setLineDash([5, 15]);
 
         if(showAxisType == 0) {

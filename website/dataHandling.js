@@ -21,6 +21,8 @@ Papa.parse(link2, {
 	complete: function(results) {
 		//console.log(results.data);
 		tracking_data = results.data
+
+		computeAllRoles();
 	}
 });
 

@@ -3,6 +3,7 @@
 // var ctx;
 
 var gameCanvas;
+var overviewCanvas;
 
 class CanvasHelper {
     constructor(id, width, height, mouseClick, mouseDown, draw) {
@@ -14,14 +15,8 @@ class CanvasHelper {
         this.height = height; 
 
         console.log("setting up");
-        draw()
-
-
 
         this.draw = draw
-
-        this.draw()
-
 
         var canvas = d3.select('#' + id) 
         .append('canvas') 
@@ -90,12 +85,18 @@ class CanvasHelper {
 
 function setup() {
 
+    console.log("in setup function");
+
     gameCanvas = new CanvasHelper("container", 750, 500, () => {mouseClick();}, () => {mouseDown();}, () => {draw();});
 
     gameCanvas.clearCanvas()
 
-    console.log("gamecanvas of " + gameCanvas);
+    overviewCanvas = new CanvasHelper("container2", 750, 500, () => {empty();}, () => {empty();}, () => {draw2();});
 
+
+    overviewCanvas.clearCanvas()
+
+    console.log("overviewcanvas " + overviewCanvas);
 
     setupUIElements()
 

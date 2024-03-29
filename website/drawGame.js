@@ -35,6 +35,8 @@ function drawGame(frame) {
         }
 
         gameCanvas.drawDot(convertX(x),convertY(y),3);
+        gameCanvas.ctx.fillText("" + playerId, convertX(x), convertY(y)-8);        
+
 
         //drawDot((game.pitch.width+x)*scaling,(game.pitch.height+y)*scaling,3);
     }
