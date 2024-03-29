@@ -1,7 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
     <head>
+
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script> <!-- jQuery-->
+        <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/d3@7"></script> <!-- D3 -->
         <script src="PapaParse-5.0.2/papaparse.js"></script>
         <script src="dataHandling.js"></script>
@@ -14,6 +18,7 @@
         <script src="uiElements.js"></script>
         <script src="main.js"></script>
 
+        <link rel="stylesheet" href="jquery/jquery-ui.css">
         <link rel="stylesheet" type="text/css" href="styles.css" />
     </head>
     <body>
@@ -26,19 +31,21 @@
         <div id="container"></div>
 
         <button id="play_button">Play</button>
+        <br><br>
+        <button id="button_show_graph_a">Show Graph Team A</button>
+        <button id="button_show_graph_none">Hide Graph</button>
+        <button id="button_show_graph_b">Show Graph Team B</button>
+
+        <br><br>
         <div class="slidecontainer">
-            <input type="range" min="0" max="1000" value="50" class="slider" id="duration_slider">
-          </div>
+        <input type="range" min="0" max="1000" value="50" class="slider" id="duration_slider">
+        <br><br>
+        <div id="slider-range"></div>
 
-          <br><br><br>
-          <button id="button_show_graph_a">Show Graph Team A</button>
-          <button id="button_show_graph_none">Hide Graph</button>
-          <button id="button_show_graph_b">Show Graph Team B</button>
-
-          <br><br>
+        </div>
+        <br><br>
           <div id="container2"></div>
 
-          <br><br>
           <button id="dubug_button">Debug Button</button>
 
         </center>

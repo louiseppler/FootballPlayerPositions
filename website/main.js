@@ -1,11 +1,13 @@
 // ============= UI parameters =============
 
-var showBaseGraph = true;
+var showBaseGraph = false;
 var showCircles = false;
 var showDotNumbers = false;
-var showCenters = true;
-var showExtremaLines = true;
+var showCenters = false;
+var showExtremaLines = false;
 var showAxisType = 0; //0: x, 1: y
+
+var showPlayerLabels = false;
 
 // ============= Animations Parameters =============
 

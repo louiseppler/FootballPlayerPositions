@@ -45,4 +45,14 @@ function setupUIElements() {
     $("#dubug_button").click(function() {
         debugFlagSet = true;
     });
+
+    $( "#slider-range" ).slider({
+        range: true,
+        min: minFrame,
+        max: maxFrame,
+        values: [ minFrame, maxFrame ],
+        slide: function( event, ui ) {
+          //get called when slider is updated
+        }
+      });
 }
