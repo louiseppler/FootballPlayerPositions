@@ -18,6 +18,7 @@ var showTeamA = true;
 var showTeamB = true;
 
 var showGraphForTeam = 0; //0 nothing, 1: team a, 2: team b
+var showGraphColorMode = 0; //0: dominant, 1: x, 2: y
 
 var debugFlagSet = false;
 
@@ -39,6 +40,10 @@ function mouseClick() {
 
 var t = 0;
 
+/**
+ * This function gets called once every frame and
+ * handles drawing of the game
+ */
 function draw() { 
 
     if(gameCanvas == null) return;
@@ -81,11 +86,15 @@ function handleFrameNr() {
     }
 }
 
+
 function moveDots() {
     dots[selectedIndex].x = gameCanvas.mouseX;
     dots[selectedIndex].y = gameCanvas.mouseY;
 }
 
+/**
+ * Gets the closest dot from the current mouse coordinates
+ */
 function getClosestDot() {
     var minIndex = 0;
     var minDist = 1_000_000_000;
@@ -124,7 +133,11 @@ function drawDotsSimple() {
     }
 }
 
-
+/**
+ * This function computes the positions labels for the players
+ * by computing a delaunay graph, then reduces it to a shape graph
+ * to then determine the labels
+ */
 function shapeGraphMain(array, showDrawings = true) {
 
     // var array = []
@@ -182,6 +195,8 @@ function resetVariables() {
     logString = [];
 }
 
+// ============= drawing functions  =============
+
 function drawGraph(points) {
     for(var i = 0; i < graph.length; i++) {
         for(var j = 0; j < graph[i].length; j++) {
@@ -196,12 +211,20 @@ function drawGraph(points) {
 
 function drawDotsRoles(points) {
     for(var i = 0; i < roles.length; i++) {
-        if(showAxisType == 0) {
-            gameCanvas.ctx.fillStyle = roles[i].getColorX()
+        switch (showGraphColorMode) {
+            case 0:
+                gameCanvas.ctx.fillStyle = roles[i].getDominantColor()
+                break;
+            case 1:
+                gameCanvas.ctx.fillStyle = roles[i].getColorX()
+                break;
+            case 2:
+                gameCanvas.ctx.fillStyle = roles[i].getColorY()
+                break;
+            default:
+                break;
         }
-        else {
-            gameCanvas.ctx.fillStyle = roles[i].getColorY()
-        }
+
         gameCanvas.drawDot(points[i*2],points[i*2+1], 6);
     }
 }
@@ -249,6 +272,8 @@ function drawCircles(voronoi, triangles) {
     gameCanvas.drawCircle(voronoi.circumcenters[i],voronoi.circumcenters[i+1], radius)
    }
 }
+
+// ============= Helper Functions =============
 
 function boolArrayToString(arr) {
     var s = ""

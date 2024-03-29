@@ -29,7 +29,7 @@ class Role {
             return "#000"
         }
         
-        const colors = ["#000","#8E6713","#BBA471","#A9A9A9","#A1AB71","#627313"];
+        const colors = ["#000","#B7352D","#D48681","#A9A9A9","#7A9DCF","#215CAF"];
         return colors[this.x_role];
     }
 
@@ -38,7 +38,18 @@ class Role {
             return "#000"
         }
         
-        const colors = ["#000","#B7352D","#D48681","#A9A9A9","#7A9DCF","#215CAF"];
+        const colors = ["#000","#8E6713","#BBA471","#A9A9A9","#A1AB71","#627313"];
         return colors[this.y_role];
+    }
+
+    getDominantColor() {
+        if(this.x_role == 1 || this.x_role == 5) {
+            return this.getColorX();
+        }
+        if(this.y_role == 1 || this.y_role == 5) {
+            return this.getColorY()
+        }
+
+        return "#A9A9A9"
     }
 }

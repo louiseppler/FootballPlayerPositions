@@ -24,8 +24,11 @@ function drawGame(frame) {
         var playerId = dataLine[5];
 
         
-        if(showTeamA == false && game.players.teamA.includes(playerId)) continue;
-        if(showTeamB == false && game.players.teamB.includes(playerId)) continue;
+        var isInTeamA = game.players.teamA.includes(playerId);
+        var isInTeamB = game.players.teamB.includes(playerId);
+
+        if(showTeamA == false && isInTeamA) continue;
+        if(showTeamB == false && isInTeamB) continue;
         
         var x = dataLine[6]
         var y = dataLine[7]
@@ -33,6 +36,9 @@ function drawGame(frame) {
         if(x == "Inf" || y == "Inf") {
             continue;
         }
+
+        if(isInTeamA) gameCanvas.ctx.fillStyle = "blue"
+        if(isInTeamB) gameCanvas.ctx.fillStyle = "red"
 
         gameCanvas.drawDot(convertX(x),convertY(y),3);
         if(showPlayerLabels) gameCanvas.ctx.fillText("" + playerId, convertX(x), convertY(y)-8);        

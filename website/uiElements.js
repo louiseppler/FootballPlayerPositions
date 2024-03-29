@@ -30,8 +30,20 @@ function setupUIElements() {
         showTeamB = true;
     });
 
+    $("#button_show_color_mode_x").click(function() {
+        showGraphColorMode = 1;
+    });
+    $("#button_show_color_mode_y").click(function() {
+        showGraphColorMode = 2; 
+    });
+    $("#button_show_color_mode_d").click(function() {
+        showGraphColorMode = 0;
+    });
+
     
 
+
+    
     $("#button_show_graph_a").click(function() {
         showGraphForTeam = 1
     });    
