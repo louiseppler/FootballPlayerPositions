@@ -49,9 +49,14 @@ function drawGame(frame) {
 }
 
 function getGamePoints(frame, team) {
-    if(tracking_data == null) return null
+    if(tracking_data == null) return [null, null]
 
     var points = [];
+
+    var isReversed = false;
+
+    if((tracking_data[1+0+frame*23][2] != "One") && team == 1) isReversed = true;
+    if((tracking_data[1+0+frame*23][2] == "One") && team == 2) isReversed = true;
 
     for(var i = 0; i < 23; i++) {
         var dataLine = tracking_data[1+i+frame*23];
@@ -70,5 +75,5 @@ function getGamePoints(frame, team) {
         }
     }
 
-    return points;
+    return [points, isReversed];
 }

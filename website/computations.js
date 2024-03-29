@@ -8,7 +8,13 @@ var logString = [];
 
 // ---------------- Compute Roles ----------------
 
-function computeRoles(points, extremaLines) {
+/**
+ * 
+ * @param {*} points the points that have to be computed
+ * @param {*} extremaLines passed with min_x, min_y, max_x, max_y values
+ * @param {*} isReversed Will reverse X coordinate if team plays into the other direction
+ */
+function computeRoles(points, extremaLines, isReversed) {
     roles = []
     const N = points.length/2
     for(var i = 0; i < N; i++) {
@@ -17,16 +23,16 @@ function computeRoles(points, extremaLines) {
 
     for(var i = 0; i < N; i++) {
         if(points[i*2] < extremaLines.min_x) {
-            roles[i].x_role = 1;
+            roles[i].x_role = isReversed ? 5 : 1;
         }
         if(points[i*2] > extremaLines.max_x) {
-            roles[i].x_role = 5;
+            roles[i].x_role = isReversed ? 1 : 5;
         }
         if(points[i*2+1] < extremaLines.min_y) {
-            roles[i].y_role = 1;
+            roles[i].y_role = isReversed ? 5 : 1;
         }
         if(points[i*2+1] > extremaLines.max_y) {
-            roles[i].y_role = 5;
+            roles[i].y_role = isReversed ? 1 : 5;
         }
     }
 

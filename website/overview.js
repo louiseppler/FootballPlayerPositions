@@ -6,9 +6,9 @@ function computeAllRoles() {
     console.log("Starting role computation");
 
     for(var i = minFrame; i < maxFrame-2; i++) {
-        const points = getGamePoints(i, 1);
+        const [points, isReversed] = getGamePoints(i, 1);
         if(points == null) return;
-        shapeGraphMain(points, false);
+        shapeGraphMain(points, isReversed, false);
 
         rolesTeamA.push(roles.slice())
     }   
@@ -57,9 +57,9 @@ function draw2() {
                 if(debugFlagSet) console.log("role: " + rolesTeamA[frame][j].x_role + " " + rolesTeamA[frame][j].y_role);
             }
 
-            overviewCanvas.ctx.strokeStyle = rolesTeamA[frame][j].getColorY();
-            overviewCanvas.drawLine(i, y0+j*ys, i, y0+j*ys+ys*0.45);
             overviewCanvas.ctx.strokeStyle = rolesTeamA[frame][j].getColorX();
+            overviewCanvas.drawLine(i, y0+j*ys, i, y0+j*ys+ys*0.45);
+            overviewCanvas.ctx.strokeStyle = rolesTeamA[frame][j].getColorY();
             overviewCanvas.drawLine(i, y0+j*ys+ys*0.45, i, y0+j*ys+ys*0.9);
         }
 

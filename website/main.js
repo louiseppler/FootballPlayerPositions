@@ -59,9 +59,9 @@ function draw() {
        t++;
     }
 
-    const points = getGamePoints(frameNr, showGraphForTeam);
+    const [points, isReversed] = getGamePoints(frameNr, showGraphForTeam);
     if(points != null) {
-        shapeGraphMain(points, true)
+        shapeGraphMain(points, isReversed, true)
     }
 
     // if(mouseIsPressed) {
@@ -133,12 +133,17 @@ function drawDotsSimple() {
     }
 }
 
+
 /**
  * This function computes the positions labels for the players
  * by computing a delaunay graph, then reduces it to a shape graph
  * to then determine the labels
+ * @param {*} array the array of points [x1, y1, x2, y2, ...]
+ * @param {*} isReversed pass true if team plays the other direction
+ * @param {*} showDrawings pass true if elements should be drawn, default false
+ * @returns 
  */
-function shapeGraphMain(array, showDrawings = true) {
+function shapeGraphMain(array, isReversed, showDrawings = true) {
 
     // var array = []
     // for(const dot of dots) {
@@ -164,7 +169,7 @@ function shapeGraphMain(array, showDrawings = true) {
     computeShapeGraph(delaunay);
     computeSurfaces(delaunay);
     const centers = computeExtremaLines(surfaces, delaunay.points, extremaLines, showDrawings);
-    computeRoles(delaunay.points, extremaLines)
+    computeRoles(delaunay.points, extremaLines, isReversed)
 
     if(!showDrawings) return;
 
