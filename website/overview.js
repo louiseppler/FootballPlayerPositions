@@ -22,9 +22,9 @@ function draw2() {
 
     overviewCanvas.clearCanvas();
     overviewCanvas.logLive("Computing Data")
-
+    
+    
     if (rolesTeamA == null) return;
-
 
     var minFrameLoc = $( "#slider-range" ).slider( "values", 0 );
     var maxFrameLoc = $( "#slider-range" ).slider( "values", 1 );
@@ -38,6 +38,13 @@ function draw2() {
     var ys = 40;
 
     var scaling = (maxFrameLoc-minFrameLoc) / (x1-x0);
+
+    if(overviewCanvas.mouseIsPressed) {
+        console.log("mouseIsPressed");
+        frameNr = (overviewCanvas.mouseX-x0)*scaling+minFrameLoc;
+        $('#duration_slider').val(frameNr);
+    }
+
 
     var currentX = 1/scaling*(frameNr-minFrameLoc)+x0;
 
@@ -66,8 +73,6 @@ function draw2() {
         if(frame > frameNr) { 
             debugFlagSet = false;
         }
-
- 
     }
 }
 

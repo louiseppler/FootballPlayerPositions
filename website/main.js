@@ -31,11 +31,15 @@ var selectedIndex = 0;
 var doPrint = false;
 
 function mouseDown() {
+    console.log("mouse down");
+    console.log("mousIsPressed of: " + gameCanvas.mouseIsPressed);
     getClosestDot();
 }
 
 function mouseClick() {
-    doPrint = true;
+    console.log("mouse cliked");
+    console.log("mousIsPressed of: " + gameCanvas.mouseIsPressed);
+   // doPrint = true;
 }
 
 var t = 0;
@@ -56,7 +60,8 @@ function draw() {
 
 
     if(gameCanvas.mouseIsPressed) {
-       t++;
+        console.log("mouse is pressed from gameCanvas");
+        t++;
     }
 
     const [points, isReversed] = getGamePoints(frameNr, showGraphForTeam);

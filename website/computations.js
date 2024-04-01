@@ -233,14 +233,10 @@ function computeShapeGraph(delaunay) {
         const angleA = getAngle(ti, a, tj, points);
         const angleB = getAngle(tj, b, ti, points);
 
-        logString.push("init edge " + ti + " " + tj + " with angles " + angleA/Math.PI*180 + " " + angleB/Math.PI*180);
-        logString.push("  with subangles " + a + " " + b);
-
         const angle = Math.abs(angleA+angleB)
 
         queue.enqueueFunction({a: ti, b: tj}, -(angle));
         if(doPrint) console.log("adding edge " + ti + " " + tj);
-
     }
 
     while(!queue.isPriorityQueueEmpty()) {
@@ -286,13 +282,9 @@ function computeShapeGraph(delaunay) {
 
                     if(doPrint) console.log("new angle at " + prevNode + " " + node + " of " + angleA + " and " + angleB);
                 
-                
-
 
                     if(doPrint) console.log("new angle at " + prevNode + " " + node + " of " + angleA + " and " + angleB);
                 
-                    logString.push( "  updating " + prevNode + " " + node + " with angle " + angle/Math.PI*180)
-
                     queue.updateElement({a: prevNode, b: node}, -angle);
                 
                 }

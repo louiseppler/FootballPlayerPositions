@@ -26,19 +26,21 @@ class CanvasHelper {
         this.ctx = canvas.node().getContext('2d')
         
         window.requestAnimationFrame(() => {this.drawHandler()});
+
+        var helper = this
         
         canvas.on("mousemove", function(event) {
-            this.mouseX = event.offsetX;
-            this.mouseY = event.offsetY;
+            helper.mouseX = event.offsetX;
+            helper.mouseY = event.offsetY;
         });
         
         canvas.on("mouseup", function(event) {
-            this.mouseIsPressed = false;
             mouseClick();
+            helper.mouseIsPressed = false;
         });
         
         canvas.on("mousedown", function(event) {
-            this.mouseIsPressed = true;
+            helper.mouseIsPressed = true;
             mouseDown();
         })
     
