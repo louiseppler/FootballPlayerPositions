@@ -1,5 +1,5 @@
 var minFrame = 0;
-var maxFrame = 143761;
+var maxFrame = 143761-2;
 
 
 function setupUIElements() {

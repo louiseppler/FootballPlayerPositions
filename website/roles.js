@@ -24,22 +24,24 @@ class Role {
         return names[this.x_role][this.y_role];
     }
 
+    static colorsX = ["#000","#B7352D","#D48681","#A9A9A9","#7A9DCF","#215CAF"];
+
     getColorX() {
         if(this.x_role == -1) {
             return "#000"
         }
         
-        const colors = ["#000","#B7352D","#D48681","#A9A9A9","#7A9DCF","#215CAF"];
-        return colors[this.x_role];
+        return Role.colorsX[this.x_role];
     }
 
+    static colorsY = ["#000","#8E6713","#BBA471","#A9A9A9","#A1AB71","#627313"];
+    
     getColorY() {
         if(this.y_role == -1) {
             return "#000"
         }
         
-        const colors = ["#000","#8E6713","#BBA471","#A9A9A9","#A1AB71","#627313"];
-        return colors[this.y_role];
+        return Role.colorsY[this.y_role];
     }
 
     getDominantColor() {
