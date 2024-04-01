@@ -1,14 +1,16 @@
-var scaling = 5;
+var scaling = 7;
 
 function convertX(x) {
-    return (+x+game.pitch.width/2)*scaling
+    return 10+(+x+game.pitch.width/2)*scaling
 }
 
 function convertY(y) {
-    return (+y+game.pitch.height/2)*scaling
+    return 15+(+y+game.pitch.height/2)*scaling
 }
 
 function drawGame(frame) {
+
+    drawPitch();
 
     gameCanvas.ctx.fillStyle = "#000"
     gameCanvas.ctx.strokeStyle = "#000"
@@ -76,4 +78,17 @@ function getGamePoints(frame, team) {
     }
 
     return [points, isReversed];
+}
+
+function drawPitch() {
+    gameCanvas.ctx.fillStyle = "#000"
+    gameCanvas.ctx.strokeStyle = "#000"
+
+    gameCanvas.drawLine(convertX(0),convertY(-game.pitch.height/2),convertX(0),convertY(game.pitch.height/2));
+
+    gameCanvas.drawLine(convertX(-game.pitch.width/2),convertY(-game.pitch.height/2),convertX(game.pitch.width/2),convertY(-game.pitch.height/2));
+    gameCanvas.drawLine(convertX(-game.pitch.width/2),convertY(game.pitch.height/2),convertX(game.pitch.width/2),convertY(game.pitch.height/2));
+    gameCanvas.drawLine(convertX(-game.pitch.width/2),convertY(-game.pitch.height/2),convertX(-game.pitch.width/2),convertY(game.pitch.height/2));
+    gameCanvas.drawLine(convertX(game.pitch.width/2),convertY(-game.pitch.height/2),convertX(game.pitch.width/2),convertY(game.pitch.height/2));
+
 }
