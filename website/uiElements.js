@@ -42,8 +42,6 @@ function setupUIElements() {
 
     
 
-
-    
     $("#button_show_graph_a").click(function() {
         showGraphForTeam = 1
     });    

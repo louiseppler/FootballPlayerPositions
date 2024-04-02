@@ -22,7 +22,7 @@ var showGraphColorMode = 0; //0: dominant, 1: x, 2: y
 
 var debugFlagSet = false;
 
-var overviewIsExpanded = true;
+var overviewIsExpanded = false;
 
 // ============= Function Variables =============
 
@@ -136,7 +136,7 @@ function drawDotsSimple() {
     gameCanvas.ctx.fillStyle = "black"
 
     for(const dot of dots) {
-        drawDot(dot.x,dot.y,3)
+        gameCanvas.drawDot(dot.x,dot.y,3)
     }
 }
 
