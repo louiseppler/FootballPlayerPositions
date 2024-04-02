@@ -71,9 +71,11 @@
 
             gameCanvas = new CanvasHelper("container", 750, 500, () => {mouseClickLoc();}, () => {mouseDownLoc();}, () => {drawLoc();});
 
+
+            // =============== Setup Buttons ===============
+
             $("#button_show_color_mode_x").click(function() {
                 showGraphColorMode = 1;
-                console.log("Blaa?");
             });
             $("#button_show_color_mode_y").click(function() {
                 showGraphColorMode = 2; 
@@ -128,18 +130,6 @@
             $("#showCircles").click();
             showExtremaLines = true; showAxisType = 1;
             $("#showExtremaLines").click();
-
-
-
-            /*
-            var showBaseGraph = false;
-var showCircles = false;
-var showDotNumbers = false;
-var showCenters = false;
-var showExtremaLines = false;
-var showAxisType = 0; //0: x, 1: y
-
-*/
 
         </script>
     </body>
