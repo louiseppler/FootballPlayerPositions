@@ -57,6 +57,8 @@ function getGamePoints(frame, team) {
 
     var isReversed = false;
 
+    var playerIDs = [];
+
     if((tracking_data[1+0+frame*23][2] != "One") && team == 1) isReversed = true;
     if((tracking_data[1+0+frame*23][2] == "One") && team == 2) isReversed = true;
 
@@ -71,13 +73,15 @@ function getGamePoints(frame, team) {
 
         if(team == 1 && game.players.teamA.includes(playerId)) {
             points.push(convertX(x),convertY(y));
+            playerIDs.push(playerId)
         }
         if(team == 2 && game.players.teamB.includes(playerId)) {
             points.push(convertX(x),convertY(y));
+            playerIDs.push(playerId)
         }
     }
 
-    return [points, isReversed];
+    return [points, isReversed, playerIDs];
 }
 
 function drawPitch() {

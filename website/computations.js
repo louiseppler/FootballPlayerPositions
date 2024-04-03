@@ -14,11 +14,17 @@ var logString = [];
  * @param {*} extremaLines passed with min_x, min_y, max_x, max_y values
  * @param {*} isReversed Will reverse X coordinate if team plays into the other direction
  */
-function computeRoles(points, extremaLines, isReversed) {
+function computeRoles(points, extremaLines, isReversed, playerIDs) {
     roles = []
     const N = points.length/2
     for(var i = 0; i < N; i++) {
         roles.push(new Role())
+    }
+
+    if(playerIDs != null) {
+        for(var i = 0; i < N; i++) {
+            roles[i].playerID = playerIDs[i];
+        }
     }
 
     for(var i = 0; i < N; i++) {

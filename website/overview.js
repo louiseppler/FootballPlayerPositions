@@ -5,11 +5,21 @@ function computeAllRoles() {
 
     console.log("Starting role computation");
 
-    for(var i = minFrame; i < maxFrame-2; i++) {
-        const [points, isReversed] = getGamePoints(i, 1);
-        if(points == null) return;
-        shapeGraphMain(points, isReversed, false);
+    var prevRoles = []
 
+    for(var i = minFrame; i < maxFrame-2; i++) {
+        const [points, isReversed, playerIDs] = getGamePoints(i, 1);
+        if(points == null) return;
+        shapeGraphMain(points, isReversed, false, playerIDs);
+
+
+        for(var j = 0; j < roles.length; j++) {
+             if(prevRoles.length < roles.length) continue;
+
+             roles[j].updateRoleCount(prevRoles[j].roleCount);
+        }
+
+        prevRoles = roles;
         rolesTeamA.push(roles.slice())
     }   
 
@@ -59,43 +69,47 @@ function draw2() {
     overviewCanvas.drawLine(currentX, 0, currentX, overviewCanvas.height)
 
 
-    var averagesX = [];
-    var averagesY = [];
-
-    //TODO: compute averages/sums more efficiently (with sum for each index and then a difference)
+    // var averagesX = [];
+    // var averagesY = [];
 
     if(overviewIsExpanded) {
         //Calculates + Displaying the average
         for(var j = 0; j < rolesTeamA[minFrameLoc].length; j++) {
-            var sumX = 0;
-            var sumY = 0;
-            var cnt = 0;
-            for(var i = minFrameLoc; i < maxFrameLoc; i++) {
-                if(rolesTeamA.length > i && rolesTeamA[i].length > j) {
-                    sumX += rolesTeamA[i][j].x_role;
-                    sumY += rolesTeamA[i][j].y_role;
-                    cnt++;
-                }
-                else {
-                var tt = rolesTeamA
-                    var t = 0;
-                }
-            }
+            // var sumX = 0;
+            // var sumY = 0;
+            // var cnt = 0;
+            // for(var i = minFrameLoc; i < maxFrameLoc; i++) {
+            //     if(rolesTeamA.length > i && rolesTeamA[i].length > j) {
+            //         sumX += rolesTeamA[i][j].x_role;
+            //         sumY += rolesTeamA[i][j].y_role;
+            //         cnt++;
+            //     }
+            //     else {
+            //     var tt = rolesTeamA
+            //         var t = 0;
+            //     }
+            // }
 
-            var avgX = sumX/cnt;
-            var avgY = sumY/cnt;
+            // var avgX = sumX/cnt;
+            // var avgY = sumY/cnt;
 
-            averagesX.push(avgX);
-            averagesY.push(avgY);
+            // averagesX.push(avgX);
+            // averagesY.push(avgY);
+
+
+            if(rolesTeamA[maxFrameLoc-10].length <= j) continue;
+            var [avgX, avgY] = getMostFrequentRole(rolesTeamA[minFrameLoc][j].roleCount, rolesTeamA[maxFrameLoc-10][j].roleCount);
+
+            if(debugFlagSet) console.log(j + " -> " + avgX + " " + avgY);
 
             overviewCanvas.ctx.fillStyle = "#000";
 
-            overviewCanvas.ctx.fillStyle = Role.colorsX[Math.round(avgX)];
+            overviewCanvas.ctx.fillStyle = Role.colorsX[avgX+2];
             overviewCanvas.ctx.beginPath();
             overviewCanvas.ctx.rect(x0,y0+j*ys+ys*0.225, x1-x0, ys*0.225); 
             overviewCanvas.ctx.fill();
     
-            overviewCanvas.ctx.fillStyle = Role.colorsY[Math.round(avgY)];
+            overviewCanvas.ctx.fillStyle = Role.colorsY[avgY+2];
             overviewCanvas.ctx.beginPath();
             overviewCanvas.ctx.rect(x0,y0+j*ys+ys*0.45, x1-x0, ys*0.225);  
             overviewCanvas.ctx.fill();  
@@ -123,25 +137,32 @@ function draw2() {
             overviewCanvas.ctx.strokeStyle = rolesTeamA[frame][j].getColorY();
             overviewCanvas.drawLine(i, y0+j*ys+ys*(0.45+0.225*overviewIsExpanded), i, y0+j*ys+ys*0.9);
 
-            avg_diff += Math.abs(averagesX[j]-rolesTeamA[frame][j].x_role);
-            avg_diff += Math.abs(averagesX[j]-rolesTeamA[frame][j].y_role);
+            //avg_diff += Math.abs(averagesX[j]-rolesTeamA[frame][j].x_role);
+            //avg_diff += Math.abs(averagesX[j]-rolesTeamA[frame][j].y_role);
         }
 
         if(frame > frameNr) { 
             debugFlagSet = false;
         }
 
-        if(overviewIsExpanded) {
-            overviewCanvas.ctx.strokeStyle = grayScale(avg_diff/40);
-            overviewCanvas.drawLine(i, y0+10.5*ys, i, y0+10.5*ys+ys*0.225);
+        // if(overviewIsExpanded) {
+        //     overviewCanvas.ctx.strokeStyle = grayScale(avg_diff/40);
+        //     overviewCanvas.drawLine(i, y0+10.5*ys, i, y0+10.5*ys+ys*0.225);
 
-            if(avg_diff > 30) {
-                overviewCanvas.ctx.strokeStyle = "#000"
-                overviewCanvas.drawLine(i, y0+10*ys, i, y0+10*ys+ys*0.225);
-            }
-        }
+        //     if(avg_diff > 30) {
+        //         overviewCanvas.ctx.strokeStyle = "#000"
+        //         overviewCanvas.drawLine(i, y0+10*ys, i, y0+10*ys+ys*0.225);
+        //     }
+        // }
     }
 
+    //Displaying Player IDs
+    overviewCanvas.ctx.fillStyle = "#000"
+    for(var j = 0; j < rolesTeamA[minFrameLoc].length; j++) {
+        overviewCanvas.ctx.fillText(rolesTeamA[minFrameLoc][j].playerID, x0-50, y0+ys*j+10);
+    }
+
+    debugFlagSet = false
 
 }
 

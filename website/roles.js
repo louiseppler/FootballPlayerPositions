@@ -5,6 +5,31 @@ class Role {
         //-2,-1,0,1,2  --  -3 = null
         this.x_role = -3;
         this.y_role = -3;
+
+        this.roleCount = [];
+        for(var i = 0; i < 25; i++) {
+            this.roleCount.push(0);
+        }
+    }
+
+    /**
+     * 
+     * @returns a single number combining the values of x_role and y_role
+     */
+    getRoleCountIndex() {
+        return (this.x_role+2)*5+this.y_role+2;
+    }
+
+    /**
+     * Role count counts the occurrences of the roles since the start of the game
+     * Use the difference between to frames to get the delta count
+     * @param {*} oldRoles pass the roles from the previous frame
+     */
+    updateRoleCount(oldRoles) {
+        if(oldRoles == null) return
+        this.roleCount = oldRoles.slice();
+
+        this.roleCount[this.getRoleCountIndex()] += 1;
     }
 
     getRoleLabel() {
@@ -43,4 +68,25 @@ class Role {
 
         return "#A9A9A9"
     }
+}
+
+/**
+ * Computes add differences between start and end end return x,y roles of the most occurring role
+ * @param {*} startCount Array representing the count at the beginning
+ * @param {*} endCount Array representing the count at the end
+ * @returns 
+ */
+function getMostFrequentRole(startCount, endCount) {
+    if(startCount == null || endCount == null) return [0,0]
+
+    var max = 0;
+    var maxIndex;
+    for(var i = 0; i < startCount.length; i++) {
+        var diff = endCount[i]-startCount[i];
+        if(diff > max) {
+            max = diff;
+            maxIndex = i;
+        }
+    }
+    return [Math.floor(maxIndex/5)-2, (maxIndex%5)-2];
 }

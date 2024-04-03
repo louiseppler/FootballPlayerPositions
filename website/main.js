@@ -22,7 +22,7 @@ var showGraphColorMode = 0; //0: dominant, 1: x, 2: y
 
 var debugFlagSet = false;
 
-var overviewIsExpanded = false;
+var overviewIsExpanded = true;
 
 // ============= Function Variables =============
 
@@ -150,7 +150,7 @@ function drawDotsSimple() {
  * @param {*} showDrawings pass true if elements should be drawn, default false
  * @returns 
  */
-function shapeGraphMain(array, isReversed, showDrawings = true) {
+function shapeGraphMain(array, isReversed, showDrawings = true, playerIDs = null) {
 
     // var array = []
     // for(const dot of dots) {
@@ -176,7 +176,7 @@ function shapeGraphMain(array, isReversed, showDrawings = true) {
     computeShapeGraph(delaunay);
     computeSurfaces(delaunay);
     const centers = computeExtremaLines(surfaces, delaunay.points, extremaLines, showDrawings);
-    computeRoles(delaunay.points, extremaLines, isReversed)
+    computeRoles(delaunay.points, extremaLines, isReversed, playerIDs)
 
     if(!showDrawings) return;
 
