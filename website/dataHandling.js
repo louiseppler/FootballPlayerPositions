@@ -1,8 +1,10 @@
 var link = "http://127.0.0.1:8125/data/tracking_small.csv"
 var link2 = "http://127.0.0.1:8125/data/tracking.csv"
-
+var eventsLink = "http://127.0.0.1:8125/data/events.json"
 
 var tracking_data = null
+
+var eventList = null
 
 var game = {
 	pitch: {
@@ -26,6 +28,11 @@ Papa.parse(link2, {
 	}
 });
 
+$.getJSON(eventsLink, function(data) {
+	for(object in data.data) {
+		
+	}
+});
 
 
 
