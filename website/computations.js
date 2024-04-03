@@ -23,66 +23,66 @@ function computeRoles(points, extremaLines, isReversed) {
 
     for(var i = 0; i < N; i++) {
         if(points[i*2] < extremaLines.min_x) {
-            roles[i].x_role = isReversed ? 5 : 1;
+            roles[i].x_role = isReversed ? 2 : -2;
         }
         if(points[i*2] > extremaLines.max_x) {
-            roles[i].x_role = isReversed ? 1 : 5;
+            roles[i].x_role = isReversed ? -2 : 2;
         }
         if(points[i*2+1] < extremaLines.min_y) {
-            roles[i].y_role = isReversed ? 5 : 1;
+            roles[i].y_role = isReversed ? 2 : -2;
         }
         if(points[i*2+1] > extremaLines.max_y) {
-            roles[i].y_role = isReversed ? 1 : 5;
+            roles[i].y_role = isReversed ? -2 : 2;
         }
     }
 
     for(var i = 0; i < N; i++) {
-        if(roles[i].x_role != -1) continue;
+        if(roles[i].x_role != -3) continue;
 
         var has_1_neighbor = false;
         var has_5_neighbor = false;
 
         for(const j of graph[i]) {
-            if(roles[j].x_role == 1) has_1_neighbor = true
-            if(roles[j].x_role == 5) has_5_neighbor = true
+            if(roles[j].x_role == -2) has_1_neighbor = true
+            if(roles[j].x_role == 2) has_5_neighbor = true
         }
 
         if (has_1_neighbor && has_5_neighbor) {
-            roles[i].x_role = 3;
+            roles[i].x_role = 0;
         }
         else if(has_1_neighbor) {
-            roles[i].x_role = 2;
+            roles[i].x_role = -1;
         }
         else if(has_5_neighbor) {
-            roles[i].x_role = 4;
+            roles[i].x_role = 1;
         }
         else {
-            roles[i].x_role = 3;
+            roles[i].x_role = 0;
         }
     }
 
     for(var i = 0; i < N; i++) {
-        if(roles[i].y_role != -1) continue;
+        if(roles[i].y_role != -3) continue;
 
         var has_1_neighbor = false;
         var has_5_neighbor = false;
 
         for(const j of graph[i]) {
-            if(roles[j].y_role == 1) has_1_neighbor = true
-            if(roles[j].y_role == 5) has_5_neighbor = true
+            if(roles[j].y_role == -2) has_1_neighbor = true
+            if(roles[j].y_role == 2) has_5_neighbor = true
         }
 
         if (has_1_neighbor && has_5_neighbor) {
-            roles[i].y_role = 3;
+            roles[i].y_role = 0;
         }
         else if(has_1_neighbor) {
-            roles[i].y_role = 2;
+            roles[i].y_role = -1;
         }
         else if(has_5_neighbor) {
-            roles[i].y_role = 4;
+            roles[i].y_role = 1;
         }
         else {
-            roles[i].y_role = 3;
+            roles[i].y_role = 0;
         }
     }
 }
