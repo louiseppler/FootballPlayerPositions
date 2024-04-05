@@ -96,4 +96,19 @@ class Role {
         if(maxIndex == null) return [0,0];
         return [Math.floor(maxIndex/5)-2, (maxIndex%5)-2];
     }
+
+    /**
+     * Returns a number representing how similar roles are, smaller = similar
+     * @param {*} indexA roles A represented as a single number
+     * @param {*} indexB roles B represented as a single number
+     * @returns 
+     */
+    static similarity(indexA, indexB) {
+        var x1 = Math.floor(indexA/5);
+        var y1 = (indexA%5)
+        var x2 = Math.floor(indexB/5);
+        var y2 = (indexB%5)
+
+        return (x1-x2)*(x1-x2) + (y1-y2)*(y1-y2);
+    }
 }

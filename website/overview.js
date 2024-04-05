@@ -71,7 +71,7 @@ function computePlayerOrdering(substitutionFrames) {
     var playerPair = [];
     var firstSubIndex = substitutionFrames[1];
 
-    //Initial Sorting
+    // === Initial Sorting ===
 
     console.log("#1");
 
@@ -91,42 +91,89 @@ function computePlayerOrdering(substitutionFrames) {
     console.log("playerIndices");
     console.log(playerIndices);
 
+    // === for each substitution ===
 
     for(var i = 1; i < substitutionFrames.length-1; i++) {
+        var framePrev = substitutionFrames[i-1]+1;
         var frame = substitutionFrames[i];
+        var frameNext = substitutionFrames[i+1]-1;
 
-        console.log("at sub frame " + frame);
-        console.log(rolesTeamA[frame-1].map((x) => x.playerID));
-        console.log(rolesTeamA[frame+1].map((x) => x.playerID));
+        var newPlayers = rolesTeamA[frame+1].map((x) => x.playerID);
+
+        var oldIndices = [];
+        var freeIndices = [];
+        // for(var j = 0; j < rolesTeamA[frame+1].length; j++) {indicesUsed.push(false); }
 
 
-        var indicesUsed = [];
-        for(var j = 0; j < rolesTeamA[frame+1].length; j++) {indicesUsed.push(false); }
-
-        for(var j = 0; j < rolesTeamA[frame+1].length; j++) {
-            var index = playerIndices [ rolesTeamA[frame+1][j].playerID ];
-            if(index != null) {
-                indicesUsed[index] = true;
+        for(var j = 0; j < rolesTeamA[frame-1].length; j++) {
+            var playerID = rolesTeamA[frame-1][j].playerID
+            if(newPlayers.includes(playerID) == false) {
+                oldIndices.push([j,playerIndices[playerID]]);
             }
         }
 
-        var unusedIndices = [];
-        var unusedIndicesCount = 0;
-
-        for(var j = 0; j < indicesUsed.length; j++) {
-            if(indicesUsed[j] == false) unusedIndices.push(j);
-        }
-
-        console.log("  unused " + unusedIndices);
-
         for(var j = 0; j < rolesTeamA[frame+1].length; j++) {
-            var index = playerIndices [ rolesTeamA[frame+1][j].playerID ];
+            var playerId = rolesTeamA[frame+1][j].playerID
+            var index = playerIndices [playerId];
             if(index == null) {
-                playerIndices [ rolesTeamA[frame+1][j].playerID ] = unusedIndices[unusedIndicesCount];
-                unusedIndicesCount += 1;
-                
+                freeIndices.push([j, playerId])
+            }
+
+        }
+
+        // a matrix representing a score of similarity if
+        // player would take player k would take position j (scoreMatrix[j][k])
+        var scoreMatrix = [];
+    
+        //only needs to be computed if several substitutions
+        if(oldIndices.length > 1) {
+            for(var j = 0; j < oldIndices.length; j++) {
+                scoreMatrix.push([]);
+                for(var k = 0; k < freeIndices.length; k++) {
+                    var a1 = oldIndices[j][0];
+                    var a2 = freeIndices[k][0];
+                    var rolePrev = Role.getMostFrequentRoleIndex(rolesTeamA[framePrev][a1].roleCount,rolesTeamA[frame+1][a1].roleCount)
+                    var roleNext = Role.getMostFrequentRoleIndex(rolesTeamA[frame+1][a2].roleCount, rolesTeamA[frameNext][a2].roleCount)
+                    var score = Role.similarity(rolePrev,roleNext);
+
+                    scoreMatrix[j].push(score);
+                }
             }
         }
+         console.log("score matrix");
+         console.log(scoreMatrix);
+
+        while(scoreMatrix.length > 1 && scoreMatrix[0].length > 1) {
+            var minVal = 1000;
+            var minJ = 0;
+            var minK = 0;
+
+            for(var j = 0; j < scoreMatrix.length; j++) {
+                for(var k = 0; k < scoreMatrix[j].length; k++) {
+                    var val = scoreMatrix[j][k];
+                    if(val < minVal) {
+                        minVal = val;
+                        minJ = j;
+                        minK = k;
+                    }
+                }
+            }
+
+            playerIndices[freeIndices[minK][1]] = oldIndices[minJ][1];
+
+            scoreMatrix.splice(minK, 1); //remove minK
+            for(var j = 0; j < scoreMatrix.length; j++) {
+                scoreMatrix[j].splice(minJ, 1); //remove minJ
+            }
+            freeIndices.splice(minK,1);
+            oldIndices.splice(minJ,1);
+
+
+            console.log(scoreMatrix);
+        }
+
+        //for the last case, not scores need to be compared
+        playerIndices[freeIndices[0][1]] = oldIndices[0][1];
     }
 
     console.log("playerIndices");
