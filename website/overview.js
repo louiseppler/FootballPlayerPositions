@@ -1,31 +1,137 @@
 var rolesTeamA = null
+var substitutionFrames = [];
+
+
+//dictionary mapping player id to drawn index
+var playerIndices = {};
 
 function computeAllRoles() {
     rolesTeamA = [];
+    substitutionFrames = [];
+
+    substitutionFrames.push(0);
 
     console.log("Starting role computation");
 
     var prevRoles = []
 
     for(var i = minFrame; i < maxFrame-2; i++) {
+
         const [points, isReversed, playerIDs] = getGamePoints(i, 1);
         if(points == null) return;
         shapeGraphMain(points, isReversed, false, playerIDs);
 
+        var hasSubstitution = false;
 
         for(var j = 0; j < roles.length; j++) {
              if(prevRoles.length < roles.length) continue;
 
              roles[j].updateRoleCount(prevRoles[j].roleCount);
+
+             if(roles[j].playerID != prevRoles[j].playerID) {   
+                hasSubstitution = true;
+             }
+             if(roles[j].playerID == null) {
+                hasSubstitution = true;
+
+             }
         }
 
-        prevRoles = roles;
+        if(i % Math.round(maxFrame/10) == 0) {
+            console.log("" + Math.round(i/maxFrame*100) + "%");
+        }
+
+        // if(i % 10000 == 0) {
+        //     console.log("at frame " + i + " ");
+        //     console.log(prevRoles.map((x) => x.playerID));
+        //     console.log(roles.map((x) => x.playerID));
+        // }
+
+        if(hasSubstitution) {
+            substitutionFrames.push(i);
+        }
+
+        prevRoles = roles.slice();
         rolesTeamA.push(roles.slice())
     }   
 
+    substitutionFrames.push(maxFrame-2);
+
     console.log("Computed Roles!");
+    console.log("substitutionFrames " + substitutionFrames);
+    computePlayerOrdering(substitutionFrames);
 }
 
+/**
+ * Computes `playerIndices` to determine in which order the players should be displayed
+ * @param {*} substitutionFrames Array of all substitutionFrame numbers including 0, and maxFrame
+ */
+function computePlayerOrdering(substitutionFrames) {
+    console.log("computePlayerOrdering");
+    var playerPair = [];
+    var firstSubIndex = substitutionFrames[1];
+
+    //Initial Sorting
+
+    console.log("#1");
+
+    for(var j = 0; j < rolesTeamA[0].length; j++) {
+        var roleNr = Role.getMostFrequentRoleIndex(rolesTeamA[0][j].roleCount, rolesTeamA[firstSubIndex][j].roleCount);
+        playerPair.push([rolesTeamA[0][j].playerID, roleNr]);
+    }
+
+    console.log("#2");
+
+    playerPair.sort((a, b) => a[1] - b[1]);
+
+    for(var i = 0; i < playerPair.length; i++) {
+        playerIndices[playerPair[i][0]] = i;
+    }
+
+    console.log("playerIndices");
+    console.log(playerIndices);
+
+
+    for(var i = 1; i < substitutionFrames.length-1; i++) {
+        var frame = substitutionFrames[i];
+
+        console.log("at sub frame " + frame);
+        console.log(rolesTeamA[frame-1].map((x) => x.playerID));
+        console.log(rolesTeamA[frame+1].map((x) => x.playerID));
+
+
+        var indicesUsed = [];
+        for(var j = 0; j < rolesTeamA[frame+1].length; j++) {indicesUsed.push(false); }
+
+        for(var j = 0; j < rolesTeamA[frame+1].length; j++) {
+            var index = playerIndices [ rolesTeamA[frame+1][j].playerID ];
+            if(index != null) {
+                indicesUsed[index] = true;
+            }
+        }
+
+        var unusedIndices = [];
+        var unusedIndicesCount = 0;
+
+        for(var j = 0; j < indicesUsed.length; j++) {
+            if(indicesUsed[j] == false) unusedIndices.push(j);
+        }
+
+        console.log("  unused " + unusedIndices);
+
+        for(var j = 0; j < rolesTeamA[frame+1].length; j++) {
+            var index = playerIndices [ rolesTeamA[frame+1][j].playerID ];
+            if(index == null) {
+                playerIndices [ rolesTeamA[frame+1][j].playerID ] = unusedIndices[unusedIndicesCount];
+                unusedIndicesCount += 1;
+                
+            }
+        }
+    }
+
+    console.log("playerIndices");
+    console.log(playerIndices);
+}
 
 function draw2() {
     if(overviewCanvas == null) return;
@@ -56,7 +162,6 @@ function draw2() {
     var scaling = (maxFrameLoc-minFrameLoc) / (x1-x0);
 
     if(overviewCanvas.mouseIsPressed) {
-        console.log("mouseIsPressed");
         frameNr = (overviewCanvas.mouseX-x0)*scaling+minFrameLoc;
         $('#duration_slider').val(frameNr);
     }
@@ -75,30 +180,9 @@ function draw2() {
     if(overviewIsExpanded) {
         //Calculates + Displaying the average
         for(var j = 0; j < rolesTeamA[minFrameLoc].length; j++) {
-            // var sumX = 0;
-            // var sumY = 0;
-            // var cnt = 0;
-            // for(var i = minFrameLoc; i < maxFrameLoc; i++) {
-            //     if(rolesTeamA.length > i && rolesTeamA[i].length > j) {
-            //         sumX += rolesTeamA[i][j].x_role;
-            //         sumY += rolesTeamA[i][j].y_role;
-            //         cnt++;
-            //     }
-            //     else {
-            //     var tt = rolesTeamA
-            //         var t = 0;
-            //     }
-            // }
-
-            // var avgX = sumX/cnt;
-            // var avgY = sumY/cnt;
-
-            // averagesX.push(avgX);
-            // averagesY.push(avgY);
-
 
             if(rolesTeamA[maxFrameLoc-10].length <= j) continue;
-            var [avgX, avgY] = getMostFrequentRole(rolesTeamA[minFrameLoc][j].roleCount, rolesTeamA[maxFrameLoc-10][j].roleCount);
+            var [avgX, avgY] = Role.getMostFrequentRole(rolesTeamA[minFrameLoc][j].roleCount, rolesTeamA[maxFrameLoc-10][j].roleCount);
 
             if(debugFlagSet) console.log(j + " -> " + avgX + " " + avgY);
 
@@ -125,6 +209,8 @@ function draw2() {
 
         for(var j = 0; j < rolesTeamA[frame].length; j++) {
 
+            var pos = playerIndices[rolesTeamA[frame][j].playerID];
+
             if(debugFlagSet) {
             }
 
@@ -133,9 +219,9 @@ function draw2() {
             }
 
             overviewCanvas.ctx.strokeStyle = rolesTeamA[frame][j].getColorX();
-            overviewCanvas.drawLine(i, y0+j*ys, i, y0+j*ys+ys*(0.45-0.225*overviewIsExpanded));
+            overviewCanvas.drawLine(i, y0+pos*ys, i, y0+pos*ys+ys*(0.45-0.225*overviewIsExpanded));
             overviewCanvas.ctx.strokeStyle = rolesTeamA[frame][j].getColorY();
-            overviewCanvas.drawLine(i, y0+j*ys+ys*(0.45+0.225*overviewIsExpanded), i, y0+j*ys+ys*0.9);
+            overviewCanvas.drawLine(i, y0+pos*ys+ys*(0.45+0.225*overviewIsExpanded), i, y0+pos*ys+ys*0.9);
 
             //avg_diff += Math.abs(averagesX[j]-rolesTeamA[frame][j].x_role);
             //avg_diff += Math.abs(averagesX[j]-rolesTeamA[frame][j].y_role);
@@ -159,8 +245,24 @@ function draw2() {
     //Displaying Player IDs
     overviewCanvas.ctx.fillStyle = "#000"
     for(var j = 0; j < rolesTeamA[minFrameLoc].length; j++) {
-        overviewCanvas.ctx.fillText(rolesTeamA[minFrameLoc][j].playerID, x0-50, y0+ys*j+10);
+
+        var pos = playerIndices[rolesTeamA[minFrameLoc][j].playerID];
+
+        overviewCanvas.ctx.fillText(rolesTeamA[minFrameLoc][j].playerID, x0-50, y0+ys*pos+10);
     }
+
+    //Displays Substituions as a simple line
+    for(const frame of substitutionFrames) {
+        if(minFrameLoc < frame && frame < maxFrameLoc) {
+            var currentX = 1/scaling*(frame-minFrameLoc)+x0;
+
+            //Displays the current selected frame
+            overviewCanvas.ctx.strokeStyle = "gray";
+            overviewCanvas.drawLine(currentX, y0-10, currentX, y0+ys*10+10);
+        
+        }
+    }
+
 
     debugFlagSet = false
 

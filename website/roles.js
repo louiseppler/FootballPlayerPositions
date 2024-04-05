@@ -68,25 +68,32 @@ class Role {
 
         return "#A9A9A9"
     }
-}
 
-/**
- * Computes add differences between start and end end return x,y roles of the most occurring role
- * @param {*} startCount Array representing the count at the beginning
- * @param {*} endCount Array representing the count at the end
- * @returns 
- */
-function getMostFrequentRole(startCount, endCount) {
-    if(startCount == null || endCount == null) return [0,0]
-
-    var max = 0;
-    var maxIndex;
-    for(var i = 0; i < startCount.length; i++) {
-        var diff = endCount[i]-startCount[i];
-        if(diff > max) {
-            max = diff;
-            maxIndex = i;
+    static getMostFrequentRoleIndex(startCount, endCount) {
+        if(startCount == null || endCount == null) return null
+    
+        var max = 0;
+        var maxIndex;
+        for(var i = 0; i < startCount.length; i++) {
+            var diff = endCount[i]-startCount[i];
+            if(diff > max) {
+                max = diff;
+                maxIndex = i;
+            }
         }
+    
+        return maxIndex;
     }
-    return [Math.floor(maxIndex/5)-2, (maxIndex%5)-2];
+    
+    /**
+     * Computes add differences between start and end end return x,y roles of the most occurring role
+     * @param {*} startCount Array representing the count at the beginning
+     * @param {*} endCount Array representing the count at the end
+     * @returns 
+     */
+    static getMostFrequentRole(startCount, endCount) {
+        var maxIndex = Role.getMostFrequentRoleIndex(startCount, endCount);
+        if(maxIndex == null) return [0,0];
+        return [Math.floor(maxIndex/5)-2, (maxIndex%5)-2];
+    }
 }
