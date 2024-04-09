@@ -50,8 +50,8 @@ class Role {
         return Role.colorsX[this.x_role+2];
     }
 
-    //static colorsY = ["#000","#8E6713","#BBA471","#A9A9A9","#A1AB71","#627313"];
-    static colorsY = ["#627313","#A1AB71","#A9A9A9","#BBA471","#8E6713"];
+    static colorsY = ["#8E6713","#BBA471","#A9A9A9","#A1AB71","#627313"];
+    //static colorsY = ["#627313","#A1AB71","#A9A9A9","#BBA471","#8E6713"];
 
 
     getColorY() {

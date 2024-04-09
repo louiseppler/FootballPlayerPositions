@@ -1,11 +1,11 @@
 var scaling = 7;
 
 function convertX(x) {
-    return 10+(+x+game.pitch.width/2)*scaling
+    return 10+(+x+game.pitch.height/2)*scaling
 }
 
 function convertY(y) {
-    return 15+(+y+game.pitch.height/2)*scaling
+    return 10+(+y+game.pitch.width/2)*scaling
 }
 
 function drawGame(frame) {
@@ -42,7 +42,7 @@ function drawGame(frame) {
         if(isInTeamA) gameCanvas.ctx.fillStyle = "blue"
         if(isInTeamB) gameCanvas.ctx.fillStyle = "red"
 
-        gameCanvas.drawDot(convertX(x),convertY(y),3);
+        gameCanvas.drawDot(convertX(y),convertY(x),3);
         if(showPlayerLabels) gameCanvas.ctx.fillText("" + playerId, convertX(x), convertY(y)-8);        
 
 
@@ -72,11 +72,11 @@ function getGamePoints(frame, team) {
         if(game.goalKeepers.includes(playerId)) continue;
 
         if(team == 1 && game.players.teamA.includes(playerId)) {
-            points.push(convertX(x),convertY(y));
+            points.push(convertX(y),convertY(x));
             playerIDs.push(playerId)
         }
         if(team == 2 && game.players.teamB.includes(playerId)) {
-            points.push(convertX(x),convertY(y));
+            points.push(convertX(y),convertY(x));
             playerIDs.push(playerId)
         }
     }
@@ -88,11 +88,11 @@ function drawPitch() {
     gameCanvas.ctx.fillStyle = "#000"
     gameCanvas.ctx.strokeStyle = "#000"
 
-    gameCanvas.drawLine(convertX(0),convertY(-game.pitch.height/2),convertX(0),convertY(game.pitch.height/2));
+    gameCanvas.drawLine(convertX(-game.pitch.height/2),convertY(0),convertX(game.pitch.height/2),convertY(0));
 
-    gameCanvas.drawLine(convertX(-game.pitch.width/2),convertY(-game.pitch.height/2),convertX(game.pitch.width/2),convertY(-game.pitch.height/2));
-    gameCanvas.drawLine(convertX(-game.pitch.width/2),convertY(game.pitch.height/2),convertX(game.pitch.width/2),convertY(game.pitch.height/2));
-    gameCanvas.drawLine(convertX(-game.pitch.width/2),convertY(-game.pitch.height/2),convertX(-game.pitch.width/2),convertY(game.pitch.height/2));
-    gameCanvas.drawLine(convertX(game.pitch.width/2),convertY(-game.pitch.height/2),convertX(game.pitch.width/2),convertY(game.pitch.height/2));
+    gameCanvas.drawLine(convertX(-game.pitch.height/2),convertY(-game.pitch.width/2),convertX(game.pitch.height/2),convertY(-game.pitch.width/2));
+    gameCanvas.drawLine(convertX(-game.pitch.height/2),convertY(game.pitch.width/2),convertX(game.pitch.height/2),convertY(game.pitch.width/2));
+    gameCanvas.drawLine(convertX(-game.pitch.height/2),convertY(-game.pitch.width/2),convertX(-game.pitch.height/2),convertY(game.pitch.width/2));
+    gameCanvas.drawLine(convertX(game.pitch.height/2),convertY(-game.pitch.width/2),convertX(game.pitch.height/2),convertY(game.pitch.width/2));
 
 }

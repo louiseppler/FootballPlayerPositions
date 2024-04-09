@@ -29,16 +29,20 @@ function computeRoles(points, extremaLines, isReversed, playerIDs) {
 
     for(var i = 0; i < N; i++) {
         if(points[i*2] < extremaLines.min_x) {
-            roles[i].x_role = isReversed ? 2 : -2;
+            if(axisIsFlipped) roles[i].y_role = isReversed ? 2 : -2;
+            else roles[i].x_role = isReversed ? 2 : -2;
         }
         if(points[i*2] > extremaLines.max_x) {
-            roles[i].x_role = isReversed ? -2 : 2;
+            if(axisIsFlipped) roles[i].y_role = isReversed ? -2 : 2;
+            else roles[i].x_role = isReversed ? -2 : 2;
         }
         if(points[i*2+1] < extremaLines.min_y) {
-            roles[i].y_role = isReversed ? 2 : -2;
+            if(axisIsFlipped) roles[i].x_role = isReversed ? 2 : -2;
+            else roles[i].y_role = isReversed ? 2 : -2;
         }
         if(points[i*2+1] > extremaLines.max_y) {
-            roles[i].y_role = isReversed ? -2 : 2;
+            if(axisIsFlipped) roles[i].x_role = isReversed ? -2 : 2;
+            else roles[i].y_role = isReversed ? -2 : 2;
         }
     }
 
