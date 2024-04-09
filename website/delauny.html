@@ -59,10 +59,11 @@
                     points.push(dot.x, dot.y);
                 }
                 shapeGraphMain(points, false, true);
+                doPrint = false;
             }
 
             function mouseClickLoc() {
-
+                doPrint = true;
             }
 
             function mouseDownLoc() {

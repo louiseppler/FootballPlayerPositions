@@ -222,7 +222,13 @@ function computeShapeGraph(delaunay) {
 
     const {points, halfedges, triangles, hull} = delaunay;
 
-  
+    gameCanvas.logLive("points: " + points.length/2)
+
+    if(points.length/2 < 4) return;
+
+    if(doPrint) console.log("--------------------------------");
+    
+
 
     for (let i = 0, n = halfedges.length; i < n; ++i) {
         const j = halfedges[i];
@@ -242,7 +248,34 @@ function computeShapeGraph(delaunay) {
         const angle = Math.abs(angleA+angleB)
 
         queue.enqueueFunction({a: ti, b: tj}, -(angle));
-        if(doPrint) console.log("adding edge " + ti + " " + tj);
+        if(doPrint) console.log("adding edge " + ti + " " + tj + " with angle " + angle/Math.PI*180);
+    }
+
+    if(doPrint) console.log("adding hull edges");
+    {
+        var prevNode = -1;
+        for (var i = 0; i < hull.length; i++) {
+            if(prevNode == -1) {
+                var ti = hull[hull.length-1];
+                var tj = hull[i];
+            }
+            else {
+                var ti = prevNode;
+                var tj = hull[i];
+            }
+            const neighborsA = Array.from(delaunay.neighbors(ti));
+            var a = getPrevEdge(neighborsA, tj);
+
+            const angleA = getAngle(ti, a, tj, points);
+
+            const angle = Math.abs(angleA)
+
+            queue.enqueueFunction({a: ti, b: tj}, -(angle));
+
+            if(doPrint) console.log("adding edge " + ti + " " + tj + " with angle " + angle/Math.PI*180);
+
+            prevNode = hull[i];
+        }
     }
 
     while(!queue.isPriorityQueueEmpty()) {
@@ -251,7 +284,7 @@ function computeShapeGraph(delaunay) {
         var angle = -queueElement.priority
 
         if(isHullEdge(edge.a, edge.b, hull)) {
-            continue;
+            //continue;
         }
 
         logString.push( "at edge " + edge.a + " " + edge.b + " with angle " + angle/Math.PI*180)
