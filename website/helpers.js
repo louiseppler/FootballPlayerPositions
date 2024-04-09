@@ -100,6 +100,8 @@ function setup() {
 
     console.log("overviewcanvas " + overviewCanvas);
 
+    overviewTeamA = new OverviewData(1);
+
     setupUIElements()
 
 }

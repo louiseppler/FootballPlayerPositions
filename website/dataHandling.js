@@ -33,7 +33,8 @@ Papa.parse(link2, {
 		//console.log(results.data);
 		tracking_data = results.data
 
-		computeAllRoles();
+		
+		overviewTeamA.computeAllRoles();
 	}
 });
 
