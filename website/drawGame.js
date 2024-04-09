@@ -43,8 +43,7 @@ function drawGame(frame) {
         if(isInTeamB) gameCanvas.ctx.fillStyle = "red"
 
         gameCanvas.drawDot(convertX(y),convertY(x),3);
-        if(showPlayerLabels) gameCanvas.ctx.fillText("" + playerId, convertX(x), convertY(y)-8);        
-
+        if(showPlayerLabels) gameCanvas.ctx.fillText("" + game.getShirtNumberLabel(playerId), convertX(y), convertY(x)-8);        
 
         //drawDot((game.pitch.width+x)*scaling,(game.pitch.height+y)*scaling,3);
     }

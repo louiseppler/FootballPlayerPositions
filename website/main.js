@@ -7,7 +7,7 @@ var showCenters = false;
 var showExtremaLines = false;
 var showAxisType = 0; //0: x, 1: y
 
-var showPlayerLabels = false;
+var showPlayerLabels = true;
 
 // ============= Animations Parameters =============
 
