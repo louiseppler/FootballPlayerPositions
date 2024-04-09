@@ -8,6 +8,10 @@ function convertY(y) {
     return 10+(+y+game.pitch.width/2)*scaling
 }
 
+function convertDist(d) {
+    return d*scaling;
+}
+
 function drawGame(frame) {
 
     drawPitch();
@@ -84,14 +88,69 @@ function getGamePoints(frame, team) {
 }
 
 function drawPitch() {
+    //source: https://upload.wikimedia.org/wikipedia/commons/b/b3/Soccer_pitch_dimensions.png
+
     gameCanvas.ctx.fillStyle = "#000"
     gameCanvas.ctx.strokeStyle = "#000"
 
     gameCanvas.drawLine(convertX(-game.pitch.height/2),convertY(0),convertX(game.pitch.height/2),convertY(0));
 
+    //Touch line (outside line)
     gameCanvas.drawLine(convertX(-game.pitch.height/2),convertY(-game.pitch.width/2),convertX(game.pitch.height/2),convertY(-game.pitch.width/2));
     gameCanvas.drawLine(convertX(-game.pitch.height/2),convertY(game.pitch.width/2),convertX(game.pitch.height/2),convertY(game.pitch.width/2));
     gameCanvas.drawLine(convertX(-game.pitch.height/2),convertY(-game.pitch.width/2),convertX(-game.pitch.height/2),convertY(game.pitch.width/2));
     gameCanvas.drawLine(convertX(game.pitch.height/2),convertY(-game.pitch.width/2),convertX(game.pitch.height/2),convertY(game.pitch.width/2));
+
+
+    var h0 = -game.pitch.height/2;
+    var h1 = game.pitch.height/2;
+    var w0 = -game.pitch.width/2;
+    var w1 = game.pitch.width/2;
+
+    //Goal Area
+    gameCanvas.drawLine(convertX(9.16),convertY(w0+5.5),convertX(-9.16),convertY(w0+5.5));
+    gameCanvas.drawLine(convertX(9.16),convertY(w0),convertX(9.16),convertY(w0+5.5));
+    gameCanvas.drawLine(convertX(-9.16),convertY(w0),convertX(-9.16),convertY(w0+5.5));
+
+    gameCanvas.drawLine(convertX(9.16),convertY(w1-5.5),convertX(-9.16),convertY(w1-5.5));
+    gameCanvas.drawLine(convertX(9.16),convertY(w1),convertX(9.16),convertY(w1-5.5));
+    gameCanvas.drawLine(convertX(-9.16),convertY(w1),convertX(-9.16),convertY(w1-5.5));
+
+    //Penalty Area
+    gameCanvas.drawLine(convertX(20.16),convertY(w0+16.5),convertX(-20.16),convertY(w0+16.5));
+    gameCanvas.drawLine(convertX(20.16),convertY(w0),convertX(20.16),convertY(w0+16.5));
+    gameCanvas.drawLine(convertX(-20.16),convertY(w0),convertX(-20.16),convertY(w0+16.5));
+
+    gameCanvas.drawLine(convertX(20.16),convertY(w1-16.5),convertX(-20.16),convertY(w1-16.5));
+    gameCanvas.drawLine(convertX(20.16),convertY(w1),convertX(20.16),convertY(w1-16.5));
+    gameCanvas.drawLine(convertX(-20.16),convertY(w1),convertX(-20.16),convertY(w1-16.5));
+
+    //center circle
+    gameCanvas.drawCircle(convertX(0),convertY(0),convertDist(9.15))
+
+    const radius = convertDist(9.15);
+
+    gameCanvas.ctx.beginPath();
+    gameCanvas.ctx.arc(convertX(0),convertY(w0+11), radius, Math.PI/2-0.92592839678, Math.PI/2+0.92592839678);
+    gameCanvas.ctx.stroke();
+
+    gameCanvas.ctx.beginPath();
+    gameCanvas.ctx.arc(convertX(0),convertY(w1-11), radius, -Math.PI/2-0.92592839678, -Math.PI/2+0.92592839678);
+    gameCanvas.ctx.stroke();
+
+    gameCanvas.drawDot(convertX(0),convertY(0),2)
+    gameCanvas.drawDot(convertX(0),convertY(w0+11),2)
+    gameCanvas.drawDot(convertX(0),convertY(w1-11),2)
+
+    //gameCanvas.drawCircle(convertX(0),convertY(w0+11),convertDist(9.15))
+
+
+
+    // gameCanvas.drawLine(convertX(),convertY(),convertX(),convertY());
+    // gameCanvas.drawLine(convertX(),convertY(),convertX(),convertY());
+    // gameCanvas.drawLine(convertX(),convertY(),convertX(),convertY());
+    // gameCanvas.drawLine(convertX(),convertY(),convertX(),convertY());
+    // gameCanvas.drawLine(convertX(),convertY(),convertX(),convertY());
+    // gameCanvas.drawLine(convertX(),convertY(),convertX(),convertY());
 
 }
