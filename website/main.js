@@ -56,7 +56,7 @@ function draw() {
 
     if(gameCanvas == null) return;
 
-    gameCanvas.clearCanvas();
+    gameCanvas.clearCanvasWhite();
     gameCanvas.logLive("frame: " + frameNr);
 
     handleFrameNr();

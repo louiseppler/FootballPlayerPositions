@@ -77,6 +77,11 @@ class CanvasHelper {
         this.ctx.fillRect(0,0,this.width,this.height);
     }
 
+    clearCanvasWhite() {
+        this.ctx.fillStyle = "white"
+        this.ctx.fillRect(0,0,this.width,this.height);
+    }
+
     logLive(text) {
         this.ctx.fillStyle = "#fff"
         this.ctx.fillRect(0,0,200,20);
@@ -93,7 +98,7 @@ function setup() {
 
     gameCanvas.clearCanvas()
 
-    overviewCanvas = new CanvasHelper("container2", 750, 750, () => {empty();}, () => {empty();}, () => {draw2();});
+    overviewCanvas = new CanvasHelper("container2", 750, 500, () => {empty();}, () => {empty();}, () => {draw2();});
 
 
     overviewCanvas.clearCanvas()

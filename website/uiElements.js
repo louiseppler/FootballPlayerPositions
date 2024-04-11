@@ -65,4 +65,50 @@ function setupUIElements() {
           //get called when slider is updated
         }
       });
+
+      
+      $("#graph_select_group").click(function() {
+        showGraphForTeam = +($('input[name=graph_select]:checked').val());
+        console.log("chaning to " + showGraphForTeam);
+      })
+      showGraphForTeam = +($('input[name=graph_select]:checked').val());
+
+      $("#team_select_group").click(function() {
+        setShowTeam( $('input[name=team_select]:checked').val() );   
+      })
+      setShowTeam( $('input[name=team_select]:checked').val() );  
+      
+      
+      $("#button_play").click(function() {
+        isPlaying = true;
+        $("#button_pause").show();
+        $("#button_play").hide();
+      })
+      $("#button_pause").click(function() {
+        isPlaying = false;
+        $("#button_pause").hide();
+        $("#button_play").show();
+      })
+      $("#button_pause").hide();
+
+}
+
+function setShowTeam(str) {
+    if(str == "team_a") {
+        showTeamA = true;
+        showTeamB = false;
+    }
+    else if(str == "team_b") {
+        showTeamA = false;
+        showTeamB = true;
+    }
+    else if(str == "team_both") {
+        showTeamA = true;
+        showTeamB = true;
+    }
+}
+
+function updateColor(i) {
+    console.log("updating color");
+    showGraphColorMode = i;
 }
