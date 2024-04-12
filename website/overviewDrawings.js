@@ -1,10 +1,13 @@
 var overviewTeamA;
 var overviewTeamB;
 
+base_image = new Image();
+base_image.src = 'imgs/ball.png';
+
 function draw2() {
     if(overviewCanvas == null) return;
 
-    overviewCanvas.clearCanvas();
+    overviewCanvas.clearCanvasWhite();
     overviewCanvas.logLive("Computing Data")
     
     var data = overviewTeamA;
@@ -111,6 +114,33 @@ function draw2() {
         // }
     }
 
+    //Display Event List
+    var levels = {0: 0, 1: 5_000, 2: 10_000, 3: 40_000, 4: 70_000, 5: 100_000, 9: 1_000_000}
+    var frameDiff = maxFrameLoc-minFrameLoc;
+
+    for(var i = 0; i < eventList.length; i++) {
+        var frame = eventList[i].start.frame;
+
+        var type = gameEvents[ getType(eventList[i]) ];
+
+        if(type != null) {
+            level = type.res
+
+            if(frame > minFrameLoc && frame < maxFrameLoc && frameDiff < levels[level]) {
+                overviewCanvas.ctx.fillText(type.letter + "*",  1/scaling*(frame-minFrameLoc)-5+x0,y0+10.5*ys);
+
+                if(type.icon != "") { 
+                    overviewCanvas.ctx.drawImage(base_image, 1/scaling*(frame-minFrameLoc)-10+x0,y0+10.5*ys, 20, 20);
+                }
+            }
+        }
+
+        
+        
+    }
+
+
+
     //Displaying Player IDs
     overviewCanvas.ctx.fillStyle = "#000"
     for(var j = 0; j < data.roles[minFrameLoc].length; j++) {
@@ -150,3 +180,35 @@ function grayScale(value) {
 }
 
 function empty() {}
+
+/**
+ * Finds the type/subtype with biggest resolution 
+ * @param {*} data Data with a type variable and a list of subtype variables
+ */
+function getType(data) {
+    var name = data.type.name
+    var maxRes = gameEvents[name].res;
+
+    if(name == "SHOT") {
+        var x = 1;
+    }
+
+
+    if(data.subtypes == null) return name;
+
+    if(data.subtypes instanceof Array) {
+        for(var subtype of data.subtypes) {
+            var newName = subtype.name;
+            if(gameEvents[subtype.name] != null) {
+                var newRes = gameEvents[subtype.name].res
+
+                if(newRes > maxRes) {
+                    name = newName;
+                    maxRes = newRes;
+                }
+            }
+        }
+    }
+   
+    return name
+}

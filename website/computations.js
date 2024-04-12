@@ -225,9 +225,7 @@ function computeShapeGraph(delaunay) {
     let queue = new PriorityQueue();
 
     const {points, halfedges, triangles, hull} = delaunay;
-
-    gameCanvas.logLive("points: " + points.length/2)
-
+    
     if(points.length/2 < 4) return;
 
     if(doPrint) console.log("--------------------------------");

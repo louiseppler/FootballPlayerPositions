@@ -27,6 +27,8 @@ var game = {
 	}
 }
 
+
+
 Papa.parse(link2, {
 	download: true,
 	complete: function(results) {
@@ -39,10 +41,61 @@ Papa.parse(link2, {
 });
 
 $.getJSON(eventsLink, function(data) {
-	for(object in data.data) {
-		
-	}
+	eventList = data.data
 });
 
 
 
+
+const gameEvents = {
+	"ADVANTAGE"	: {res: 0, icon: "", letter: ""},
+	"AERIAL"	: {res: 0, icon: "", letter: ""},
+	"BALL LOST"	: {res: 2, icon: "", letter: "L"},
+	"BALL OUT"	: {res: 1, icon: "", letter: "X"},
+	"BLOCKED"	: {res: 0, icon: "", letter: ""},
+	"BLOCKED"	: {res: 0, icon: "", letter: ""},
+	"CARD"		: {res: 3, icon: "", letter: "C"},
+	"CARRY"		: {res: 1, icon: "", letter: "-"},
+	"CHALLENGE"	: {res: 0, icon: "", letter: ""},
+	"CLEARANCE"	: {res: 0, icon: "", letter: ""},
+	"CORNER KICK": {res: 5, icon: "", letter: "C"},
+	"CROSS"		: {res: 0, icon: "", letter: ""},
+	"DEEP BALL"	: {res: 0, icon: "", letter: ""},
+	"DIRECT"	: {res: 0, icon: "", letter: ""},
+	"DRIBBLE"	: {res: 0, icon: "", letter: ""},
+	"END HALF"	: {res: 0, icon: "", letter: ""},
+	"FAULT"		: {res: 0, icon: "", letter: ""},
+	"FAULT RECEIVED": {res: 0, icon: "", letter: ""},
+	"FORCED"	: {res: 0, icon: "", letter: ""},
+	"FREE KICK"	: {res: 3, icon: "", letter: "FK"},
+	"GOAL"		: {res: 9, icon: "ball.jpg", letter: "G"},
+	"GOAL KICK"	: {res: 9, icon: "", letter: "GK"},
+	"GROUND"	: {res: 0, icon: "", letter: ""},
+	"HAND BALL"	: {res: 0, icon: "", letter: ""},
+	"HEAD"		: {res: 0, icon: "", letter: ""},
+	"INDIRECT"	: {res: 0, icon: "", letter: ""},
+	"INTERCEPTION"	: {res: 0, icon: "", letter: ""},
+	"KICK OFF"	: {res: 0, icon: "", letter: ""},
+	"LOST"		: {res: 0, icon: "", letter: ""},
+	"OFF TARGET": {res: 0, icon: "", letter: ""},
+	"OFFSIDE"	: {res: 0, icon: "", letter: ""},
+	"ON TARGET"	: {res: 0, icon: "", letter: ""},
+	"OUT"		: {res: 3, icon: "", letter: "X"},
+	"PASS"		: {res: 1, icon: "", letter: "*"},
+	"PENALTY"	: {res: 9, icon: "", letter: "PK"},
+	"RECOVERY"	: {res: 0, icon: "", letter: ""},
+	"RED"		: {res: 9, icon: "", letter: "R"},
+	"REFEREE HIT": {res: 0, icon: "", letter: ""},
+	"RETAKEN"	: {res: 0, icon: "", letter: ""},
+	"SAVED"		: {res: 0, icon: "", letter: ""},
+	"SET PIECE"	: {res: 0, icon: "", letter: ""},
+	"SHOT"		: {res: 4, icon: "", letter: "S"},
+	"TACKLE"	: {res: 0, icon: "", letter: ""},
+	"THEFT"		: {res: 0, icon: "", letter: ""},
+	"THROUGH BALL": {res: 0, icon: "", letter: ""},
+	"THROW IN"	: {res: 0, icon: "", letter: ""},
+	"VOLUNTARY"	: {res: 0, icon: "", letter: ""},
+	"WON"		: {res: 0, icon: "", letter: ""},
+	"WOODWORK"	: {res: 0, icon: "", letter: ""},
+	"YELLOW"	: {res: 9, icon: "", letter: "Y"},
+}
