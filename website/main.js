@@ -76,6 +76,7 @@ function draw() {
 
     drawGame(frameNr);
     drawPlayerLabels(frameNr);
+    drawBall(frameNr);
 
 }
 

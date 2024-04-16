@@ -88,6 +88,35 @@ function drawPlayerLabels(frame) {
     }
 }
 
+function drawBall(frame) {
+    if(tracking_data == null) {
+        return
+    }
+    for(var i = 0; i < 23; i++) {
+        var dataLine = tracking_data[1+i+frame*23];
+
+        var playerId = dataLine[5];
+
+        if(playerId != "-1") continue;
+        
+        var isInTeamA = game.players.teamA.includes(playerId);
+        var isInTeamB = game.players.teamB.includes(playerId);
+
+        var x = dataLine[6]
+        var y = dataLine[7]
+        var z = +(dataLine[8])
+
+        if(x == "Inf" || y == "Inf") {
+            continue;
+        }
+
+        gameCanvas.ctx.fillStyle = grayScale(Math.min(z/2,0.5));
+
+        gameCanvas.drawDot(convertX(y),convertY(x),4);
+
+    }
+}
+
 function getGamePoints(frame, team) {
     if(tracking_data == null) return [null, null]
 
