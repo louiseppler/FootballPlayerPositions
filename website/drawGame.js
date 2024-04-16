@@ -14,8 +14,6 @@ function convertDist(d) {
 
 function drawGame(frame) {
 
-    drawPitch();
-
     gameCanvas.ctx.fillStyle = "#000"
     gameCanvas.ctx.strokeStyle = "#000"
 
@@ -43,13 +41,50 @@ function drawGame(frame) {
             continue;
         }
 
-        if(isInTeamA) gameCanvas.ctx.fillStyle = "blue"
-        if(isInTeamB) gameCanvas.ctx.fillStyle = "red"
+        if(isInTeamA) gameCanvas.ctx.fillStyle = "#3395AB"
+        if(isInTeamB) gameCanvas.ctx.fillStyle = "#B73B92"
 
-        gameCanvas.drawDot(convertX(y),convertY(x),3);
-        if(showPlayerLabels) gameCanvas.ctx.fillText("" + game.getShirtNumberLabel(playerId), convertX(y), convertY(x)-8);        
+        if((showGraphForTeam == 1 && isInTeamA) || (showGraphForTeam == 2 && isInTeamB)) {}
+        else gameCanvas.drawDot(convertX(y),convertY(x),4);
 
         //drawDot((game.pitch.width+x)*scaling,(game.pitch.height+y)*scaling,3);
+    }
+}
+
+function drawPlayerLabels(frame) {
+    if(tracking_data == null) {
+        return
+    }
+    for(var i = 0; i < 23; i++) {
+        var dataLine = tracking_data[1+i+frame*23];
+
+        var playerId = dataLine[5];
+
+        
+        var isInTeamA = game.players.teamA.includes(playerId);
+        var isInTeamB = game.players.teamB.includes(playerId);
+
+        if(showTeamA == false && isInTeamA) continue;
+        if(showTeamB == false && isInTeamB) continue;
+        
+        var x = dataLine[6]
+        var y = dataLine[7]
+
+        if(x == "Inf" || y == "Inf") {
+            continue;
+        }
+
+
+        if(showPlayerLabels) {
+            if((showGraphForTeam == 1 && isInTeamA) || (showGraphForTeam == 2 && isInTeamB)) {
+                gameCanvas.ctx.fillStyle = "#FFF"
+                gameCanvas.ctx.fillText("" + game.getShirtNumberLabel(playerId), convertX(y)-5, convertY(x)+3); 
+            }
+            else {
+                gameCanvas.ctx.fillStyle = "#8C8C8C"
+                gameCanvas.ctx.fillText("" + game.getShirtNumberLabel(playerId), convertX(y)+4, convertY(x)-4); 
+            }    
+        }
     }
 }
 

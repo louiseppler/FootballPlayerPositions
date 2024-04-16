@@ -60,8 +60,7 @@ function draw() {
     gameCanvas.logLive("frame: " + frameNr);
 
     handleFrameNr();
-    drawGame(frameNr);
-
+    drawPitch();
 
     if(gameCanvas.mouseIsPressed) {
         console.log("mouse is pressed from gameCanvas");
@@ -73,16 +72,11 @@ function draw() {
         shapeGraphMain(points, isReversed, true)
     }
 
-    // if(mouseIsPressed) {
-    //     moveDots();
-    // }
+    drawArrows(isReversed);
 
-    // clearCanvas();
-    // drawDotsSimple();
-    // main();
+    drawGame(frameNr);
+    drawPlayerLabels(frameNr);
 
-    // if(doPrint) console.log("========================");
-    // doPrint = false;
 }
 
 function handleFrameNr() {
@@ -212,6 +206,9 @@ function resetVariables() {
 // ============= drawing functions  =============
 
 function drawGraph(points) {
+    gameCanvas.ctx.strokeStyle = "#A9A9A9"
+    gameCanvas.ctx.lineWidth = 3;
+
     for(var i = 0; i < graph.length; i++) {
         for(var j = 0; j < graph[i].length; j++) {
             const k = graph[i][j];
@@ -221,6 +218,8 @@ function drawGraph(points) {
             }
         }
     }
+
+    gameCanvas.ctx.lineWidth = 1;
 }
 
 function drawDotsRoles(points) {
@@ -239,7 +238,7 @@ function drawDotsRoles(points) {
                 break;
         }
 
-        gameCanvas.drawDot(points[i*2],points[i*2+1], 6);
+        gameCanvas.drawDot(points[i*2],points[i*2+1], 8);
     }
 }
 
@@ -252,8 +251,28 @@ function drawCenters(centers) {
 function drawPointNumbers(points) {
     for (var i = 0; i < points.length/2; i += 1) {
         gameCanvas.ctx.fillStyle = "#000"
-        gameCanvas.ctx.fillText("" + i, points[i*2]+8, points[i*2+1]+8);        
+        //gameCanvas.ctx.fillText("" + i, points[i*2]+8, points[i*2+1]+8);        
     }
+}
+
+function drawArrows(isReversed) {
+    var h0A = gameCanvas.height/2+25;
+    var h0B = gameCanvas.height/2-25;
+    var h = 12;
+    var w = 3;
+    var h1 = 8;
+    
+    gameCanvas.ctx.fillStyle = "#3395AB";
+    if(showGraphForTeam == 2)  gameCanvas.ctx.fillStyle = "#CCE4EA";
+    if(showGraphForTeam == 1)  gameCanvas.ctx.fillStyle = "#575757";
+    gameCanvas.ctx.fillRect(w, h0A-h, w, h*2);
+    gameCanvas.drawTriangle(0, h0A-h, w*3, h0A-h, w*1.5, h0A-h-h1);
+
+    gameCanvas.ctx.fillStyle = "#B73B92";
+    if(showGraphForTeam == 1)  gameCanvas.ctx.fillStyle = "#EFD0E3";
+    if(showGraphForTeam == 2)  gameCanvas.ctx.fillStyle = "#575757";
+    gameCanvas.ctx.fillRect(w, h0B-h, w, h*2);
+    gameCanvas.drawTriangle(0, h0B+h, w*3, h0B+h, w*1.5, h0B+h+h1);
 }
 
 function drawHull(delaunay) {

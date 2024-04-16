@@ -72,6 +72,14 @@ class CanvasHelper {
         this.ctx.stroke();
     }
 
+    drawTriangle(x1, y1, x2, y2, x3, y3) {
+        this.ctx.beginPath();
+        this.ctx.moveTo(x1, y1);
+        this.ctx.lineTo(x2, y2);
+        this.ctx.lineTo(x3, y3);
+        this.ctx.fill();
+    }
+
     clearCanvas() {
         this.ctx.fillStyle = "lightgray"
         this.ctx.fillRect(0,0,this.width,this.height);
