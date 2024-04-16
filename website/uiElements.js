@@ -53,7 +53,7 @@ function setupUIElements() {
     });  
     
     $("#dubug_button").click(function() {
-        $('#duration_slider').val(25000);
+        $('#duration_slider').val(34000);
         //debugFlagSet = true;
     });
 
