@@ -83,8 +83,11 @@ function drawPlayerLabels(frame) {
                 gameCanvas.ctx.fillText("" + game.getShirtNumberLabel(playerId), convertX(y)-5, convertY(x)+3); 
             }
             else {
-                gameCanvas.ctx.fillStyle = "#8C8C8C"
-                gameCanvas.ctx.fillText("" + game.getShirtNumberLabel(playerId), convertX(y)+4, convertY(x)-4); 
+                gameCanvas.ctx.fillStyle = "#000"
+                gameCanvas.ctx.fillText("" + game.getShirtNumberLabel(playerId), convertX(y)-5, convertY(x)+3); 
+
+                //gameCanvas.ctx.fillStyle = "#8C8C8C"
+                //gameCanvas.ctx.fillText("" + game.getShirtNumberLabel(playerId), convertX(y)+4, convertY(x)-4); 
             }    
         }
     }
