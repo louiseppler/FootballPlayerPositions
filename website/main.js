@@ -188,8 +188,8 @@ function shapeGraphMain(array, isReversed, showDrawings = true, playerIDs = null
     if(!showDrawings) return;
 
     gameCanvas.ctx.strokeStyle = "#A9A9A9"
-    if(!isOther) gameCanvas.ctx.lineWidth = 3;
-    drawGraph(delaunay.points)
+    gameCanvas.ctx.lineWidth = 3;
+    if(!isOther) drawGraph(delaunay.points)
     gameCanvas.ctx.lineWidth = 1;
 
     if(drawPointNumbers) {
@@ -252,7 +252,21 @@ function drawDotsRoles(points, isOther) {
         }
 
         if(!isOther) gameCanvas.drawDot(points[i*2],points[i*2+1], 8);
-        else gameCanvas.drawCircle(points[i*2],points[i*2+1], 8          );
+        else {
+            var grayMode = roles[i].getGrayScaleColorIndex(showGraphColorMode);
+            if(showGraphForTeam == 1) {
+                if(grayMode == 2) gameCanvas.ctx.fillStyle = "#8C0A59"
+                else if(grayMode == 1) gameCanvas.ctx.fillStyle = "#B73B92"
+                else gameCanvas.ctx.fillStyle = "#CA6CAE"
+            }
+            else {
+                if(grayMode == 2) gameCanvas.ctx.fillStyle = "#00596D"
+                else if(grayMode == 1) gameCanvas.ctx.fillStyle = "#3395AB"
+                else gameCanvas.ctx.fillStyle = "#66AFC0"
+            }
+            
+            gameCanvas.drawDot(points[i*2],points[i*2+1], 3);
+        }
     }
 }
 
