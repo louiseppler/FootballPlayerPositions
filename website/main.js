@@ -78,7 +78,7 @@ function draw() {
         //draw shapegraph for the other team
         const [points, isReversed] = getGamePoints(frameNr, 1-(showGraphForTeam-1)+1);
         if(points != null) {
-            shapeGraphMain(points, isReversed, true)
+            shapeGraphMain(points, isReversed, true, null, true)
         }
     }
 
@@ -157,7 +157,7 @@ function drawDotsSimple() {
  * @param {*} showDrawings pass true if elements should be drawn, default false
  * @returns 
  */
-function shapeGraphMain(array, isReversed, showDrawings = true, playerIDs = null) {
+function shapeGraphMain(array, isReversed, showDrawings = true, playerIDs = null, isOther = false) {
 
     // var array = []
     // for(const dot of dots) {
@@ -187,7 +187,10 @@ function shapeGraphMain(array, isReversed, showDrawings = true, playerIDs = null
 
     if(!showDrawings) return;
 
+    gameCanvas.ctx.strokeStyle = "#A9A9A9"
+    if(!isOther) gameCanvas.ctx.lineWidth = 3;
     drawGraph(delaunay.points)
+    gameCanvas.ctx.lineWidth = 1;
 
     if(drawPointNumbers) {
         drawPointNumbers(delaunay.points)
@@ -205,7 +208,7 @@ function shapeGraphMain(array, isReversed, showDrawings = true, playerIDs = null
 
     gameCanvas.ctx.strokeStyle = "#000"
 
-    drawDotsRoles(delaunay.points);
+    drawDotsRoles(delaunay.points, isOther);
 }
 
 function resetVariables() {
@@ -217,9 +220,6 @@ function resetVariables() {
 // ============= drawing functions  =============
 
 function drawGraph(points) {
-    gameCanvas.ctx.strokeStyle = "#A9A9A9"
-    gameCanvas.ctx.lineWidth = 3;
-
     for(var i = 0; i < graph.length; i++) {
         for(var j = 0; j < graph[i].length; j++) {
             const k = graph[i][j];
@@ -229,11 +229,9 @@ function drawGraph(points) {
             }
         }
     }
-
-    gameCanvas.ctx.lineWidth = 1;
 }
 
-function drawDotsRoles(points) {
+function drawDotsRoles(points, isOther) {
     for(var i = 0; i < roles.length; i++) {
         switch (showGraphColorMode) {
             case 0:
@@ -249,7 +247,8 @@ function drawDotsRoles(points) {
                 break;
         }
 
-        gameCanvas.drawDot(points[i*2],points[i*2+1], 8);
+        if(!isOther) gameCanvas.drawDot(points[i*2],points[i*2+1], 8);
+        else gameCanvas.drawDot(points[i*2],points[i*2+1], 4);
     }
 }
 
