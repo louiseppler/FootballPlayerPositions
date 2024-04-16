@@ -188,8 +188,8 @@ function shapeGraphMain(array, isReversed, showDrawings = true, playerIDs = null
     if(!showDrawings) return;
 
     gameCanvas.ctx.strokeStyle = "#A9A9A9"
-    gameCanvas.ctx.lineWidth = 3;
-    if(!isOther) drawGraph(delaunay.points)
+    if(!isOther) gameCanvas.ctx.lineWidth = 3;
+    drawGraph(delaunay.points)
     gameCanvas.ctx.lineWidth = 1;
 
     if(drawPointNumbers) {
@@ -252,7 +252,7 @@ function drawDotsRoles(points, isOther) {
         }
 
         if(!isOther) gameCanvas.drawDot(points[i*2],points[i*2+1], 8);
-        else gameCanvas.drawCircle(points[i*2],points[i*2+1], 8);
+        else gameCanvas.drawCircle(points[i*2],points[i*2+1], 8          );
     }
 }
 
