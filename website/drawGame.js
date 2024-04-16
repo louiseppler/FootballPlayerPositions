@@ -44,7 +44,7 @@ function drawGame(frame) {
         if(isInTeamA) gameCanvas.ctx.fillStyle = "#3395AB"
         if(isInTeamB) gameCanvas.ctx.fillStyle = "#B73B92"
 
-        if(shapeGraphMode == 0) {
+        if(shapeGraphMode == 0 || showGraphForTeam == 0) {
             if((showGraphForTeam == 1 && isInTeamA) || (showGraphForTeam == 2 && isInTeamB)) {}
             else gameCanvas.drawDot(convertX(y),convertY(x),4);
         }
@@ -83,11 +83,14 @@ function drawPlayerLabels(frame) {
                 gameCanvas.ctx.fillText("" + game.getShirtNumberLabel(playerId), convertX(y)-5, convertY(x)+3); 
             }
             else {
-                //gameCanvas.ctx.fillStyle = "#000"
-                //gameCanvas.ctx.fillText("" + game.getShirtNumberLabel(playerId), convertX(y)-5, convertY(x)+3); 
-
-                gameCanvas.ctx.fillStyle = "#8C8C8C"
-                gameCanvas.ctx.fillText("" + game.getShirtNumberLabel(playerId), convertX(y)+4, convertY(x)-4); 
+                if(shapeGraphMode == 0 || showGraphForTeam == 0 ) {
+                    gameCanvas.ctx.fillStyle = "#8C8C8C"
+                    gameCanvas.ctx.fillText("" + game.getShirtNumberLabel(playerId), convertX(y)+4, convertY(x)-4); 
+                }
+                else {
+                    gameCanvas.ctx.fillStyle = "#000"
+                    gameCanvas.ctx.fillText("" + game.getShirtNumberLabel(playerId), convertX(y)-5, convertY(x)+3);  
+                }
             }    
         }
     }

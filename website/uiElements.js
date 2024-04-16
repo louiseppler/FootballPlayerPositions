@@ -59,7 +59,7 @@ function setupUIElements() {
 
     $("#shape_mode").click(function() {
         shapeGraphMode += 1;
-        if(shapeGraphMode > 5) shapeGraphMode = 0
+        if(shapeGraphMode > 1) shapeGraphMode = 0
     });
 
 
