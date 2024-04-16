@@ -38,6 +38,8 @@ function draw2() {
         $('#duration_slider').val(frameNr);
     }
 
+    var smoothing = +($('#smoothing_slider').val())
+    document.getElementById("smoothing_text").innerHTML = "Smoothing " + smoothing
 
     var currentX = 1/scaling*(frameNr-minFrameLoc)+x0;
 
@@ -74,8 +76,11 @@ function draw2() {
     }
     
     //Displaying the color for each pixel
-    for(var i = x0; i < x1; i++) {
+    for(var i = x0; i < x1-smoothing-1; i += smoothing) {
         var frame = Math.floor(scaling*(i-x0)+minFrameLoc);
+        var frameNext = Math.floor(scaling*(i+1-x0)+minFrameLoc);
+
+        //if(frameNext > maxFrameLoc-1) continue;
 
         var avg_diff = 0;
 
@@ -90,10 +95,22 @@ function draw2() {
                 if(debugFlagSet) console.log("role: " + data.roles[frame][j].x_role + " " + data.roles[frame][j].y_role);
             }
 
-            overviewCanvas.ctx.strokeStyle = data.roles[frame][j].getColorX();
-            overviewCanvas.drawLine(i, y0+pos*ys, i, y0+pos*ys+ys*(0.45-0.225*overviewIsExpanded));
-            overviewCanvas.ctx.strokeStyle = data.roles[frame][j].getColorY();
-            overviewCanvas.drawLine(i, y0+pos*ys+ys*(0.45+0.225*overviewIsExpanded), i, y0+pos*ys+ys*0.9);
+            const [xRole, yRole] = Role.getMostFrequentRole(data.roles[frame][j].roleCount,data.roles[frame+1][j].roleCount)
+
+            if(smoothing == 1) {
+                overviewCanvas.ctx.strokeStyle = Role.colorsX[xRole+2]
+                overviewCanvas.drawLine(i, y0+pos*ys, i, y0+pos*ys+ys*(0.45-0.225*overviewIsExpanded));
+                overviewCanvas.ctx.strokeStyle = Role.colorsY[yRole+2]
+                overviewCanvas.drawLine(i, y0+pos*ys+ys*(0.45+0.225*overviewIsExpanded), i, y0+pos*ys+ys*0.9);
+            }
+            else {
+                overviewCanvas.ctx.fillStyle = Role.colorsX[xRole+2]
+                overviewCanvas.ctx.fillRect(i, y0+pos*ys, smoothing, ys*(0.45));
+                overviewCanvas.ctx.fillStyle = Role.colorsY[yRole+2]
+                overviewCanvas.ctx.fillRect(i, y0+pos*ys+ys*(0.45+0.225*overviewIsExpanded), smoothing, ys*0.45);
+            }
+            overviewCanvas.ctx.fillStyle = "#000"
+
 
             //avg_diff += Math.abs(averagesX[j]-data.roles[frame][j].x_role);
             //avg_diff += Math.abs(averagesX[j]-data.roles[frame][j].y_role);

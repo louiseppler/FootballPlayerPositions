@@ -56,6 +56,11 @@ function setupUIElements() {
         debugFlagSet = true;
     });
 
+
+    $("#smoothing_slider").click(function() {
+        debugFlagSet = true;
+    });
+
     $( "#slider-range" ).slider({
         range: true,
         min: minFrame,
@@ -111,4 +116,8 @@ function setShowTeam(str) {
 function updateColor(i) {
     console.log("updating color");
     showGraphColorMode = i;
+}
+
+function smoothingSliderDidChange(val) {
+    document.getElementById("smoothing_text").innerHTML = "Smoothing " + val
 }
