@@ -69,20 +69,22 @@ function draw() {
         t++;
     }
 
-    const [points, isReversed] = getGamePoints(frameNr, showGraphForTeam);
+    const [points, isReversed, playerIds, isSecondHalf] = getGamePoints(frameNr, showGraphForTeam);
     if(points != null) {
         shapeGraphMain(points, isReversed, true)
     }
 
     if(showGraphForTeam != 0 && shapeGraphMode != 0) {
         //draw shapegraph for the other team
-        const [points, isReversed] = getGamePoints(frameNr, 1-(showGraphForTeam-1)+1);
-        if(points != null) {
-            shapeGraphMain(points, isReversed, true, null, true)
+        const [pointsLoc, isReversedLoc] = getGamePoints(frameNr, 1-(showGraphForTeam-1)+1);
+        if(pointsLoc != null) {
+            if((showGraphForTeam == 1 && showTeamB == true) || (showGraphForTeam == 2 && showTeamA == true)) {
+                shapeGraphMain(pointsLoc, isReversedLoc, true, null, true)
+            }
         }
     }
 
-    drawArrows(isReversed);
+    drawArrows(isSecondHalf);
 
     drawGame(frameNr);
     drawPlayerLabels(frameNr);
@@ -269,24 +271,36 @@ function drawPointNumbers(points) {
     }
 }
 
-function drawArrows(isReversed) {
-    var h0A = gameCanvas.height/2+25;
-    var h0B = gameCanvas.height/2-25;
-    var h = 12;
-    var w = 3;
-    var h1 = 8;
-    
+function drawArrows(isSecondHalf) {    
     gameCanvas.ctx.fillStyle = "#3395AB";
-    if(showGraphForTeam == 2)  gameCanvas.ctx.fillStyle = "#CCE4EA";
-    if(showGraphForTeam == 1)  gameCanvas.ctx.fillStyle = "#575757";
-    gameCanvas.ctx.fillRect(w, h0A-h, w, h*2);
-    gameCanvas.drawTriangle(0, h0A-h, w*3, h0A-h, w*1.5, h0A-h-h1);
+    if(showGraphForTeam == 2) gameCanvas.ctx.fillStyle = "#CCE4EA";
+    if(showGraphForTeam == 1) gameCanvas.ctx.fillStyle = "#575757";
+    
+    if(!isSecondHalf) drawArrowUp();
+    else drawArrowDown();
 
     gameCanvas.ctx.fillStyle = "#B73B92";
-    if(showGraphForTeam == 1)  gameCanvas.ctx.fillStyle = "#EFD0E3";
-    if(showGraphForTeam == 2)  gameCanvas.ctx.fillStyle = "#575757";
+    if(showGraphForTeam == 1) gameCanvas.ctx.fillStyle = "#EFD0E3";
+    if(showGraphForTeam == 2) gameCanvas.ctx.fillStyle = "#575757";
+    
+    if(!isSecondHalf) drawArrowDown();
+    else drawArrowUp();
+}
+
+function drawArrowDown() {
+    const h0A = gameCanvas.height/2+25;
+    const h0B = gameCanvas.height/2-25;
+    const h = 12; const w = 3; const h1 = 8;
     gameCanvas.ctx.fillRect(w, h0B-h, w, h*2);
     gameCanvas.drawTriangle(0, h0B+h, w*3, h0B+h, w*1.5, h0B+h+h1);
+}
+
+function drawArrowUp() {
+    const h0A = gameCanvas.height/2+25;
+    const h0B = gameCanvas.height/2-25;
+    const h = 12; const w = 3; const h1 = 8;
+    gameCanvas.ctx.fillRect(w, h0A-h, w, h*2);
+    gameCanvas.drawTriangle(0, h0A-h, w*3, h0A-h, w*1.5, h0A-h-h1);
 }
 
 function drawHull(delaunay) {

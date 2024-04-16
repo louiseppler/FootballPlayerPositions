@@ -126,11 +126,13 @@ function drawBall(frame) {
 }
 
 function getGamePoints(frame, team) {
-    if(tracking_data == null) return [null, null]
+    if(tracking_data == null) return [null, null, null]
 
     var points = [];
 
     var isReversed = false;
+
+    var isSecondHalf = (tracking_data[1+0+frame*23][2] != "One")
 
     var playerIDs = [];
 
@@ -156,7 +158,7 @@ function getGamePoints(frame, team) {
         }
     }
 
-    return [points, isReversed, playerIDs];
+    return [points, isReversed, playerIDs, isSecondHalf];
 }
 
 function drawPitch() {
