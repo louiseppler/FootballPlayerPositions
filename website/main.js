@@ -20,6 +20,8 @@ var showTeamB = true;
 var showGraphForTeam = 0; //0 nothing, 1: team a, 2: team b
 var showGraphColorMode = 0; //0: dominant, 1: x, 2: y
 
+var shapeGraphMode = 0;
+
 var debugFlagSet = false;
 
 var overviewIsExpanded = false;
@@ -70,6 +72,14 @@ function draw() {
     const [points, isReversed] = getGamePoints(frameNr, showGraphForTeam);
     if(points != null) {
         shapeGraphMain(points, isReversed, true)
+    }
+
+    if(showGraphForTeam != 0 && shapeGraphMode != 0) {
+        //draw shapegraph for the other team
+        const [points, isReversed] = getGamePoints(frameNr, 1-(showGraphForTeam-1)+1);
+        if(points != null) {
+            shapeGraphMain(points, isReversed, true)
+        }
     }
 
     drawArrows(isReversed);

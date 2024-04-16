@@ -44,8 +44,10 @@ function drawGame(frame) {
         if(isInTeamA) gameCanvas.ctx.fillStyle = "#3395AB"
         if(isInTeamB) gameCanvas.ctx.fillStyle = "#B73B92"
 
-        if((showGraphForTeam == 1 && isInTeamA) || (showGraphForTeam == 2 && isInTeamB)) {}
-        else gameCanvas.drawDot(convertX(y),convertY(x),4);
+        if(shapeGraphMode == 0) {
+            if((showGraphForTeam == 1 && isInTeamA) || (showGraphForTeam == 2 && isInTeamB)) {}
+            else gameCanvas.drawDot(convertX(y),convertY(x),4);
+        }
 
         //drawDot((game.pitch.width+x)*scaling,(game.pitch.height+y)*scaling,3);
     }

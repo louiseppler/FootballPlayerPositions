@@ -53,7 +53,13 @@ function setupUIElements() {
     });  
     
     $("#dubug_button").click(function() {
-        debugFlagSet = true;
+        $('#duration_slider').val(25000);
+        //debugFlagSet = true;
+    });
+
+    $("#shape_mode").click(function() {
+        shapeGraphMode += 1;
+        if(shapeGraphMode > 5) shapeGraphMode = 0
     });
 
 

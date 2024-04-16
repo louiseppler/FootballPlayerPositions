@@ -36,7 +36,7 @@ Papa.parse(link2, {
 		tracking_data = results.data
 
 		
-		overviewTeamA.computeAllRoles();
+		//overviewTeamA.computeAllRoles();
 	}
 });
 
