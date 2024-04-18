@@ -159,10 +159,18 @@ function draw2() {
 
                 }
             }
+        }        
+    }
+
+    //Displaying Substituiton Indices
+    for(var i = 0; i < data.substitutionIndices.length; i++) {
+        var loc = scaling.frameToPixel(data.substitutionFrames[i+1]);
+
+        for(var pos of data.substitutionIndices[i]) {
+            overviewCanvas.ctx.fillStyle = "#A9A9A9"
+            overviewCanvas.ctx.fillRect(loc+scaling.dist*0.25, y0+ys*(pos+0.15), scaling.dist*0.5,ys*0.6);
         }
 
-        
-        
     }
 
 
@@ -190,7 +198,8 @@ class Scaling {
 
         this.holes = [];
 
-        for(var h of holeFrames) {
+        for(var i = 1; i < holeFrames.length-1; i++) {
+            const h = holeFrames[i];
             if(minFrameLoc < h && h < maxFrameLoc) {
                 this.holes.push(h);
             }

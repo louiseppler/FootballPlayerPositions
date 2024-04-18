@@ -73,6 +73,7 @@ class OverviewData {
      * @param {*} substitutionFrames Array of all substitutionFrame numbers including 0, and maxFrame
      */
     computePlayerOrdering(substitutionFrames) {
+        var substitutionIndices = [];
         var playerPair = [];
         var firstSubIndex = substitutionFrames[1];
 
@@ -118,6 +119,8 @@ class OverviewData {
                 }
 
             }
+
+            substitutionIndices.push(oldIndices.map((x) => x[1]));
 
             // a matrix representing a score of similarity if
             // player would take player k would take position j (scoreMatrix[j][k])
@@ -171,6 +174,10 @@ class OverviewData {
             //for the last case, not scores need to be compared
             this.playerIndices[freeIndices[0][1]] = oldIndices[0][1];
         }
+
+        this.substitutionIndices = substitutionIndices;
+        console.log("substitutionIndices");
+        console.log(substitutionIndices);
 
     }
 }
