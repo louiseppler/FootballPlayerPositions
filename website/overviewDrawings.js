@@ -82,7 +82,7 @@ function draw2() {
     //Displaying the color for each pixel
     for(var i = x0; i < x1-smoothing-1; i += smoothing) {
         var frame = scaling.pixelToFrame(i) //Math.floor(scaling*(i-x0)+minFrameLoc);
-        var frameNext = scaling.pixelToFrame(i+1) //Math.floor(scaling*(i+1-x0)+minFrameLoc);
+        var frameNext = scaling.pixelToFrame(i+smoothing) //Math.floor(scaling*(i+1-x0)+minFrameLoc);
 
 
 
@@ -105,7 +105,7 @@ function draw2() {
 
             var pos = data.playerIndices[data.roles[frame][j].playerID];
 
-            const [xRole, yRole] = Role.getMostFrequentRole(data.roles[frame][j].roleCount,data.roles[frame+1][j].roleCount)
+            const [xRole, yRole] = Role.getMostFrequentRole(data.roles[frame][j].roleCount,data.roles[frameNext][j].roleCount)
 
             if(smoothing == 1) {
                 overviewCanvas.ctx.strokeStyle = Role.colorsX[xRole+2]
