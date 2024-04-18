@@ -31,7 +31,9 @@ function draw2() {
     
     if(overviewIsExpanded) ys = 60;
 
-    var scaling = (maxFrameLoc-minFrameLoc) / (x1-x0);
+    var scaling = new Scaling(minFrameLoc, maxFrameLoc, x0, x1)
+
+    //var scaling = (maxFrameLoc-minFrameLoc) / (x1-x0);
 
     if(overviewCanvas.mouseIsPressed) {
         frameNr = (overviewCanvas.mouseX-x0)*scaling+minFrameLoc;
@@ -41,7 +43,8 @@ function draw2() {
     var smoothing = +($('#smoothing_slider').val())
     document.getElementById("smoothing_text").innerHTML = "Smoothing " + smoothing
 
-    var currentX = 1/scaling*(frameNr-minFrameLoc)+x0;
+    //var currentX = 1/scaling*(frameNr-minFrameLoc)+x0;
+    var currentX = scaling.frameToPixel(frameNr);
 
     //Displays the current selected frame
     overviewCanvas.ctx.strokeStyle = "black";
@@ -77,23 +80,29 @@ function draw2() {
     
     //Displaying the color for each pixel
     for(var i = x0; i < x1-smoothing-1; i += smoothing) {
-        var frame = Math.floor(scaling*(i-x0)+minFrameLoc);
-        var frameNext = Math.floor(scaling*(i+1-x0)+minFrameLoc);
+        var frame = scaling.pixelToFrame(i) //Math.floor(scaling*(i-x0)+minFrameLoc);
+        var frameNext = scaling.pixelToFrame(i+1) //Math.floor(scaling*(i+1-x0)+minFrameLoc);
 
-        //if(frameNext > maxFrameLoc-1) continue;
+
+
+        if(frame > frameNr) {
+            
+            if(debugFlagSet) console.log("pixel " + i + " frame " + frame);
+
+            debugFlagSet = false;
+        }
+
+
+        if(!scaling.pixelIsActive(i)) continue;
+        if(frameNext == 0) continue;
+
+        if(frameNext > maxFrameLoc-1) continue;
 
         var avg_diff = 0;
 
         for(var j = 0; j < data.roles[frame].length; j++) {
 
             var pos = data.playerIndices[data.roles[frame][j].playerID];
-
-            if(debugFlagSet) {
-            }
-
-            if(frame > frameNr) { 
-                if(debugFlagSet) console.log("role: " + data.roles[frame][j].x_role + " " + data.roles[frame][j].y_role);
-            }
 
             const [xRole, yRole] = Role.getMostFrequentRole(data.roles[frame][j].roleCount,data.roles[frame+1][j].roleCount)
 
@@ -114,10 +123,6 @@ function draw2() {
 
             //avg_diff += Math.abs(averagesX[j]-data.roles[frame][j].x_role);
             //avg_diff += Math.abs(averagesX[j]-data.roles[frame][j].y_role);
-        }
-
-        if(frame > frameNr) { 
-            debugFlagSet = false;
         }
 
         // if(overviewIsExpanded) {
@@ -144,10 +149,13 @@ function draw2() {
             level = type.res
 
             if(frame > minFrameLoc && frame < maxFrameLoc && frameDiff < levels[level]) {
-                overviewCanvas.ctx.fillText(type.letter + "*",  1/scaling*(frame-minFrameLoc)-5+x0,y0+10.5*ys);
+                //overviewCanvas.ctx.fillText(type.letter + "*",  1/scaling*(frame-minFrameLoc)-5+x0,y0+10.5*ys);
+                overviewCanvas.ctx.fillText(type.letter + "*",  scaling.frameToPixel(frame)-5+x0,y0+10.5*ys);
 
                 if(type.icon != "") { 
-                    overviewCanvas.ctx.drawImage(base_image, 1/scaling*(frame-minFrameLoc)-10+x0,y0+10.5*ys, 20, 20);
+                    //overviewCanvas.ctx.drawImage(base_image, 1/scaling*(frame-minFrameLoc)-10+x0,y0+10.5*ys, 20, 20);
+                    overviewCanvas.ctx.drawImage(base_image, scaling.frameToPixel(frame)-10+x0,y0+10.5*ys, 20, 20);
+
                 }
             }
         }
@@ -170,7 +178,8 @@ function draw2() {
     //Displays Substituions as a simple line
     for(const frame of substitutionFrames) {
         if(minFrameLoc < frame && frame < maxFrameLoc) {
-            var currentX = 1/scaling*(frame-minFrameLoc)+x0;
+            //var currentX = 1/scaling*(frame-minFrameLoc)+x0;
+            var currentX = scaling.frameToPixel(frame)+x0;
 
             //Displays the current selected frame
             overviewCanvas.ctx.strokeStyle = "gray";
@@ -183,6 +192,67 @@ function draw2() {
     debugFlagSet = false
 
 }
+
+class Scaling {
+
+    constructor(minFrameLoc, maxFrameLoc, x0, x1) {
+        this.minFrameLoc = minFrameLoc
+        this.maxFrameLoc = maxFrameLoc
+        this.x0 = x0
+        this.x1 = x1
+
+        this.holes = [20_000, 70_000, 130_000];
+        this.dist = 30;
+
+        this.scaling = (maxFrameLoc-minFrameLoc) / (x1-x0- this.holes.length*this.dist);
+    }
+
+    frameToPixel(frame) {
+        var i = 1/this.scaling*(frame-this.minFrameLoc)+this.x0;
+
+        for(var k = 0; k < this.holes.length; k++) {
+            if(frame > this.holes[k]) i += this.dist;
+        }
+
+        return i;
+    }
+
+    pixelToFrame(i_temp) {
+        var i = i_temp;
+
+        for(var k = this.holes.length-1; k >= 0; k--) {
+            var j = this.frameToPixel(this.holes[k]);
+
+            if(i > j) i -= this.dist;
+             //if(frame > this.holes[k]) i += this.dist;
+        }
+
+        // var j = this.frameToPixel(70_000);
+        // if(j < i && i < j+100) return 0;
+
+        // if(i > j)return Math.floor( (i-this.x0-100)*this.scaling+this.minFrameLoc );
+        return Math.floor( (i-this.x0)*this.scaling+this.minFrameLoc );
+    }
+
+    pixelIsActive(i_temp) {
+        // var j = this.frameToPixel(70_000);
+        // if(j < i && i < j+100) return false;
+        // return true;
+
+        var i = i_temp;
+
+        for(var k = this.holes.length-1; k >= 0; k--) {
+            var j = this.frameToPixel(this.holes[k]);
+
+            if(j < i && i < j+this.dist) return false;
+
+        }
+        return true;
+
+    }
+
+    }
+
 
 /**
  * Gives color code for a value

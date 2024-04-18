@@ -53,8 +53,8 @@ function setupUIElements() {
     });  
     
     $("#dubug_button").click(function() {
-        $('#duration_slider').val(34000);
-        //debugFlagSet = true;
+        //$('#duration_slider').val(34000);
+        debugFlagSet = true;
     });
 
     $("#shape_mode").click(function() {
@@ -64,7 +64,7 @@ function setupUIElements() {
 
 
     $("#smoothing_slider").click(function() {
-        debugFlagSet = true;
+        //debugFlagSet = true;
     });
 
     $( "#slider-range" ).slider({
