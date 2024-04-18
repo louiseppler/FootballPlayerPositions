@@ -63,6 +63,8 @@ class OverviewData {
         console.log("substitutionFrames " + substitutionFrames);
         
         this.computePlayerOrdering(substitutionFrames);
+
+        this.substitutionFrames = substitutionFrames;
         this.dataComputed = true;
     }
 

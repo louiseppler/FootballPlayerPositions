@@ -31,12 +31,13 @@ function draw2() {
     
     if(overviewIsExpanded) ys = 60;
 
-    var scaling = new Scaling(minFrameLoc, maxFrameLoc, x0, x1)
+    var scaling = new Scaling(minFrameLoc, maxFrameLoc, x0, x1, data.substitutionFrames);
 
     //var scaling = (maxFrameLoc-minFrameLoc) / (x1-x0);
 
     if(overviewCanvas.mouseIsPressed) {
-        frameNr = (overviewCanvas.mouseX-x0)*scaling+minFrameLoc;
+        frameNr = scaling.pixelToFrame(overviewCanvas.mouseX)
+        //frameNr = (overviewCanvas.mouseX-x0)*scaling+minFrameLoc;
         $('#duration_slider').val(frameNr);
     }
 
@@ -175,34 +176,32 @@ function draw2() {
         overviewCanvas.ctx.fillText(data.roles[minFrameLoc][j].playerID, x0-50, y0+ys*pos+10);
     }
 
-    //Displays Substituions as a simple line
-    for(const frame of substitutionFrames) {
-        if(minFrameLoc < frame && frame < maxFrameLoc) {
-            //var currentX = 1/scaling*(frame-minFrameLoc)+x0;
-            var currentX = scaling.frameToPixel(frame)+x0;
-
-            //Displays the current selected frame
-            overviewCanvas.ctx.strokeStyle = "gray";
-            overviewCanvas.drawLine(currentX, y0-10, currentX, y0+ys*10+10);
-        
-        }
-    }
-
-
     debugFlagSet = false
 
 }
 
 class Scaling {
 
-    constructor(minFrameLoc, maxFrameLoc, x0, x1) {
+    constructor(minFrameLoc, maxFrameLoc, x0, x1, holeFrames) {
         this.minFrameLoc = minFrameLoc
         this.maxFrameLoc = maxFrameLoc
         this.x0 = x0
         this.x1 = x1
 
-        this.holes = [20_000, 70_000, 130_000];
-        this.dist = 30;
+        this.holes = [];
+
+        for(var h of holeFrames) {
+            if(minFrameLoc < h && h < maxFrameLoc) {
+                this.holes.push(h);
+            }
+        }
+
+        if(this.holes.length > 3) {
+            this.dist = 10;
+        }
+        else {
+            this.dist = 20;
+        }
 
         this.scaling = (maxFrameLoc-minFrameLoc) / (x1-x0- this.holes.length*this.dist);
     }
