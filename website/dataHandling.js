@@ -31,12 +31,11 @@ var game = {
 
 Papa.parse(link2, {
 	download: true,
+	//worker: true,
 	complete: function(results) {
 		//console.log(results.data);
 		tracking_data = results.data
-
-		
-		overviewTeamA.computeAllRoles();
+		//overviewTeamA.computeAllRoles();
 	}
 });
 

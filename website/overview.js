@@ -7,65 +7,95 @@ class OverviewData {
         this.team = team
 
         this.roles = []
+
+        //stores the frames number of when a substitution happens
+        //including 0 and maxFrame number (helps with edge case calculations)
+        this.substitutionFrames = []
+        this.substitutionFrames.push(0);
+        
+        this.substitutionIndices = []
+        
         
         //dictionary mapping player id to drawn index
         this.playerIndices = {};
 
         this.dataComputed = false;
+
+        this.dataComputedUntil = minFrame;
+    }
+
+    computeChunk(size) {
+        for(var i = this.dataComputedUntil; i < this.dataComputedUntil+size; i++) {
+            if(i > maxFrame-2) {
+                this.finishComputation();
+                return;
+            }
+
+            this.computeFrame(i)
+        }
+        this.dataComputedUntil += size;
+    }
+
+    finishComputation() {
+        this.substitutionFrames.push(maxFrame-2);        
+        this.computePlayerOrdering(this.substitutionFrames);
+        this.dataComputed = true;
+    }
+
+    computeFrame(i) {
+        const [points, isReversed, playerIDs] = getGamePoints(i, 1);
+        if(points == null) return;
+        shapeGraphMain(points, isReversed, false, playerIDs);
+
+        var hasSubstitution = false;
+
+        var prevRoles = []
+        if(i != 0) {
+            prevRoles = this.roles[i-1];
+        }
+
+        for(var j = 0; j < roles.length; j++) {
+            if(prevRoles.length < roles.length) continue;
+
+            roles[j].updateRoleCount(prevRoles[j].roleCount);
+
+            if(roles[j].playerID != prevRoles[j].playerID) {   
+                hasSubstitution = true;
+            }
+            if(roles[j].playerID == null) {
+                hasSubstitution = true;
+
+            }
+        }
+
+        if(i % Math.round(maxFrame/10) == 0) {
+            console.log("" + Math.round(i/maxFrame*100) + "%");
+        }
+
+        if(hasSubstitution) {
+            this.substitutionFrames.push(i);
+        }
+
+        this.roles.push(roles.slice())
     }
 
     computeAllRoles() {
-        substitutionFrames = [];
-
-        substitutionFrames.push(0);
-
         console.log("Starting role computation");
 
-        var prevRoles = []
-
         for(var i = minFrame; i < maxFrame-2; i++) {
-
-            const [points, isReversed, playerIDs] = getGamePoints(i, 1);
-            if(points == null) return;
-            shapeGraphMain(points, isReversed, false, playerIDs);
-
-            var hasSubstitution = false;
-
-            for(var j = 0; j < roles.length; j++) {
-                if(prevRoles.length < roles.length) continue;
-
-                roles[j].updateRoleCount(prevRoles[j].roleCount);
-
-                if(roles[j].playerID != prevRoles[j].playerID) {   
-                    hasSubstitution = true;
-                }
-                if(roles[j].playerID == null) {
-                    hasSubstitution = true;
-
-                }
-            }
-
-            if(i % Math.round(maxFrame/10) == 0) {
-                console.log("" + Math.round(i/maxFrame*100) + "%");
-            }
-
-            if(hasSubstitution) {
-                substitutionFrames.push(i);
-            }
-
-            prevRoles = roles.slice();
-            this.roles.push(roles.slice())
+            this.computeFrame(i)
         }   
 
-        substitutionFrames.push(maxFrame-2);
+        this.substitutionFrames.push(maxFrame-2);
 
         console.log("Computed Roles!");
         console.log("substitutionFrames " + substitutionFrames);
         
-        this.computePlayerOrdering(substitutionFrames);
+        this.computePlayerOrdering(this.substitutionFrames);
 
-        this.substitutionFrames = substitutionFrames;
         this.dataComputed = true;
+
+        console.log(this.substitutionFrames);
     }
 
     /**
@@ -117,7 +147,6 @@ class OverviewData {
                 if(index == null) {
                     freeIndices.push([j, playerId])
                 }
-
             }
 
             substitutionIndices.push(oldIndices.map((x) => x[1]));
@@ -173,11 +202,9 @@ class OverviewData {
 
             //for the last case, not scores need to be compared
             this.playerIndices[freeIndices[0][1]] = oldIndices[0][1];
-        }
 
-        this.substitutionIndices = substitutionIndices;
-        console.log("substitutionIndices");
-        console.log(substitutionIndices);
+            this.substitutionIndices = substitutionIndices;
+        };
 
     }
 }

@@ -12,6 +12,16 @@ function draw2() {
     
     var data = overviewTeamA;
 
+    if(data.dataComputed == false) {
+        if(tracking_data != null) {
+            overviewTeamA.computeChunk(500); 
+        }
+
+        overviewCanvas.ctx.strokeRect(50, overviewCanvas.height/2-5, overviewCanvas.width-100, 10);
+        overviewCanvas.ctx.fillRect(50, overviewCanvas.height/2-5, overviewTeamA.dataComputedUntil/maxFrame*(overviewCanvas.width-100), 10);
+
+    }
+
     if(data.dataComputed == false) return;
     
     var minFrameLoc = $( "#slider-range" ).slider( "values", 0 );
