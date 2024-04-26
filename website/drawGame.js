@@ -1,15 +1,22 @@
-var scaling = 7;
+var scaling = 6;
+var pitchOffsetX = 0;
+var pitchOffsetY = 0;
 
 function convertX(x) {
-    return 10+(+x+game.pitch.height/2)*scaling
+    return pitchOffsetX+(+x+game.pitch.height/2)*scaling
 }
 
 function convertY(y) {
-    return 10+(+y+game.pitch.width/2)*scaling
+    return pitchOffsetY+(+y+game.pitch.width/2)*scaling
 }
 
 function convertDist(d) {
     return d*scaling;
+}
+
+function drawGameSetup() {
+    pitchOffsetX = (gameCanvas.width-convertDist(game.pitch.height))/2;
+    pitchOffsetY = (gameCanvas.height-convertDist(game.pitch.width))/2;
 }
 
 function drawGame(frame) {

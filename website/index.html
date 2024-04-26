@@ -32,45 +32,6 @@
         <div class="container text-center">
             <div class="row">
                 <div class="col">
-                    <div class="col-md-auto p-2">
-                        <div class="btn-group" role="group" aria-label="Basic radio toggle button group" id="team_select_group">
-                            <input type="radio" class="btn-check" name="team_select" id="team_select_btn_1" autocomplete="off" value="team_a">
-                            <label class="btn btn-outline-primary" for="team_select_btn_1">Team A</label>
-                            
-                            <input type="radio" class="btn-check" name="team_select" id="team_select_btn_2" autocomplete="off" value="team_both" checked>
-                            <label class="btn btn-outline-primary" for="team_select_btn_2">Both Teams</label>
-                            
-                            <input type="radio" class="btn-check" name="team_select" id="team_select_btn_3" autocomplete="off" value="team_b">
-                            <label class="btn btn-outline-primary" for="team_select_btn_3">Team B</label>
-                        </div>
-                    </div>
-                    <div class="row justify-content-center pb-2">
-                        <div class="col-md-auto">
-                            <div class="btn-group" role="group" aria-label="Basic radio toggle button group" id="graph_select_group">
-                                <input type="radio" class="btn-check" name="graph_select" id="graph_select_btn_1" autocomplete="off" value="1">
-                                <label class="btn btn-outline-primary" for="graph_select_btn_1">Show Graph A</label>
-                                
-                                <input type="radio" class="btn-check" name="graph_select" id="graph_select_btn_2" autocomplete="off" value="0" checked>
-                                <label class="btn btn-outline-primary" for="graph_select_btn_2">Hide Graph</label>
-                                
-                                <input type="radio" class="btn-check" name="graph_select" id="graph_select_btn_3" autocomplete="off" value="2">
-                                <label class="btn btn-outline-primary" for="graph_select_btn_3">Show Graph B</label>
-                            </div>
-                        </div>
-                        <div class="col-md-auto">
-                            <div class="dropdown">
-                                <button class="btn btn-primary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                Color Mode
-                                </button>
-                                <ul class="dropdown-menu">
-                                <li><a class="dropdown-item" href="javascript:updateColor(0)">Dominant</a></li>
-                                <li><a class="dropdown-item" href="javascript:updateColor(1)">Attack / Defend</a></li>
-                                <li><a class="dropdown-item" href="javascript:updateColor(2)">Left / Right</a></li>
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
-
                     <div class="p-4"></div>
 
                     <div class="p-2">
@@ -88,17 +49,54 @@
                             </div>
                         </div>
                     </div>
-
-                    
-
-
                 </div>
 
                 <div class="col-md-auto">
-                    <div id="container"></div>
-                    <div class="row">
+
+                    <div class="col-md-auto p-2"> <!-- Button Selection 1 -->
+                        <div class="btn-group btn-group-sm" role="group" aria-label="Basic radio toggle button group" id="team_select_group">
+                            <input type="radio" class="btn-check" name="team_select" id="team_select_btn_1" autocomplete="off" value="team_a">
+                            <label class="btn btn-outline-primary" for="team_select_btn_1">Team A</label>
+                            
+                            <input type="radio" class="btn-check" name="team_select" id="team_select_btn_2" autocomplete="off" value="team_both" checked>
+                            <label class="btn btn-outline-primary" for="team_select_btn_2">Both Teams</label>
+                            
+                            <input type="radio" class="btn-check" name="team_select" id="team_select_btn_3" autocomplete="off" value="team_b">
+                            <label class="btn btn-outline-primary" for="team_select_btn_3">Team B</label>
+                        </div>
+                    </div>
+                    <div class="row justify-content-center pb-2"> <!-- Button Selection 2&3 -->
                         <div class="col-md-auto">
-                            <div>
+                            <div class="btn-group btn-group-sm" role="group" aria-label="Basic radio toggle button group" id="graph_select_group">
+                                <input type="radio" class="btn-check" name="graph_select" id="graph_select_btn_1" autocomplete="off" value="1">
+                                <label class="btn btn-outline-primary" for="graph_select_btn_1">Show Graph A</label>
+                                
+                                <input type="radio" class="btn-check" name="graph_select" id="graph_select_btn_2" autocomplete="off" value="0" checked>
+                                <label class="btn btn-outline-primary" for="graph_select_btn_2">Hide Graph</label>
+                                
+                                <input type="radio" class="btn-check" name="graph_select" id="graph_select_btn_3" autocomplete="off" value="2">
+                                <label class="btn btn-outline-primary" for="graph_select_btn_3">Show Graph B</label>
+                            </div>
+                        </div>
+                        <div class="col-md-auto">
+                            <div class="dropdown">
+                                <button class="btn btn-primary btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                Color Mode
+                                </button>
+                                <ul class="dropdown-menu">
+                                <li><a class="dropdown-item" href="javascript:updateColor(0)">Dominant</a></li>
+                                <li><a class="dropdown-item" href="javascript:updateColor(1)">Attack / Defend</a></li>
+                                <li><a class="dropdown-item" href="javascript:updateColor(2)">Left / Right</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="container"></div>
+
+                    <div class="row">
+                        <div class="col-md-auto p-0">
+                            <div class="align-items-center justify-content-center">
                                 <button type="button" class="btn btn-default btn-xs" id="button_play">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" class="bi bi-play-fill" viewBox="0 0 16 16">
                                         <path d="m11.596 8.697-6.363 3.692c-.54.313-1.233-.066-1.233-.697V4.308c0-.63.692-1.01 1.233-.696l6.363 3.692a.802.802 0 0 1 0 1.393"/>
@@ -111,8 +109,11 @@
                                 </button>
                             </div>
                         </div>
-                        <div class="col">
-                            <div class="slidecontainer pt-2">
+                        <div class="col d-flex">
+                            <!-- <div class="d-flex align-items-center justify-content-center" >
+                                <p style="margin: 0px;">Test</p>
+                            </div> -->
+                            <div class="d-flex container align-items-center justify-content-center">
                                 <input type="range" min="0" max="1000" value="50" class="form-range" id="duration_slider">
                             </div>
                         </div>
@@ -120,13 +121,13 @@
                 </div>
             </div>
           </div>
+        </div>
 
         <center>
             <button id="shape_mode">Change Shape Mode</button>
             <button id="dubug_button">Debug Button</button>
         </center>
         <br><br><br>
-
        
         
         <script>setup();</script>

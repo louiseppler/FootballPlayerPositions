@@ -102,9 +102,11 @@ function setup() {
 
     console.log("in setup function");
 
-    gameCanvas = new CanvasHelper("container", 500, 760, () => {mouseClick();}, () => {mouseDown();}, () => {draw();});
+    gameCanvas = new CanvasHelper("container", 480, 650, () => {mouseClick();}, () => {mouseDown();}, () => {draw();});
 
     gameCanvas.clearCanvas()
+
+    drawGameSetup();
 
     overviewCanvas = new CanvasHelper("container2", 750, 500, () => {empty();}, () => {empty();}, () => {draw2();});
 
