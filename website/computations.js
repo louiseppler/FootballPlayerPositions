@@ -1,8 +1,3 @@
-var graph = []
-var surfaces = []
-var extremaLines = {}
-var roles = [];
-
 //used for debugging, an array of strings
 var logString = [];
 
@@ -14,7 +9,7 @@ var logString = [];
  * @param {*} extremaLines passed with min_x, min_y, max_x, max_y values
  * @param {*} isReversed Will reverse X coordinate if team plays into the other direction
  */
-function computeRoles(points, extremaLines, isReversed, playerIDs) {
+function computeRoles(points, extremaLines, graph, isReversed, playerIDs) {
     roles = []
     const N = points.length/2
     for(var i = 0; i < N; i++) {
@@ -95,12 +90,16 @@ function computeRoles(points, extremaLines, isReversed, playerIDs) {
             roles[i].y_role = 0;
         }
     }
+
+    return roles
 }
 
 // ---------------- Surface Centers + ExtremaLines ----------------
 
 
-function computeExtremaLines(surfaces, points, extremaLines, showDrawings) {
+function computeExtremaLines(surfaces, points, showDrawings) {
+    var extremaLines = {}
+
     var centers = [];
 
     var min_x = gameCanvas.width+5;
@@ -159,16 +158,18 @@ function computeExtremaLines(surfaces, points, extremaLines, showDrawings) {
         gameCanvas.ctx.setLineDash([]);
     }
 
-    return centers;
+    return [centers, extremaLines];
 }
 
 
 // ---------------- Compute Surfaces ----------------
 
-function computeSurfaces(delaunay) {
+function computeSurfaces(delaunay, graph) {
+    var surfaces = [];
+
     const {points, hull} = delaunay;
     if(points.length < 5) {
-        return;
+        return [];
     }
 
     var processedEdges = [];
@@ -177,13 +178,15 @@ function computeSurfaces(delaunay) {
         for(var j = 0; j < graph[i].length; j++) {
             var k = graph[i][j];
             if(!processedEdges.includes(compressEdge(i, k)) && !isHullEdge(i,k,hull)) {
-                findSurface(i,k, processedEdges);
+                surfaces.push(getSurface(i,k, processedEdges, graph));
             }
         }
     }
+
+    return surfaces
 }
 
-function findSurface(a, b, processedEdges) {
+function getSurface(a, b, processedEdges, graph) {
     var cnt = 0;
     var nodes = [a];
 
@@ -204,7 +207,7 @@ function findSurface(a, b, processedEdges) {
         node = nextNode
     }
 
-    surfaces.push(nodes)
+    return nodes
 }
 
 function compressEdge(a, b) {
@@ -214,13 +217,17 @@ function compressEdge(a, b) {
 // ---------------- Compute Shape Graph ----------------
 
 function computeBaseGraph(delaunay) {
+    var graph = []
+
     for (var i = 0; i < delaunay.points.length/2; i++) {
         const neighbors = Array.from(delaunay.neighbors(i));
         graph.push(neighbors)
     }
+    
+    return graph
 }
 
-function computeShapeGraph(delaunay) {
+function computeShapeGraph(delaunay, graph) {
 
     let queue = new PriorityQueue();
 
@@ -295,7 +302,7 @@ function computeShapeGraph(delaunay) {
             var prevNode = edge.a
             var node = getNextEdge(graph[edge.a], edge.b)
 
-            removeEdge(edge.a, edge.b);
+            removeEdge(graph, edge.a, edge.b);
         
             var s = "" + prevNode + " "
             var cnt = 0;
@@ -308,8 +315,8 @@ function computeShapeGraph(delaunay) {
                 if(!isHullEdge(prevNode,node,hull)) {
                     logString.push( "  updating " + prevNode + " " + node)
 
-                    const angleA = getStabilityAngle(prevNode, node, points)
-                    const angleB = getStabilityAngle(node, prevNode, points)
+                    const angleA = getStabilityAngle(prevNode, node, graph, points)
+                    const angleB = getStabilityAngle(node, prevNode, graph, points)
 
                     angle = angleA + angleB;
 
@@ -339,7 +346,7 @@ function computeShapeGraph(delaunay) {
     var logStringLoc = logString
 }
 
-function getStabilityAngle(a, b, points) {
+function getStabilityAngle(a, b, graph, points) {
     var minAngle = Math.PI
     var prevNode = a
     var node = getNextEdge(graph[a], b)
@@ -378,7 +385,7 @@ function getStabilityAngle(a, b, points) {
 
 // ---------------- Helpers ----------------
 
-function removeEdge(a, b) {
+function removeEdge(graph, a, b) {
     graph[a] = graph[a].filter(item => item != b);
     graph[b] = graph[b].filter(item => item != a);
 }

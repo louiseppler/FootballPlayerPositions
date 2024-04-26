@@ -14,7 +14,7 @@ function draw2() {
 
     if(data.dataComputed == false) {
         if(tracking_data != null) {
-            //overviewTeamA.computeChunk(2); 
+            overviewTeamA.computeChunk(500); 
         }
 
         overviewCanvas.ctx.strokeRect(50, overviewCanvas.height/2-5, overviewCanvas.width-100, 10);

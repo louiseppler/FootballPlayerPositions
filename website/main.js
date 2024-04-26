@@ -171,32 +171,25 @@ function shapeGraphMain(array, isReversed, showDrawings = true, playerIDs = null
 
     const voronoi = delaunay.voronoi([0, 0, gameCanvas.width, gameCanvas.height]);
 
-    resetVariables();
-
-    computeBaseGraph(delaunay);
+    var graph = computeBaseGraph(delaunay);
 
     if(showBaseGraph && showDrawings) {
         gameCanvas.ctx.strokeStyle = "#d3c3c3"
-        drawGraph(delaunay.points)
+        drawGraph(delaunay.points, graph)
         gameCanvas.ctx.strokeStyle = "#000"
     }
 
+    computeShapeGraph(delaunay, graph);
+    const surfaces = computeSurfaces(delaunay, graph);
+    const [centers, extremaLines] = computeExtremaLines(surfaces, delaunay.points, showDrawings);
+    const roles = computeRoles(delaunay.points, extremaLines, graph, isReversed, playerIDs)
 
-    computeShapeGraph(delaunay);
-    computeSurfaces(delaunay);
-    const centers = computeExtremaLines(surfaces, delaunay.points, extremaLines, showDrawings);
-    computeRoles(delaunay.points, extremaLines, isReversed, playerIDs)
-
-    if(!showDrawings) return;
+    if(!showDrawings) return roles;
 
     gameCanvas.ctx.strokeStyle = "#A9A9A9"
     gameCanvas.ctx.lineWidth = 3;
-    if(!isOther) drawGraph(delaunay.points)
+    if(!isOther) drawGraph(delaunay.points, graph)
     gameCanvas.ctx.lineWidth = 1;
-
-    if(drawPointNumbers) {
-        drawPointNumbers(delaunay.points)
-    }
 
     if(showCenters) {
         drawCenters(centers);
@@ -210,18 +203,14 @@ function shapeGraphMain(array, isReversed, showDrawings = true, playerIDs = null
 
     gameCanvas.ctx.strokeStyle = "#000"
 
-    drawDotsRoles(delaunay.points, isOther);
-}
+    drawDotsRoles(delaunay.points, roles, isOther);
 
-function resetVariables() {
-    surfaces = []
-    graph = []
-    logString = [];
+    return roles
 }
 
 // ============= drawing functions  =============
 
-function drawGraph(points) {
+function drawGraph(points, graph) {
     for(var i = 0; i < graph.length; i++) {
         for(var j = 0; j < graph[i].length; j++) {
             const k = graph[i][j];
@@ -233,7 +222,7 @@ function drawGraph(points) {
     }
 }
 
-function drawDotsRoles(points, isOther) {
+function drawDotsRoles(points, roles, isOther) {
     for(var i = 0; i < roles.length; i++) {
         switch (showGraphColorMode) {
             case 0:
@@ -267,7 +256,7 @@ function drawCenters(centers) {
 function drawPointNumbers(points) {
     for (var i = 0; i < points.length/2; i += 1) {
         gameCanvas.ctx.fillStyle = "#000"
-        //gameCanvas.ctx.fillText("" + i, points[i*2]+8, points[i*2+1]+8);        
+        gameCanvas.ctx.fillText("" + i, points[i*2]+8, points[i*2+1]+8);        
     }
 }
 
