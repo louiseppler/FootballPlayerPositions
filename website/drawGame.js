@@ -83,23 +83,16 @@ function drawPlayerLabels(frame) {
             continue;
         }
 
-
-        if(showPlayerLabels) {
-            if((showGraphForTeam == 1 && isInTeamA) || (showGraphForTeam == 2 && isInTeamB)) {
-                gameCanvas.ctx.fillStyle = "#FFF"
-                gameCanvas.ctx.fillText("" + game.getShirtNumberLabel(playerId), convertX(y)-5, convertY(x)+3); 
-            }
-            else {
-                if(shapeGraphMode == 0 || showGraphForTeam == 0 ) {
-                    gameCanvas.ctx.fillStyle = "#8C8C8C"
-                    gameCanvas.ctx.fillText("" + game.getShirtNumberLabel(playerId), convertX(y)+4, convertY(x)-4); 
-                }
-                else {
-                    gameCanvas.ctx.fillStyle = "#000"
-                    gameCanvas.ctx.fillText("" + game.getShirtNumberLabel(playerId), convertX(y)-5, convertY(x)+3);  
-                }
-            }    
+        if(showGraphForTeam == 0 || (showGraphForTeam == 1 && isInTeamA) || (showGraphForTeam == 2 && isInTeamB)) {
+            gameCanvas.ctx.fillStyle = "#FFF"
         }
+        else {
+            gameCanvas.ctx.fillStyle = "#575757"
+        }
+
+        textWidth = gameCanvas.ctx.measureText(game.getShirtNumberLabel(playerId)).width;
+
+        gameCanvas.ctx.fillText("" + game.getShirtNumberLabel(playerId), convertX(y)-textWidth/2, convertY(x)+3); 
     }
 }
 
@@ -132,14 +125,18 @@ function drawBall(frame) {
     }
 }
 
+function getIsSecondHalf(frame) {
+    if(tracking_data == null) return false;
+
+    return (tracking_data[1+0+frame*23][2] != "One")
+}
+
 function getGamePoints(frame, team) {
     if(tracking_data == null) return [null, null, null]
 
     var points = [];
 
     var isReversed = false;
-
-    var isSecondHalf = (tracking_data[1+0+frame*23][2] != "One")
 
     var playerIDs = [];
 
@@ -165,7 +162,7 @@ function getGamePoints(frame, team) {
         }
     }
 
-    return [points, isReversed, playerIDs, isSecondHalf];
+    return [points, isReversed, playerIDs];
 }
 
 function drawPitch() {

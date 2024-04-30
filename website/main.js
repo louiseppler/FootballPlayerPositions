@@ -69,27 +69,26 @@ function draw() {
         t++;
     }
 
-    const [points, isReversed, playerIds, isSecondHalf] = getGamePoints(frameNr, showGraphForTeam);
-    if(points != null) {
-        shapeGraphMain(points, isReversed, true)
+    if(showGraphForTeam == 0) {
+        drawTeam(1);
+        drawTeam(2);
+    }
+    else {
+        drawTeam(showGraphForTeam);
+        drawTeam(1-(showGraphForTeam-1)+1);
     }
 
-    if(showGraphForTeam != 0 && shapeGraphMode != 0) {
-        //draw shapegraph for the other team
-        const [pointsLoc, isReversedLoc] = getGamePoints(frameNr, 1-(showGraphForTeam-1)+1);
-        if(pointsLoc != null) {
-            if((showGraphForTeam == 1 && showTeamB == true) || (showGraphForTeam == 2 && showTeamA == true)) {
-                shapeGraphMain(pointsLoc, isReversedLoc, true, null, true)
-            }
-        }
-    }
-
-    drawArrows(isSecondHalf);
-
-    drawGame(frameNr);
+    drawArrows(getIsSecondHalf(frameNr));
     drawPlayerLabels(frameNr);
     drawBall(frameNr);
 
+}
+
+function drawTeam(team) {
+    const [points, isReversed, playerIds] = getGamePoints(frameNr, team);
+    if(points != null) {
+        shapeGraphMain(points, isReversed, true, null, team);
+    }
 }
 
 function handleFrameNr() {
@@ -159,7 +158,7 @@ function drawDotsSimple() {
  * @param {*} showDrawings pass true if elements should be drawn, default false
  * @returns 
  */
-function shapeGraphMain(array, isReversed, showDrawings = true, playerIDs = null, isOther = false) {
+function shapeGraphMain(array, isReversed, showDrawings = true, playerIDs = null, team = 0) {
 
     // var array = []
     // for(const dot of dots) {
@@ -186,10 +185,12 @@ function shapeGraphMain(array, isReversed, showDrawings = true, playerIDs = null
 
     if(!showDrawings) return roles;
 
-    gameCanvas.ctx.strokeStyle = "#A9A9A9"
-    gameCanvas.ctx.lineWidth = 3;
-    if(!isOther) drawGraph(delaunay.points, graph)
-    gameCanvas.ctx.lineWidth = 1;
+    if(team == showGraphForTeam) {
+        gameCanvas.ctx.strokeStyle = "#A9A9A9"
+        gameCanvas.ctx.lineWidth = 3;
+        drawGraph(delaunay.points, graph)
+        gameCanvas.ctx.lineWidth = 1;
+    }
 
     if(showCenters) {
         drawCenters(centers);
@@ -203,7 +204,7 @@ function shapeGraphMain(array, isReversed, showDrawings = true, playerIDs = null
 
     gameCanvas.ctx.strokeStyle = "#000"
 
-    drawDotsRoles(delaunay.points, roles, isOther);
+    drawDotsRoles(delaunay.points, roles, team);
 
     return roles
 }
@@ -222,7 +223,20 @@ function drawGraph(points, graph) {
     }
 }
 
-function drawDotsRoles(points, roles, isOther) {
+function drawDotsRoles(points, roles, team) {
+    if(showGraphForTeam == 0) {
+        for(var i = 0; i < roles.length; i++) {
+            if(team == 1) {
+                gameCanvas.ctx.fillStyle = "#3395AB";   
+            }
+            else {
+                gameCanvas.ctx.fillStyle = "#B73B92";
+            }
+            gameCanvas.drawDot(points[i*2],points[i*2+1], 8);
+        }       
+        return
+    }
+
     for(var i = 0; i < roles.length; i++) {
         switch (showGraphColorMode) {
             case 0:
@@ -242,7 +256,7 @@ function drawDotsRoles(points, roles, isOther) {
                 break;
         }
 
-        if(!isOther) gameCanvas.drawDot(points[i*2],points[i*2+1], 8);
+        if(team == showGraphForTeam) gameCanvas.drawDot(points[i*2],points[i*2+1], 8);
         else gameCanvas.drawCircle(points[i*2],points[i*2+1], 8);
     }
 }
