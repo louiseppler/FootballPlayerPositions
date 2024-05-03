@@ -89,10 +89,16 @@ function drawPlayerLabels(frame) {
         }
 
         if(showGraphForTeam == 0 || (showGraphForTeam == 1 && isInTeamA) || (showGraphForTeam == 2 && isInTeamB)) {
-            gameCanvas.ctx.fillStyle = "#EEE"
+            gameCanvas.ctx.fillStyle = "#FFF"
         }
         else {
             //case outline colors
+            gameCanvas.ctx.fillStyle = "#575757"
+        }
+
+        if(showGoalKeepers == false && game.goalKeepers.includes(playerId)) continue;
+        
+        if(showGraphForTeam != 0 && game.goalKeepers.includes(playerId)) {
             gameCanvas.ctx.fillStyle = "#575757"
         }
 
@@ -135,6 +141,34 @@ function getIsSecondHalf(frame) {
     if(tracking_data == null) return false;
 
     return (tracking_data[1+0+frame*23][2] != "One")
+}
+
+function getGoalKeepers(frame) {
+    if(tracking_data == null) return null
+
+    var points = [];
+
+    for(var i = 0; i < 23; i++) {
+        var dataLine = tracking_data[1+i+frame*23];
+
+        var playerId = dataLine[5];
+        var x = dataLine[6]
+        var y = dataLine[7]
+
+        var isInTeamA = game.players.teamA.includes(playerId);
+        var isInTeamB = game.players.teamB.includes(playerId);
+
+        if(game.goalKeepers.includes(playerId)) {
+            if(isInTeamA) {
+                points.push([convertX(y),convertY(x),1])
+            }
+            else {
+                points.push([convertX(y),convertY(x),2])
+            }
+        }
+    }
+
+    return points;
 }
 
 function getGamePoints(frame, team) {

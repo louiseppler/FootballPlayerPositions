@@ -80,9 +80,11 @@ function draw() {
     }
 
     drawArrows(getIsSecondHalf(frameNr));
+
+    if(showGoalKeepers) drawGoalKeepers(getGoalKeepers(frameNr));
+    
     drawPlayerLabels(frameNr);
     drawBall(frameNr);
-
 }
 
 function drawTeam(team) {
@@ -224,6 +226,21 @@ function drawGraph(points, graph) {
                 gameCanvas.drawLine(points[i*2],points[i*2+1],points[k*2],points[k*2+1])
             }
         }
+    }
+}
+
+function drawGoalKeepers(points) {
+    if(points == null) return
+
+    for(const point of points) {
+        if(showOtherTeam == false && point[3] == 1+(1-(showGraphForTeam-1))) continue;
+
+        gameCanvas.ctx.fillStyle = "#575757";
+        gameCanvas.ctx.strokeStyle = "#575757";
+
+        if(showGraphForTeam == 0) gameCanvas.drawDot(point[0],point[1], 8);
+        else gameCanvas.drawCircle(point[0],point[1], 8);
+
     }
 }
 
