@@ -10,8 +10,6 @@ function draw2() {
     overviewCanvas.clearCanvasWhite();
     overviewCanvas.logLive("Computing Data")
     
-    return;
-
     var data = overviewTeamA;
 
     if(data.dataComputed == false) {
@@ -33,7 +31,7 @@ function draw2() {
     // minFrameLoc = 100;
     // maxFrameLoc = 10000;
 
-    overviewCanvas.logLive("We are ready")
+    //overviewCanvas.logLive("We are ready")
 
     var x0 = 50;
     var x1 = overviewCanvas.width-50;
@@ -189,12 +187,27 @@ function draw2() {
 
     //Displaying Player IDs
     overviewCanvas.ctx.fillStyle = "#000"
+    
+    overviewCanvas.logLive(overviewCanvas.ctx.font)
+
+    overviewCanvas.ctx.font= "12px sans-serif"
+
     for(var j = 0; j < data.roles[minFrameLoc].length; j++) {
 
         var pos = data.playerIndices[data.roles[minFrameLoc][j].playerID];
 
-        overviewCanvas.ctx.fillText(data.roles[minFrameLoc][j].playerID, x0-50, y0+ys*pos+10);
+        overviewCanvas.fillTextCenter(game.getShirtNumberLabel(data.roles[minFrameLoc][j].playerID), x0-15, y0+ys*(pos+0.5)+6);
     }
+    for(var j = 0; j < data.roles[maxFrameLoc-2].length; j++) {
+
+        var pos = data.playerIndices[data.roles[maxFrameLoc-2][j].playerID];
+
+        overviewCanvas.fillTextCenter(game.getShirtNumberLabel(data.roles[maxFrameLoc-2][j].playerID), x1+10, y0+ys*(pos+0.5)+4);
+    }
+
+    overviewCanvas.ctx.font= "10px sans-serif"
+
+    
 
     debugFlagSet = false
 

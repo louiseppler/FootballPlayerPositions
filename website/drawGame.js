@@ -97,14 +97,12 @@ function drawPlayerLabels(frame) {
         }
 
         if(showGoalKeepers == false && game.goalKeepers.includes(playerId)) continue;
-        
+
         if(showGraphForTeam != 0 && game.goalKeepers.includes(playerId)) {
             gameCanvas.ctx.fillStyle = "#575757"
         }
 
-        textWidth = gameCanvas.ctx.measureText(game.getShirtNumberLabel(playerId)).width;
-
-        gameCanvas.ctx.fillText("" + game.getShirtNumberLabel(playerId), convertX(y)-textWidth/2, convertY(x)+3); 
+        gameCanvas.fillTextCenter(game.getShirtNumberLabel(playerId), convertX(y), convertY(x)+3)
     }
 }
 

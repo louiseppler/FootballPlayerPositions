@@ -80,6 +80,11 @@ class CanvasHelper {
         this.ctx.fill();
     }
 
+    fillTextCenter(str, x, y) {
+        var textWidth = gameCanvas.ctx.measureText(str).width;
+        this.ctx.fillText("" + str, x-textWidth/2, y); 
+    }
+
     clearCanvas() {
         this.ctx.fillStyle = "lightgray"
         this.ctx.fillRect(0,0,this.width,this.height);
