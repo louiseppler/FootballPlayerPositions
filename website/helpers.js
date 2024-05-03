@@ -53,15 +53,15 @@ class CanvasHelper {
         window.requestAnimationFrame(() => {this.drawHandler()});
     }
 
-    drawDot(x, y, r) {
+    drawDot(x, y, r, start = 0, end = 2 * Math.PI) {
         this.ctx.beginPath();
-        this.ctx.arc(x, y, r, 0, 2 * Math.PI);
+        this.ctx.arc(x, y, r, start, end);
         this.ctx.fill();
     }
 
-    drawCircle(x, y, r) {
+    drawCircle(x, y, r, start = 0, end = 2 * Math.PI) {
         this.ctx.beginPath();
-        this.ctx.arc(x, y, r, 0, 2 * Math.PI);
+        this.ctx.arc(x, y, r, start, end);
         this.ctx.stroke();
     }
 

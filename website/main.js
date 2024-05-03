@@ -21,7 +21,7 @@ var showGoalKeepers = true;
 var showShapeGraph = true;
 
 var showGraphForTeam = 0; //0 nothing, 1: team a, 2: team b
-var showGraphColorMode = 0; //0: dominant, 1: x, 2: y
+var showGraphColorMode = 0; //0: dominant, 1: x, 2: y, 3: semicircles
 
 var debugFlagSet = false;
 
@@ -82,7 +82,7 @@ function draw() {
     drawArrows(getIsSecondHalf(frameNr));
 
     if(showGoalKeepers) drawGoalKeepers(getGoalKeepers(frameNr));
-    
+
     drawPlayerLabels(frameNr);
     drawBall(frameNr);
 }
@@ -259,6 +259,24 @@ function drawDotsRoles(points, roles, team) {
     }
 
     for(var i = 0; i < roles.length; i++) {
+
+        if(showGraphColorMode == 3) {
+
+            gameCanvas.ctx.fillStyle = roles[i].getColorX()
+            gameCanvas.ctx.strokeStyle = roles[i].getColorX()
+            
+            if(team == showGraphForTeam) gameCanvas.drawDot(points[i*2],points[i*2+1], 8, 0, Math.PI);
+            else gameCanvas.drawCircle(points[i*2],points[i*2+1], 8, 0, Math.PI);
+
+            gameCanvas.ctx.fillStyle = roles[i].getColorY()
+            gameCanvas.ctx.strokeStyle = roles[i].getColorY()
+
+            if(team == showGraphForTeam) gameCanvas.drawDot(points[i*2],points[i*2+1], 8, Math.PI, 2*Math.PI);
+            else gameCanvas.drawCircle(points[i*2],points[i*2+1], 8, Math.PI, 2*Math.PI);
+
+            continue;
+        }
+
         switch (showGraphColorMode) {
             case 0:
                 gameCanvas.ctx.fillStyle = roles[i].getDominantColor()
