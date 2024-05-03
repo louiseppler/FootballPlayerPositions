@@ -108,7 +108,7 @@ function setup() {
 
     drawGameSetup();
 
-    overviewCanvas = new CanvasHelper("container2", 750, 500, () => {empty();}, () => {empty();}, () => {draw2();});
+    overviewCanvas = new CanvasHelper("container2", 650, 500, () => {empty();}, () => {empty();}, () => {draw2();});
 
 
     overviewCanvas.clearCanvas()

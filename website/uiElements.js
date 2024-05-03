@@ -3,6 +3,7 @@ var maxFrame = 143761-2;
 
 
 function setupUIElements() {
+
     $('#duration_slider').prop("min", minFrame);
     $('#duration_slider').prop("max", maxFrame-2);
 
