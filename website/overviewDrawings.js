@@ -174,7 +174,9 @@ function draw2() {
 
     //Displaying Substituiton Indices
     for(var i = 0; i < data.substitutionIndices.length; i++) {
-        var loc = scaling.frameToPixel(data.substitutionFrames[i+1]);
+        var frame = data.substitutionFrames[i+1];
+        if(frame > maxFrameLoc || frame < minFrameLoc) continue;
+        var loc = scaling.frameToPixel(frame);
 
         for(var pos of data.substitutionIndices[i]) {
             overviewCanvas.ctx.fillStyle = "#A9A9A9"
