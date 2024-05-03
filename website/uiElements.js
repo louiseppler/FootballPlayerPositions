@@ -4,63 +4,20 @@ var maxFrame = 143761-2;
 
 function setupUIElements() {
 
+    setupViewSettings();
+
+
     $('#duration_slider').prop("min", minFrame);
     $('#duration_slider').prop("max", maxFrame-2);
 
     $("#play_button").click(function() {
         isPlaying = !isPlaying;
-
-        if(isPlaying) {
-            $("#play_button").html("Pause")
-        }
-        else {
-            $("#play_button").html("Play")
-        }
+        nextFrameAt = Date.now()
     });
 
-    $("#button_team_a").click(function() {
-        showTeamA = true;
-        showTeamB = false;
-    });
-    $("#button_team_b").click(function() {
-        showTeamA = false;
-        showTeamB = true;  
-    });
-    $("#button_team_both").click(function() {
-        showTeamA = true;
-        showTeamB = true;
-    });
-
-    $("#button_show_color_mode_x").click(function() {
-        showGraphColorMode = 1;
-    });
-    $("#button_show_color_mode_y").click(function() {
-        showGraphColorMode = 2; 
-    });
-    $("#button_show_color_mode_d").click(function() {
-        showGraphColorMode = 0;
-    });
-
-    
-
-    $("#button_show_graph_a").click(function() {
-        showGraphForTeam = 1
-    });    
-    $("#button_show_graph_b").click(function() {
-        showGraphForTeam = 2
-    });
-    $("#button_show_graph_none").click(function() {
-        showGraphForTeam = 0
-    });  
-    
     $("#dubug_button").click(function() {
         //$('#duration_slider').val(34000);
         debugFlagSet = true;
-    });
-
-    $("#shape_mode").click(function() {
-        shapeGraphMode += 1;
-        if(shapeGraphMode > 1) shapeGraphMode = 0
     });
 
 
@@ -79,11 +36,13 @@ function setupUIElements() {
       });
 
       
-      $("#graph_select_group").click(function() {
+
+    $("#graph_select_group").click(function() {
         showGraphForTeam = +($('input[name=graph_select]:checked').val());
-        console.log("chaning to " + showGraphForTeam);
-      })
-      showGraphForTeam = +($('input[name=graph_select]:checked').val());
+    })
+    showGraphForTeam = +($('input[name=graph_select]:checked').val());
+
+
 
       $("#team_select_group").click(function() {
         setShowTeam( $('input[name=team_select]:checked').val() );   
@@ -103,6 +62,14 @@ function setupUIElements() {
       })
       $("#button_pause").hide();
 
+}
+
+function changePlaybackSpeed(val) {
+    playBackSpeed = val;
+    isPlaying = true;
+    nextFrameAt = Date.now()
+    $("#button_pause").show();
+    $("#button_play").hide();
 }
 
 function setShowTeam(str) {
@@ -127,4 +94,17 @@ function updateColor(i) {
 
 function smoothingSliderDidChange(val) {
     document.getElementById("smoothing_text").innerHTML = "Smoothing " + val
+}
+
+function setupViewSettings() {
+    document.getElementById("show_other_team_btn").checked = true;
+    document.getElementById("show_goal_keeper_btn").checked = true;
+    document.getElementById("show_shape_graph_btn").checked = true;
+    viewSettingsChanged();
+}
+
+function viewSettingsChanged() {
+    showOtherTeam =  document.getElementById("show_other_team_btn").checked;
+    showGoalKeepers = document.getElementById("show_goal_keeper_btn").checked;
+    showShapeGraph = document.getElementById("show_shape_graph_btn").checked;
 }

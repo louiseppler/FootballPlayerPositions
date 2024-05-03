@@ -10,6 +10,8 @@ function draw2() {
     overviewCanvas.clearCanvasWhite();
     overviewCanvas.logLive("Computing Data")
     
+    return;
+
     var data = overviewTeamA;
 
     if(data.dataComputed == false) {

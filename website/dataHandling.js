@@ -7,6 +7,7 @@ var tracking_data = null
 var eventList = null
 
 var game = {
+	frameRate: 24,
 	pitch: {
 		width: 105.0,
 		height: 68.0

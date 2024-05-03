@@ -12,15 +12,16 @@ var showPlayerLabels = true;
 // ============= Animations Parameters =============
 
 var isPlaying = false;
+var playBackSpeed = 2;
 var frameNr = 0;
+var nextFrameAt = 0; //timestamp for when the frame should increase
 
-var showTeamA = true;
-var showTeamB = true;
+var showOtherTeam = true;
+var showGoalKeepers = true;
+var showShapeGraph = true;
 
 var showGraphForTeam = 0; //0 nothing, 1: team a, 2: team b
 var showGraphColorMode = 0; //0: dominant, 1: x, 2: y
-
-var shapeGraphMode = 0;
 
 var debugFlagSet = false;
 
@@ -75,7 +76,7 @@ function draw() {
     }
     else {
         drawTeam(showGraphForTeam);
-        drawTeam(1-(showGraphForTeam-1)+1);
+        if(showOtherTeam) drawTeam(1-(showGraphForTeam-1)+1);
     }
 
     drawArrows(getIsSecondHalf(frameNr));
@@ -95,7 +96,10 @@ function handleFrameNr() {
     frameNr = $('#duration_slider').val()
 
     if(isPlaying && frameNr < maxFrame) {
-        frameNr++;
+        if(Date.now() > nextFrameAt) {
+            frameNr++;
+            nextFrameAt = Date.now() + 1000/(game.frameRate*playBackSpeed)
+        }
 
         $('#duration_slider').val(frameNr);
     }
@@ -185,7 +189,7 @@ function shapeGraphMain(array, isReversed, showDrawings = true, playerIDs = null
 
     if(!showDrawings) return roles;
 
-    if(team == showGraphForTeam) {
+    if(team == showGraphForTeam && showShapeGraph) {
         gameCanvas.ctx.strokeStyle = "#A9A9A9"
         gameCanvas.ctx.lineWidth = 3;
         drawGraph(delaunay.points, graph)

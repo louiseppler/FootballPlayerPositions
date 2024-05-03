@@ -24,6 +24,9 @@
         <script src="uiElements.js"></script>
         <script src="main.js"></script>
 
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
+
+
         <link rel="stylesheet" href="jquery/jquery-ui.css">
         <link rel="stylesheet" type="text/css" href="styles.css" />
     </head>
@@ -52,30 +55,17 @@
                 </div>
 
                 <div class="col-md-auto">
-
-                    <div class="col-md-auto p-2"> <!-- Button Selection 1 -->
-                        <div class="btn-group btn-group-sm" role="group" aria-label="Basic radio toggle button group" id="team_select_group">
-                            <input type="radio" class="btn-check" name="team_select" id="team_select_btn_1" autocomplete="off" value="team_a">
-                            <label class="btn btn-outline-primary" for="team_select_btn_1">Team A</label>
-                            
-                            <input type="radio" class="btn-check" name="team_select" id="team_select_btn_2" autocomplete="off" value="team_both" checked>
-                            <label class="btn btn-outline-primary" for="team_select_btn_2">Both Teams</label>
-                            
-                            <input type="radio" class="btn-check" name="team_select" id="team_select_btn_3" autocomplete="off" value="team_b">
-                            <label class="btn btn-outline-primary" for="team_select_btn_3">Team B</label>
-                        </div>
-                    </div>
                     <div class="row justify-content-center pb-2"> <!-- Button Selection 2&3 -->
                         <div class="col-md-auto">
                             <div class="btn-group btn-group-sm" role="group" aria-label="Basic radio toggle button group" id="graph_select_group">
                                 <input type="radio" class="btn-check" name="graph_select" id="graph_select_btn_1" autocomplete="off" value="1">
-                                <label class="btn btn-outline-primary" for="graph_select_btn_1">Show Graph A</label>
+                                <label class="btn btn-outline-primary" for="graph_select_btn_1">Home</label>
                                 
                                 <input type="radio" class="btn-check" name="graph_select" id="graph_select_btn_2" autocomplete="off" value="0" checked>
-                                <label class="btn btn-outline-primary" for="graph_select_btn_2">Hide Graph</label>
+                                <label class="btn btn-outline-primary" for="graph_select_btn_2">Both Teams</label>
                                 
                                 <input type="radio" class="btn-check" name="graph_select" id="graph_select_btn_3" autocomplete="off" value="2">
-                                <label class="btn btn-outline-primary" for="graph_select_btn_3">Show Graph B</label>
+                                <label class="btn btn-outline-primary" for="graph_select_btn_3">Away</label>
                             </div>
                         </div>
                         <div class="col-md-auto">
@@ -90,28 +80,31 @@
                                 </ul>
                             </div>
                         </div>
+
                         <div class="col-md-auto">
                             <div class="dropdown">
                                 <button class="btn btn-primary btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                Settings
+                                
+                                View Options
+
                                 </button>
                                 <ul class="dropdown-menu">
-                                <li><a class="dropdown-item" href="javascript:updateColor(0)">
+                                <li><a class="dropdown-item">
                                     <div class="form-check">
-                                        <input class="form-check-input" type="checkbox" value="" id="Checkme1" />
-                                        <label class="form-check-label" for="Checkme1">Show Other Team</label>
+                                        <input class="form-check-input" type="checkbox" value="checked" id="show_other_team_btn" name="show_other_team" onchange="viewSettingsChanged()"/>
+                                        <label class="form-check-label" for="show_other_team_btn">Show Other Team</label>
                                     </div>
                                 </a></li>
-                                <li><a class="dropdown-item" href="javascript:updateColor(0)">
+                                <li><a class="dropdown-item">
                                     <div class="form-check">
-                                        <input class="form-check-input" type="checkbox" value="" id="Checkme1" />
-                                        <label class="form-check-label" for="Checkme1">Show Goal Keepers</label>
+                                        <input class="form-check-input" type="checkbox" value="checked" id="show_goal_keeper_btn" name="show_goal_keeper" onchange="viewSettingsChanged()" />
+                                        <label class="form-check-label" for="show_goal_keeper_btn">Show Goal Keepers</label>
                                     </div>
                                 </a></li>
-                                <li><a class="dropdown-item" href="javascript:updateColor(0)">
+                                <li><a class="dropdown-item">
                                     <div class="form-check">
-                                        <input class="form-check-input" type="checkbox" value="" id="Checkme1" />
-                                        <label class="form-check-label" for="Checkme1">Show Shape Graph</label>
+                                        <input class="form-check-input" type="checkbox" value="checked" id="show_shape_graph_btn" name="show_shape_graph" onchange="viewSettingsChanged()" />
+                                        <label class="form-check-label" for="show_shape_graph_btn">Show Shape Graph</label>
                                     </div>
                                 </a></li>
                                 </ul>
@@ -125,16 +118,34 @@
                     <div class="row">
                         <div class="col-md-auto p-0">
                             <div class="align-items-center justify-content-center">
-                                <button type="button" class="btn btn-default btn-xs" id="button_play">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" class="bi bi-play-fill" viewBox="0 0 16 16">
-                                        <path d="m11.596 8.697-6.363 3.692c-.54.313-1.233-.066-1.233-.697V4.308c0-.63.692-1.01 1.233-.696l6.363 3.692a.802.802 0 0 1 0 1.393"/>
-                                      </svg>
-                                 </button>
-                                <button type="button" class="btn btn-default btn-xs" id="button_pause">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" class="bi bi-pause" viewBox="0 0 16 16">
-                                        <path d="M6 3.5a.5.5 0 0 1 .5.5v8a.5.5 0 0 1-1 0V4a.5.5 0 0 1 .5-.5m4 0a.5.5 0 0 1 .5.5v8a.5.5 0 0 1-1 0V4a.5.5 0 0 1 .5-.5"/>
-                                      </svg>
-                                </button>
+
+                                <div class="dropup">
+                                    <div class="btn-group">
+                                    <button type="button" class="btn btn-primary btn-sm">
+
+                                        <div id="button_play">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-play-fill" viewBox="0 0 16 16">
+                                                <path d="m11.596 8.697-6.363 3.692c-.54.313-1.233-.066-1.233-.697V4.308c0-.63.692-1.01 1.233-.696l6.363 3.692a.802.802 0 0 1 0 1.393"/>
+                                              </svg>
+                                            </div>
+                                        <div id="button_pause">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-pause" viewBox="0 0 16 16">
+                                                <path d="M6 3.5a.5.5 0 0 1 .5.5v8a.5.5 0 0 1-1 0V4a.5.5 0 0 1 .5-.5m4 0a.5.5 0 0 1 .5.5v8a.5.5 0 0 1-1 0V4a.5.5 0 0 1 .5-.5"/>
+                                              </svg>
+                                        </div>
+
+                                    </button>
+                                    <button class="btn btn-primary btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                    </button>
+
+                                    <ul class="dropdown-menu">
+                                    <li><a class="dropdown-item" href="javascript:changePlaybackSpeed(0.5)">0.5x</a></li>
+                                    <li><a class="dropdown-item" href="javascript:changePlaybackSpeed(1)">1x</a></li>
+                                    <li><a class="dropdown-item" href="javascript:changePlaybackSpeed(2)">2x</a></li>
+                                    </ul>
+                                </div>
+                                </div>
+                                
                             </div>
                         </div>
                         <div class="col d-flex">

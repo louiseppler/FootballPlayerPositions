@@ -51,7 +51,7 @@ function drawGame(frame) {
         if(isInTeamA) gameCanvas.ctx.fillStyle = "#3395AB"
         if(isInTeamB) gameCanvas.ctx.fillStyle = "#B73B92"
 
-        if(shapeGraphMode == 0 || showGraphForTeam == 0) {
+        if(showGraphForTeam == 0) {
             if((showGraphForTeam == 1 && isInTeamA) || (showGraphForTeam == 2 && isInTeamB)) {}
             else gameCanvas.drawDot(convertX(y),convertY(x),4);
         }
@@ -69,13 +69,18 @@ function drawPlayerLabels(frame) {
 
         var playerId = dataLine[5];
 
-        
         var isInTeamA = game.players.teamA.includes(playerId);
         var isInTeamB = game.players.teamB.includes(playerId);
-
-        if(showTeamA == false && isInTeamA) continue;
-        if(showTeamB == false && isInTeamB) continue;
         
+        if(playerId == "25") {
+            var x = 0;
+        }
+
+        if(showOtherTeam == false) {
+            if(showGraphForTeam == 1 && isInTeamB) return;
+            if(showGraphForTeam == 2 && isInTeamA) return;
+        }
+
         var x = dataLine[6]
         var y = dataLine[7]
 
@@ -84,9 +89,10 @@ function drawPlayerLabels(frame) {
         }
 
         if(showGraphForTeam == 0 || (showGraphForTeam == 1 && isInTeamA) || (showGraphForTeam == 2 && isInTeamB)) {
-            gameCanvas.ctx.fillStyle = "#FFF"
+            gameCanvas.ctx.fillStyle = "#EEE"
         }
         else {
+            //case outline colors
             gameCanvas.ctx.fillStyle = "#575757"
         }
 
