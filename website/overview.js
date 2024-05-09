@@ -22,6 +22,22 @@ class OverviewData {
         this.dataComputed = false;
 
         this.dataComputedUntil = minFrame;
+
+        this.runningRoleCounts = []
+        for(var i = 0; i < 11; i++) {
+            var roleCountTemp = []
+            for(var j = 0; j < 25; j++) {
+                roleCountTemp.push(0);
+            }
+            this.runningRoleCounts.push(roleCountTemp);
+        }
+
+        //frequency of times the rolecount should be stored
+        //low number: uses more memory
+        //high number: uses more computation
+        this.roleCountFreq = 10000;
+
+
     }
 
     computeChunk(size) {
@@ -55,9 +71,13 @@ class OverviewData {
         }
 
         for(var j = 0; j < roles.length; j++) {
-            if(prevRoles.length < roles.length) continue;
+            this.runningRoleCounts[j][roles[j].getRoleCountIndex()] += 1;
 
-            roles[j].updateRoleCount(prevRoles[j].roleCount);
+            if(i % this.roleCountFreq == 0) {
+                roles[j].roleCount = this.runningRoleCounts[j];
+            }
+
+            if(prevRoles.length < roles.length) continue;
 
             if(roles[j].playerID != prevRoles[j].playerID) {   
                 hasSubstitution = true;
@@ -110,7 +130,8 @@ class OverviewData {
         // === Initial Sorting ===
 
         for(var j = 0; j < this.roles[0].length; j++) {
-            var roleNr = Role.getMostFrequentRoleIndex(this.roles[0][j].roleCount, this.roles[firstSubIndex][j].roleCount);
+            var roleNr = this.getMostFrequentRole(0, firstSubIndex, j);
+            //var roleNr = Role.getMostFrequentRoleIndex(this.roles[0][j].roleCount, this.roles[firstSubIndex][j].roleCount);
             playerPair.push([this.roles[0][j].playerID, roleNr]);
         }
 
@@ -162,8 +183,8 @@ class OverviewData {
                     for(var k = 0; k < freeIndices.length; k++) {
                         var a1 = oldIndices[j][0];
                         var a2 = freeIndices[k][0];
-                        var rolePrev = Role.getMostFrequentRoleIndex(this.roles[framePrev][a1].roleCount,this.roles[frame+1][a1].roleCount)
-                        var roleNext = Role.getMostFrequentRoleIndex(this.roles[frame+1][a2].roleCount, this.roles[frameNext][a2].roleCount)
+                        var rolePrev = this.getMostFrequentRoleIndex(framePrev, frame+1, a1)
+                        var roleNext = this.getMostFrequentRoleIndex(frame+1,frameNext, a2)
                         var score = Role.similarity(rolePrev,roleNext);
 
                         scoreMatrix[j].push(score);
@@ -205,6 +226,60 @@ class OverviewData {
 
             this.substitutionIndices = substitutionIndices;
         };
+    }
 
+    getMostFrequentRoleIndexFromArray(startCount, endCount) {
+        if(startCount == null || endCount == null) return null
+    
+        var max = 0;
+        var maxIndex;
+        for(var i = 0; i < startCount.length; i++) {
+            var diff = endCount[i]-startCount[i];
+            if(diff > max) {
+                max = diff;
+                maxIndex = i;
+            }
+        }
+    
+        return maxIndex;
+    }
+    
+    getMostFrequentRoleIndex(startIndex, endIndex, playerIndex) {
+        const freq = this.roleCountFreq;
+        var a0 = startIndex - (startIndex % freq);
+        var a1 = startIndex;
+        var b0 = endIndex - (endIndex % freq);
+        var b1 = endIndex;
+
+        var rolesA = this.roles[a0].map((x) => x.roleCount.slice());
+        var rolesB = this.roles[b0].map((x) => x.roleCount.slice());
+
+        var x = 0;
+
+        for(var i = a0; i < a1; i++) {
+            for(var j = 0; j < rolesA.length; j++) {
+                rolesA[j][this.roles[i][j].getRoleCountIndex()] += 1;
+            }
+        }
+
+        for(var i = b0; i < b1; i++) {
+            for(var j = 0; j < rolesB.length; j++) {
+                rolesB[j][this.roles[i][j].getRoleCountIndex()] += 1;
+            }
+        }
+
+        return this.getMostFrequentRoleIndexFromArray(rolesA[playerIndex], rolesB[playerIndex]);
+    }
+
+    /**
+     * Computes add differences between start and end end return x,y roles of the most occurring role
+     * @param {*} startIndex index of beginning
+     * @param {*} endIndex index of end
+     * @returns 
+     */
+       getMostFrequentRole(startIndex, endIndex, playerIndex) {
+        var maxIndex = this.getMostFrequentRoleIndex(startIndex, endIndex, playerIndex);
+        if(maxIndex == null) return [0,0];
+        return [Math.floor(maxIndex/5)-2, (maxIndex%5)-2];
     }
 }

@@ -20,23 +20,23 @@ function draw2() {
         overviewCanvas.ctx.fillRect(50, overviewCanvas.height/2-5, overviewTeamA.dataComputedUntil/maxFrame*(overviewCanvas.width-100), 10);
     }
 
-    // if(overviewTeamA.dataComputed == true && overviewTeamB.dataComputed == false) {
+    if(overviewTeamA.dataComputed == true && overviewTeamB.dataComputed == false) {
     
-    //     if(tracking_data != null) {
-    //         overviewTeamB.computeChunk(500); 
-    //     }
+        if(tracking_data != null) {
+            overviewTeamB.computeChunk(500); 
+        }
 
-    //     overviewCanvas.ctx.strokeRect(50, overviewCanvas.height/2-5, overviewCanvas.width-100, 10);
-    //     overviewCanvas.ctx.fillRect(50, overviewCanvas.height/2-5, overviewTeamB.dataComputedUntil/maxFrame*(overviewCanvas.width-100), 10);
-    // }
+        overviewCanvas.ctx.strokeRect(50, overviewCanvas.height/2-5, overviewCanvas.width-100, 10);
+        overviewCanvas.ctx.fillRect(50, overviewCanvas.height/2-5, overviewTeamB.dataComputedUntil/maxFrame*(overviewCanvas.width-100), 10);
+    }
 
     if(overviewTeamA.dataComputed == false) return;
-    //if(overviewTeamB.dataComputed == false) return;
+    if(overviewTeamB.dataComputed == false) return;
 
     debugFlagSet = false
 
     drawOverviewFor(overviewTeamA, 50, 30, overviewCanvas.width-50, overviewCanvas.height/2-30);
-    //drawOverviewFor(overviewTeamB, 50, overviewCanvas.height/2+30, overviewCanvas.width-50, overviewCanvas.height-30);
+    drawOverviewFor(overviewTeamB, 50, overviewCanvas.height/2+30, overviewCanvas.width-50, overviewCanvas.height-30);
 
 }
 
@@ -89,7 +89,8 @@ function drawOverviewFor(data, x0, y0, x1, y1) {
         for(var j = 0; j < data.roles[minFrameLoc].length; j++) {
 
             if(data.roles[maxFrameLoc-10].length <= j) continue;
-            var [avgX, avgY] = Role.getMostFrequentRole(data.roles[minFrameLoc][j].roleCount, data.roles[maxFrameLoc-10][j].roleCount);
+            //var [avgX, avgY] = Role.getMostFrequentRole(data.roles[minFrameLoc][j].roleCount, data.roles[maxFrameLoc-10][j].roleCount);
+            var [avgX, avgY] = data.getMostFrequentRole(minFrameLoc, maxFrameLoc-10, j);
 
             if(debugFlagSet) console.log(j + " -> " + avgX + " " + avgY);
 
@@ -134,7 +135,7 @@ function drawOverviewFor(data, x0, y0, x1, y1) {
 
             var pos = data.playerIndices[data.roles[frame][j].playerID];
 
-            const [xRole, yRole] = Role.getMostFrequentRole(data.roles[frame][j].roleCount,data.roles[frameNext][j].roleCount)
+            const [xRole, yRole] = data.getMostFrequentRole(frame, frameNext, j);
 
             if(smoothing == 0) {
                 overviewCanvas.ctx.strokeStyle = Role.colorsX[xRole+2]
