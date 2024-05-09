@@ -43,7 +43,7 @@ class OverviewData {
     }
 
     computeFrame(i) {
-        const [points, isReversed, playerIDs] = getGamePoints(i, 1);
+        const [points, isReversed, playerIDs] = getGamePoints(i, this.team);
         if(points == null) return;
         const roles = shapeGraphMain(points, isReversed, false, playerIDs);
 

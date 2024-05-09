@@ -113,7 +113,7 @@ function setup() {
 
     drawGameSetup();
 
-    overviewCanvas = new CanvasHelper("container2", 650, 500, () => {empty();}, () => {empty();}, () => {draw2();});
+    overviewCanvas = new CanvasHelper("container2", 650, 650, () => {empty();}, () => {empty();}, () => {draw2();});
 
 
     overviewCanvas.clearCanvas()
@@ -121,6 +121,7 @@ function setup() {
     console.log("overviewcanvas " + overviewCanvas);
 
     overviewTeamA = new OverviewData(1);
+    overviewTeamB = new OverviewData(2);
 
     setupUIElements()
 

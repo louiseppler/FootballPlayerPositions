@@ -10,20 +10,38 @@ function draw2() {
     overviewCanvas.clearCanvasWhite();
     overviewCanvas.logLive("Computing Data")
     
-    var data = overviewTeamA;
 
-    if(data.dataComputed == false) {
+    if(overviewTeamA.dataComputed == false) {
         if(tracking_data != null) {
             overviewTeamA.computeChunk(500); 
         }
 
         overviewCanvas.ctx.strokeRect(50, overviewCanvas.height/2-5, overviewCanvas.width-100, 10);
         overviewCanvas.ctx.fillRect(50, overviewCanvas.height/2-5, overviewTeamA.dataComputedUntil/maxFrame*(overviewCanvas.width-100), 10);
-
     }
 
-    if(data.dataComputed == false) return;
+    // if(overviewTeamA.dataComputed == true && overviewTeamB.dataComputed == false) {
     
+    //     if(tracking_data != null) {
+    //         overviewTeamB.computeChunk(500); 
+    //     }
+
+    //     overviewCanvas.ctx.strokeRect(50, overviewCanvas.height/2-5, overviewCanvas.width-100, 10);
+    //     overviewCanvas.ctx.fillRect(50, overviewCanvas.height/2-5, overviewTeamB.dataComputedUntil/maxFrame*(overviewCanvas.width-100), 10);
+    // }
+
+    if(overviewTeamA.dataComputed == false) return;
+    //if(overviewTeamB.dataComputed == false) return;
+
+    debugFlagSet = false
+
+    drawOverviewFor(overviewTeamA, 50, 30, overviewCanvas.width-50, overviewCanvas.height/2-30);
+    //drawOverviewFor(overviewTeamB, 50, overviewCanvas.height/2+30, overviewCanvas.width-50, overviewCanvas.height-30);
+
+}
+
+function drawOverviewFor(data, x0, y0, x1, y1) {
+  
     var minFrameLoc = $( "#slider-range" ).slider( "values", 0 );
     var maxFrameLoc = $( "#slider-range" ).slider( "values", 1 );
 
@@ -33,13 +51,14 @@ function draw2() {
 
     //overviewCanvas.logLive("We are ready")
 
-    var x0 = 50;
-    var x1 = overviewCanvas.width-50;
+    //var x0 = 50;
+    //var x1 = overviewCanvas.width-50;
 
-    var y0 = 30;
-    var ys = 40;
+    //var y0 = 30;
+    var ys = (y1-y0)/11;
     
-    if(overviewIsExpanded) ys = 60;
+    //if(overviewIsExpanded) ys = 60;
+
 
     var scaling = new Scaling(minFrameLoc, maxFrameLoc, x0, x1, data.substitutionFrames);
 
@@ -117,7 +136,7 @@ function draw2() {
 
             const [xRole, yRole] = Role.getMostFrequentRole(data.roles[frame][j].roleCount,data.roles[frameNext][j].roleCount)
 
-            if(smoothing == 1) {
+            if(smoothing == 0) {
                 overviewCanvas.ctx.strokeStyle = Role.colorsX[xRole+2]
                 overviewCanvas.drawLine(i, y0+pos*ys, i, y0+pos*ys+ys*(0.45-0.225*overviewIsExpanded));
                 overviewCanvas.ctx.strokeStyle = Role.colorsY[yRole+2]
@@ -210,9 +229,6 @@ function draw2() {
     overviewCanvas.ctx.font= "10px sans-serif"
 
     
-
-    debugFlagSet = false
-
 }
 
 class Scaling {
