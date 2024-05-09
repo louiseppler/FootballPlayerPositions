@@ -44,13 +44,13 @@ class Role {
         return names[this.x_role+2][this.y_role+2];
     }
 
-    static colorsX = ["#B7352D","#D48681","#A9A9A9","#7A9DCF","#215CAF"];
+    static colorsX = ["#B7352D","#D48681","#E2E2E2","#7A9DCF","#215CAF"];
 
     getColorX() {
         return Role.colorsX[this.x_role+2];
     }
 
-    static colorsY = ["#8E6713","#BBA471","#A9A9A9","#A1AB71","#627313"];
+    static colorsY = ["#8E6713","#D2C2A1","#E2E2E2","#C0C7A1","#627313"];
     //static colorsY = ["#627313","#A1AB71","#A9A9A9","#BBA471","#8E6713"];
 
 
