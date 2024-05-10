@@ -134,51 +134,48 @@ function drawOverviewFor(data, x0, y0, x1, y1) {
 
         }
     }
-    
-    //Displaying the color for each pixel
-    for(var i = x0; i < x1-smoothing-1; i += smoothing) {
-        var frame = scaling.pixelToFrame(i) //Math.floor(scaling*(i-x0)+minFrameLoc);
-        var frameNext = scaling.pixelToFrame(i+smoothing) //Math.floor(scaling*(i+1-x0)+minFrameLoc);
 
-
-
-        if(frame > frameNr) {
-            
-            if(debugFlagSet) console.log("pixel " + i + " frame " + frame);
-
-            debugFlagSet = false;
-        }
-
-
-        if(!scaling.pixelIsActive(i)) continue;
-        if(frameNext == 0) continue;
-
-        if(frameNext > maxFrameLoc-1) continue;
-
-        var avg_diff = 0;
-
-        for(var j = 0; j < data.roles[frame].length; j++) {
-
-            var pos = data.playerIndices[data.roles[frame][j].playerID];
-
-            const [xRole, yRole] = Role.getMostFrequentRole(data.roles[frame][j].roleCount,data.roles[frameNext][j].roleCount)
-
-            if(smoothing == 0) {
-                overviewCanvas.ctx.strokeStyle = Role.colorsX[xRole+2]
-                overviewCanvas.drawLine(i, y0+pos*ys, i, y0+pos*ys+ys*(0.45-0.225*overviewIsExpanded));
-                overviewCanvas.ctx.strokeStyle = Role.colorsY[yRole+2]
-                overviewCanvas.drawLine(i, y0+pos*ys+ys*(0.45+0.225*overviewIsExpanded), i, y0+pos*ys+ys*0.9);
-            }
-            else {
-                overviewCanvas.ctx.fillStyle = Role.colorsX[xRole+2]
-                overviewCanvas.ctx.fillRect(i, y0+pos*ys, smoothing, ys*(0.45));
-                overviewCanvas.ctx.fillStyle = Role.colorsY[yRole+2]
-                overviewCanvas.ctx.fillRect(i, y0+pos*ys+ys*(0.45+0.225*overviewIsExpanded), smoothing, ys*0.45);
-            }
-            overviewCanvas.ctx.fillStyle = "#000"
+    var substitutionFramesLoc = [minFrameLoc];
+    for(var k = 1; k < data.substitutionFrames.length-1; k++) {
+        if(minFrameLoc <= data.substitutionFrames[k] && data.substitutionFrames[k] < maxFrameLoc) {
+            substitutionFramesLoc.push(data.substitutionFrames[k])
         }
     }
+    substitutionFramesLoc.push(maxFrameLoc-2);
 
+    for(var k = 0; k < substitutionFramesLoc.length-1; k++) {
+        var k1Frame = substitutionFramesLoc[k]+1;
+        var k2Frame = substitutionFramesLoc[k+1];
+        var k1Pixel = scaling.frameToPixel(k1Frame);
+        var k2Pixel = scaling.frameToPixel(k2Frame);
+
+        for(var i = k1Pixel; i < k2Pixel; i += smoothing) {
+            var i2 = i+smoothing;
+            if(i2 > k2Pixel) {
+                i2 = k2Pixel
+            }
+
+            var frame = scaling.pixelToFrame(i);
+            var frameNext = scaling.pixelToFrame(i2);
+            
+            for(var j = 0; j < data.roles[frame].length; j++) {
+
+                var pos = data.playerIndices[data.roles[frame][j].playerID];
+
+                const [xRole, yRole] = Role.getMostFrequentRole(data.roles[frame][j].roleCount,data.roles[frameNext][j].roleCount)
+
+                overviewCanvas.ctx.fillStyle = Role.colorsX[xRole+2]
+                overviewCanvas.ctx.fillRect(i, y0+pos*ys, (i2-i), ys*(0.45));
+                overviewCanvas.ctx.fillStyle = Role.colorsY[yRole+2]
+                overviewCanvas.ctx.fillRect(i, y0+pos*ys+ys*(0.45+0.225*overviewIsExpanded), (i2-i), ys*0.45);
+                
+                overviewCanvas.ctx.fillStyle = "#000"
+            }
+        }
+
+    }
+    
+  
     //Displaying Substituiton Indices
     for(var i = 0; i < data.substitutionIndices.length; i++) {
         var frame = data.substitutionFrames[i+1];
@@ -186,7 +183,7 @@ function drawOverviewFor(data, x0, y0, x1, y1) {
         var loc = scaling.frameToPixel(frame);
 
         for(var pos of data.substitutionIndices[i]) {
-            overviewCanvas.ctx.fillStyle = "#A9A9A9"
+            overviewCanvas.ctx.fillStyle = "#575757"
             overviewCanvas.ctx.fillRect(loc+scaling.dist*0.25, y0+ys*(pos+0.15), scaling.dist*0.5,ys*0.6);
         }
 
@@ -359,8 +356,7 @@ class Scaling {
         return true;
 
     }
-
-    }
+}
 
 
 /**
