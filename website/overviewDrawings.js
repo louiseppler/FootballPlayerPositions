@@ -41,17 +41,20 @@ function draw2() {
     debugFlagSet = false
 
     if(showOverviewForTeam == 0) {
-        drawOverviewFor(overviewTeamA, 25, 30, overviewCanvas.width-25, overviewCanvas.height/2-20);
-        drawOverviewFor(overviewTeamB, 25, overviewCanvas.height/2+20, overviewCanvas.width-25, overviewCanvas.height-30);
-        displayEventList(25, overviewCanvas.width-25,  overviewCanvas.height/2)
+        drawOverviewFor(overviewTeamA, 25, 30, overviewCanvas.width-25, overviewCanvas.height*0.45-25);
+        drawOverviewFor(overviewTeamB, 25, overviewCanvas.height*0.45+25, overviewCanvas.width-25, overviewCanvas.height-30);
+        displayEventList(25, overviewCanvas.width-25,  overviewCanvas.height*0.45);
+        drawIconExplanation(25,  overviewCanvas.height-12);
     }
     else if(showOverviewForTeam == 1) {
         drawOverviewFor(overviewTeamA, 25, 30, overviewCanvas.width-25, overviewCanvas.height*0.75);
-        displayEventList(25, overviewCanvas.width-25,  overviewCanvas.height*0.75+50)
+        displayEventList(25, overviewCanvas.width-25,  overviewCanvas.height*0.75+30)
+        drawIconExplanation(25,  overviewCanvas.height-30);
     }
     else if(showOverviewForTeam == 2) {
         drawOverviewFor(overviewTeamB, 25, 30, overviewCanvas.width-25, overviewCanvas.height*0.75);
-        displayEventList(25, overviewCanvas.width-25,  overviewCanvas.height*0.75+50)
+        displayEventList(25, overviewCanvas.width-25,  overviewCanvas.height*0.75+30)
+        drawIconExplanation(25,  overviewCanvas.height-30);
     }
 
 }
@@ -269,7 +272,26 @@ function displayEventList(x0, x1, y0) {
             }
         }        
     }
+}
 
+function drawIconExplanation(x0, y0) {
+    var imgs = [img_goal,img_corner,img_redcard,img_yellowcard,img_freekick];
+    var labels = ["Goal","Corner","Red Card","Yellow Card","Goal Kick"]
+
+
+    var x1 = labels.reduce( (total, label) => total + overviewCanvas.ctx.measureText(label).width + 15 + 10, 0);
+
+    overviewCanvas.ctx.fillStyle = "#E2E2E2"
+    overviewCanvas.ctx.fillRect(x0,y0-12,(x1-x0)+25+5,24);
+
+    overviewCanvas.ctx.fillStyle = "#000"
+
+    x1 = x0+5;
+    for(var i = 0; i < imgs.length; i++) {
+        overviewCanvas.ctx.drawImage(imgs[i], x1, y0-7.5, 15, 15);
+        overviewCanvas.ctx.fillText(labels[i], x1+15+2, y0+4);
+        x1 += overviewCanvas.ctx.measureText(labels[i]).width + 15 + 10;
+    }
 }
 
 class Scaling {
