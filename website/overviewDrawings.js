@@ -35,8 +35,8 @@ function draw2() {
 
     debugFlagSet = false
 
-    drawOverviewFor(overviewTeamA, 50, 30, overviewCanvas.width-50, overviewCanvas.height/2-30);
-    drawOverviewFor(overviewTeamB, 50, overviewCanvas.height/2+30, overviewCanvas.width-50, overviewCanvas.height-30);
+    drawOverviewFor(overviewTeamA, 25, 30, overviewCanvas.width-25, overviewCanvas.height/2-15);
+    drawOverviewFor(overviewTeamB, 25, overviewCanvas.height/2+15, overviewCanvas.width-25, overviewCanvas.height-30);
 
 }
 
@@ -55,7 +55,7 @@ function drawOverviewFor(data, x0, y0, x1, y1) {
     //var x1 = overviewCanvas.width-50;
 
     //var y0 = 30;
-    var ys = (y1-y0)/11;
+    var ys = (y1-y0)/10;
     
     //if(overviewIsExpanded) ys = 60;
 
@@ -64,7 +64,7 @@ function drawOverviewFor(data, x0, y0, x1, y1) {
 
     //var scaling = (maxFrameLoc-minFrameLoc) / (x1-x0);
 
-    if(overviewCanvas.mouseIsPressed) {
+    if(overviewCanvas.mouseIsPressed && overviewCanvas.mouseY > y0-10 && overviewCanvas.mouseY < y1+10) {
         frameNr = scaling.pixelToFrame(overviewCanvas.mouseX)
         //frameNr = (overviewCanvas.mouseX-x0)*scaling+minFrameLoc;
         $('#duration_slider').val(frameNr);
@@ -78,11 +78,7 @@ function drawOverviewFor(data, x0, y0, x1, y1) {
 
     //Displays the current selected frame
     overviewCanvas.ctx.strokeStyle = "black";
-    overviewCanvas.drawLine(currentX, 0, currentX, overviewCanvas.height)
-
-
-    // var averagesX = [];
-    // var averagesY = [];
+    overviewCanvas.drawLine(currentX, y0-10, currentX, y1+10);
 
     if(overviewIsExpanded) {
         //Calculates + Displaying the average
@@ -149,46 +145,7 @@ function drawOverviewFor(data, x0, y0, x1, y1) {
                 overviewCanvas.ctx.fillRect(i, y0+pos*ys+ys*(0.45+0.225*overviewIsExpanded), smoothing, ys*0.45);
             }
             overviewCanvas.ctx.fillStyle = "#000"
-
-
-            //avg_diff += Math.abs(averagesX[j]-data.roles[frame][j].x_role);
-            //avg_diff += Math.abs(averagesX[j]-data.roles[frame][j].y_role);
         }
-
-        // if(overviewIsExpanded) {
-        //     overviewCanvas.ctx.strokeStyle = grayScale(avg_diff/40);
-        //     overviewCanvas.drawLine(i, y0+10.5*ys, i, y0+10.5*ys+ys*0.225);
-
-        //     if(avg_diff > 30) {
-        //         overviewCanvas.ctx.strokeStyle = "#000"
-        //         overviewCanvas.drawLine(i, y0+10*ys, i, y0+10*ys+ys*0.225);
-        //     }
-        // }
-    }
-
-    //Display Event List
-    var levels = {0: 0, 1: 5_000, 2: 10_000, 3: 40_000, 4: 70_000, 5: 100_000, 9: 1_000_000}
-    var frameDiff = maxFrameLoc-minFrameLoc;
-
-    for(var i = 0; i < eventList.length; i++) {
-        var frame = eventList[i].start.frame;
-
-        var type = gameEvents[ getType(eventList[i]) ];
-
-        if(type != null) {
-            level = type.res
-
-            if(frame > minFrameLoc && frame < maxFrameLoc && frameDiff < levels[level]) {
-                //overviewCanvas.ctx.fillText(type.letter + "*",  1/scaling*(frame-minFrameLoc)-5+x0,y0+10.5*ys);
-                overviewCanvas.ctx.fillText(type.letter + "*",  scaling.frameToPixel(frame)-5+x0,y0+10.5*ys);
-
-                if(type.icon != "") { 
-                    //overviewCanvas.ctx.drawImage(base_image, 1/scaling*(frame-minFrameLoc)-10+x0,y0+10.5*ys, 20, 20);
-                    overviewCanvas.ctx.drawImage(base_image, scaling.frameToPixel(frame)-10+x0,y0+10.5*ys, 20, 20);
-
-                }
-            }
-        }        
     }
 
     //Displaying Substituiton Indices
@@ -203,7 +160,6 @@ function drawOverviewFor(data, x0, y0, x1, y1) {
         }
 
     }
-
 
 
     //Displaying Player IDs
@@ -226,9 +182,35 @@ function drawOverviewFor(data, x0, y0, x1, y1) {
         overviewCanvas.fillTextCenter(game.getShirtNumberLabel(data.roles[maxFrameLoc-2][j].playerID), x1+10, y0+ys*(pos+0.5)+4);
     }
 
-    overviewCanvas.ctx.font= "10px sans-serif"
+    overviewCanvas.ctx.font= "10px sans-serif"  
+}
 
-    
+function displayEventList() {
+ //Display Event List
+ var levels = {0: 0, 1: 5_000, 2: 10_000, 3: 40_000, 4: 70_000, 5: 100_000, 9: 1_000_000}
+ var frameDiff = maxFrameLoc-minFrameLoc;
+
+ for(var i = 0; i < eventList.length; i++) {
+     var frame = eventList[i].start.frame;
+
+     var type = gameEvents[ getType(eventList[i]) ];
+
+     if(type != null) {
+         level = type.res
+
+         if(frame > minFrameLoc && frame < maxFrameLoc && frameDiff < levels[level]) {
+             //overviewCanvas.ctx.fillText(type.letter + "*",  1/scaling*(frame-minFrameLoc)-5+x0,y0+10.5*ys);
+             overviewCanvas.ctx.fillText(type.letter + "*",  scaling.frameToPixel(frame)-5+x0,y0+10.5*ys);
+
+             if(type.icon != "") { 
+                 //overviewCanvas.ctx.drawImage(base_image, 1/scaling*(frame-minFrameLoc)-10+x0,y0+10.5*ys, 20, 20);
+                 overviewCanvas.ctx.drawImage(base_image, scaling.frameToPixel(frame)-10+x0,y0+10.5*ys, 20, 20);
+
+             }
+         }
+     }        
+ }
+
 }
 
 class Scaling {
