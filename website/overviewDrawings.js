@@ -1,8 +1,17 @@
 var overviewTeamA;
 var overviewTeamB;
 
-base_image = new Image();
-base_image.src = 'imgs/ball.png';
+// Images
+img_corner = new Image();
+img_corner.src = 'imgs/corner.jpg';
+img_freekick = new Image();
+img_freekick.src = 'imgs/freekick.png';
+img_goal = new Image();
+img_goal.src = 'imgs/goal.png';
+img_redcard = new Image();
+img_redcard.src = 'imgs/redcard.png';
+img_yellowcard = new Image();
+img_yellowcard.src = 'imgs/yellowcard.png';
 
 function draw2() {
     if(overviewCanvas == null) return;
@@ -20,23 +29,24 @@ function draw2() {
         overviewCanvas.ctx.fillRect(50, overviewCanvas.height/2-5, overviewTeamA.dataComputedUntil/maxFrame*(overviewCanvas.width-100), 10);
     }
 
-    if(overviewTeamA.dataComputed == true && overviewTeamB.dataComputed == false) {
+    // if(overviewTeamA.dataComputed == true && overviewTeamB.dataComputed == false) {
     
-        if(tracking_data != null) {
-            overviewTeamB.computeChunk(500); 
-        }
+    //     if(tracking_data != null) {
+    //         overviewTeamB.computeChunk(500); 
+    //     }
 
-        overviewCanvas.ctx.strokeRect(50, overviewCanvas.height/2-5, overviewCanvas.width-100, 10);
-        overviewCanvas.ctx.fillRect(50, overviewCanvas.height/2-5, overviewTeamB.dataComputedUntil/maxFrame*(overviewCanvas.width-100), 10);
-    }
+    //     overviewCanvas.ctx.strokeRect(50, overviewCanvas.height/2-5, overviewCanvas.width-100, 10);
+    //     overviewCanvas.ctx.fillRect(50, overviewCanvas.height/2-5, overviewTeamB.dataComputedUntil/maxFrame*(overviewCanvas.width-100), 10);
+    // }
 
     if(overviewTeamA.dataComputed == false) return;
-    if(overviewTeamB.dataComputed == false) return;
+    //if(overviewTeamB.dataComputed == false) return;
 
     debugFlagSet = false
 
-    drawOverviewFor(overviewTeamA, 25, 30, overviewCanvas.width-25, overviewCanvas.height/2-15);
-    drawOverviewFor(overviewTeamB, 25, overviewCanvas.height/2+15, overviewCanvas.width-25, overviewCanvas.height-30);
+    drawOverviewFor(overviewTeamA, 25, 30, overviewCanvas.width-25, overviewCanvas.height/2-20);
+    //drawOverviewFor(overviewTeamB, 25, overviewCanvas.height/2+20, overviewCanvas.width-25, overviewCanvas.height-30);
+    displayEventList(25, overviewCanvas.width-25,  overviewCanvas.height/2)
 
 }
 
@@ -185,31 +195,59 @@ function drawOverviewFor(data, x0, y0, x1, y1) {
     overviewCanvas.ctx.font= "10px sans-serif"  
 }
 
-function displayEventList() {
- //Display Event List
- var levels = {0: 0, 1: 5_000, 2: 10_000, 3: 40_000, 4: 70_000, 5: 100_000, 9: 1_000_000}
- var frameDiff = maxFrameLoc-minFrameLoc;
+function displayEventList(x0, x1, y0) {
+    var minFrameLoc = $( "#slider-range" ).slider( "values", 0 );
+    var maxFrameLoc = $( "#slider-range" ).slider( "values", 1 );
+    var scaling = new Scaling(minFrameLoc, maxFrameLoc, x0, x1, []);
 
- for(var i = 0; i < eventList.length; i++) {
-     var frame = eventList[i].start.frame;
+    //Display Event List
+    var levels = {0: 0, 1: 5_000, 2: 10_000, 3: 40_000, 4: 70_000, 5: 100_000, 9: 1_000_000}
+    var frameDiff = maxFrameLoc-minFrameLoc;
 
-     var type = gameEvents[ getType(eventList[i]) ];
+    for(var i = 0; i < eventList.length; i++) {
+        var frame = eventList[i].start.frame;
 
-     if(type != null) {
-         level = type.res
+        const [typeName, team] = getType(eventList[i]);
+        const type = gameEvents[typeName]
 
-         if(frame > minFrameLoc && frame < maxFrameLoc && frameDiff < levels[level]) {
-             //overviewCanvas.ctx.fillText(type.letter + "*",  1/scaling*(frame-minFrameLoc)-5+x0,y0+10.5*ys);
-             overviewCanvas.ctx.fillText(type.letter + "*",  scaling.frameToPixel(frame)-5+x0,y0+10.5*ys);
+        overviewCanvas.drawLine(x0, y0, x1, y0);
 
-             if(type.icon != "") { 
-                 //overviewCanvas.ctx.drawImage(base_image, 1/scaling*(frame-minFrameLoc)-10+x0,y0+10.5*ys, 20, 20);
-                 overviewCanvas.ctx.drawImage(base_image, scaling.frameToPixel(frame)-10+x0,y0+10.5*ys, 20, 20);
+        if(type != null) {
+            level = type.res
 
-             }
-         }
-     }        
- }
+            if(frame > minFrameLoc && frame < maxFrameLoc && frameDiff < levels[level]) {
+                //overviewCanvas.ctx.fillText(type.letter + "*",  1/scaling*(frame-minFrameLoc)-5+x0,y0+10.5*ys);
+                //overviewCanvas.ctx.fillText(type.letter + "*",  scaling.frameToPixel(frame)-5+x0,y0+10.5*ys);
+
+                var img = null
+                switch(type.icon) {
+                    case "goal":
+                        img = img_goal; break;
+                    case "corner":
+                        img = img_corner; break;
+                    case "red":
+                        img = img_redcard; break;
+                    case "yellow":
+                        img = img_yellowcard; break;
+                    case "freekick":
+                        img = img_freekick; break;
+                }
+
+                if(img != null) { 
+                    overviewCanvas.drawLine(scaling.frameToPixel(frame), y0-2, scaling.frameToPixel(frame), y0+2);
+                    if(team == 1) {
+                        overviewCanvas.ctx.drawImage(img, scaling.frameToPixel(frame)-7.5,y0-20, 15, 15);
+                    }
+                    else {
+                        overviewCanvas.ctx.drawImage(img, scaling.frameToPixel(frame)-7.5,y0+5, 15, 15);
+                    }
+                }
+                else {
+                    //overviewCanvas.ctx.fillText(type.letter + "*",  scaling.frameToPixel(frame)-5+x0,y0+5);
+                }
+            }
+        }        
+    }
 
 }
 
@@ -309,12 +347,10 @@ function getType(data) {
     var name = data.type.name
     var maxRes = gameEvents[name].res;
 
-    if(name == "SHOT") {
-        var x = 1;
-    }
+    var team = 1;
+    if(data.team.id == "FIFATMB") team = 2;
 
-
-    if(data.subtypes == null) return name;
+    if(data.subtypes == null) return [name, team];
 
     if(data.subtypes instanceof Array) {
         for(var subtype of data.subtypes) {
@@ -329,6 +365,17 @@ function getType(data) {
             }
         }
     }
-   
-    return name
+    if(data.subtypes.name != null) {
+        var newName = data.subtypes.name;
+        if(gameEvents[newName] != null) {
+            var newRes = gameEvents[newName].res
+
+            if(newRes > maxRes) {
+                name = newName;
+                maxRes = newRes;
+            }
+        }
+    }
+    
+    return [name, team]
 }
