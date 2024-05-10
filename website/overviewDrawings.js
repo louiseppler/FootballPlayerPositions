@@ -22,15 +22,19 @@ function draw2() {
     overviewCanvas.logLive("Computing Data")
     
 
+    overviewTeamA.isComputing = false;
+    overviewTeamB.isComputing = false;
     if(overviewTeamA.dataComputed == false && showOverviewForTeam != 2) {
         if(tracking_data != null) {
             overviewTeamA.computeChunk(500); 
+            overviewTeamA.isComputing = true;
         }
     }
     else if(overviewTeamB.dataComputed == false && showOverviewForTeam != 1) {
     
         if(tracking_data != null) {
             overviewTeamB.computeChunk(500); 
+            overviewTeamB.isComputing = true;
         }
     }
 
@@ -72,8 +76,13 @@ function drawOverviewFor(data, x0, y0, x1, y1) {
         overviewCanvas.ctx.strokeRect(x0+10, y0+(y1-y0)/2-7.5, (x1-x0-20), 15);
         overviewCanvas.ctx.fillRect(x0+10, y0+(y1-y0)/2-7.5, (x1-x0-20)*data.dataComputedUntil/maxFrame, 15);
 
-        overviewCanvas.ctx.font= "12px sans-serif"  
-        overviewCanvas.fillTextRight("Computing player positions " + Math.floor(data.dataComputedUntil*100/maxFrame) + "%", x1-10, y0+(y1-y0)/2+15+8);
+        overviewCanvas.ctx.font= "12px sans-serif"
+        if(data.isComputing == true) {
+            overviewCanvas.fillTextRight("computing player positions " + Math.floor(data.dataComputedUntil*100/maxFrame) + "%", x1-10, y0+(y1-y0)/2+15+8);
+        }
+        else {
+            overviewCanvas.fillTextRight("Waiting...", x1-10, y0+(y1-y0)/2+15+8);
+        }
         overviewCanvas.ctx.font= "10px sans-serif"  
 
         return;
