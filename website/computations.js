@@ -1,5 +1,5 @@
 //used for debugging, an array of strings
-var logString = [];
+//var logString = [];
 
 // ---------------- Compute Roles ----------------
 
@@ -291,12 +291,12 @@ function computeShapeGraph(delaunay, graph) {
             //continue;
         }
 
-        logString.push( "at edge " + edge.a + " " + edge.b + " with angle " + angle/Math.PI*180)
+        //logString.push( "at edge " + edge.a + " " + edge.b + " with angle " + angle/Math.PI*180)
 
 
         if(angle > 135/180*Math.PI) {
             if(doPrint) console.log("removing edge " + edge.a + " " + edge.b);
-            logString.push( "removing edge " + edge.a + " " + edge.b)
+            //logString.push( "removing edge " + edge.a + " " + edge.b)
 
 
             var prevNode = edge.a
@@ -313,7 +313,7 @@ function computeShapeGraph(delaunay, graph) {
                 var angle = 0
 
                 if(!isHullEdge(prevNode,node,hull)) {
-                    logString.push( "  updating " + prevNode + " " + node)
+                    //logString.push( "  updating " + prevNode + " " + node)
 
                     const angleA = getStabilityAngle(prevNode, node, graph, points)
                     const angleB = getStabilityAngle(node, prevNode, graph, points)
@@ -343,7 +343,7 @@ function computeShapeGraph(delaunay, graph) {
 
     if(doPrint) console.log(graph);
 
-    var logStringLoc = logString
+    //var logStringLoc = logString
 }
 
 function getStabilityAngle(a, b, graph, points) {
@@ -360,7 +360,7 @@ function getStabilityAngle(a, b, graph, points) {
 
         if(graph[node] == undefined) {
             var graphLoc = graph
-            var logStringLoc = logString
+            //var logStringLoc = logString
             adsf = 1;
         }
 
@@ -368,7 +368,7 @@ function getStabilityAngle(a, b, graph, points) {
 
 
         const alpha = getAngle(a, node, b, points);
-        logString.push("    angle for " + prevNode + " " + node + " " + nextNode + " with angle" + alpha/Math.PI*180)
+        //logString.push("    angle for " + prevNode + " " + node + " " + nextNode + " with angle" + alpha/Math.PI*180)
 
         if(alpha < minAngle) {
             minAngle = alpha
