@@ -334,22 +334,20 @@ class Scaling {
         for(var k = this.holes.length-1; k >= 0; k--) {
             var j = this.frameToPixel(this.holes[k]);
 
-            if(i > j) i -= this.dist;
-             //if(frame > this.holes[k]) i += this.dist;
+            if(i > j) {
+                if(i < j+this.dist) {
+                    i = j;
+                }
+                else {
+                    i -= this.dist
+                }
+            };
         }
 
-        // var j = this.frameToPixel(70_000);
-        // if(j < i && i < j+100) return 0;
-
-        // if(i > j)return Math.floor( (i-this.x0-100)*this.scaling+this.minFrameLoc );
         return Math.floor( (i-this.x0)*this.scaling+this.minFrameLoc );
     }
 
     pixelIsActive(i_temp) {
-        // var j = this.frameToPixel(70_000);
-        // if(j < i && i < j+100) return false;
-        // return true;
-
         var i = i_temp;
 
         for(var k = this.holes.length-1; k >= 0; k--) {
