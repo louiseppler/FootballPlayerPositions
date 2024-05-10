@@ -206,8 +206,8 @@ function getGamePoints(frame, team) {
 function drawPitch() {
     //source: https://upload.wikimedia.org/wikipedia/commons/b/b3/Soccer_pitch_dimensions.png
 
-    gameCanvas.ctx.fillStyle = "#000"
-    gameCanvas.ctx.strokeStyle = "#000"
+    gameCanvas.ctx.fillStyle = "#8C8C8C"
+    gameCanvas.ctx.strokeStyle = "#8C8C8C"
 
     gameCanvas.drawLine(convertX(-game.pitch.height/2),convertY(0),convertX(game.pitch.height/2),convertY(0));
 
