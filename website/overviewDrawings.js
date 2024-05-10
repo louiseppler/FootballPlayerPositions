@@ -1,6 +1,8 @@
 var overviewTeamA;
 var overviewTeamB;
 
+var showOverviewForTeam = 0; //0: both; 1: team A, 2: team B
+
 // Images
 img_corner = new Image();
 img_corner.src = 'imgs/corner.jpg';
@@ -20,37 +22,44 @@ function draw2() {
     overviewCanvas.logLive("Computing Data")
     
 
-    if(overviewTeamA.dataComputed == false) {
+    if(overviewTeamA.dataComputed == false && showOverviewForTeam != 2) {
         if(tracking_data != null) {
             overviewTeamA.computeChunk(500); 
         }
-
-        overviewCanvas.ctx.strokeRect(50, overviewCanvas.height/2-5, overviewCanvas.width-100, 10);
-        overviewCanvas.ctx.fillRect(50, overviewCanvas.height/2-5, overviewTeamA.dataComputedUntil/maxFrame*(overviewCanvas.width-100), 10);
     }
-
-    // if(overviewTeamA.dataComputed == true && overviewTeamB.dataComputed == false) {
+    else if(overviewTeamB.dataComputed == false && showOverviewForTeam != 1) {
     
-    //     if(tracking_data != null) {
-    //         overviewTeamB.computeChunk(500); 
-    //     }
-
-    //     overviewCanvas.ctx.strokeRect(50, overviewCanvas.height/2-5, overviewCanvas.width-100, 10);
-    //     overviewCanvas.ctx.fillRect(50, overviewCanvas.height/2-5, overviewTeamB.dataComputedUntil/maxFrame*(overviewCanvas.width-100), 10);
-    // }
-
-    if(overviewTeamA.dataComputed == false) return;
-    //if(overviewTeamB.dataComputed == false) return;
+        if(tracking_data != null) {
+            overviewTeamB.computeChunk(500); 
+        }
+    }
 
     debugFlagSet = false
 
-    drawOverviewFor(overviewTeamA, 25, 30, overviewCanvas.width-25, overviewCanvas.height/2-20);
-    //drawOverviewFor(overviewTeamB, 25, overviewCanvas.height/2+20, overviewCanvas.width-25, overviewCanvas.height-30);
-    displayEventList(25, overviewCanvas.width-25,  overviewCanvas.height/2)
+    if(showOverviewForTeam == 0) {
+        drawOverviewFor(overviewTeamA, 25, 30, overviewCanvas.width-25, overviewCanvas.height/2-20);
+        drawOverviewFor(overviewTeamB, 25, overviewCanvas.height/2+20, overviewCanvas.width-25, overviewCanvas.height-30);
+        displayEventList(25, overviewCanvas.width-25,  overviewCanvas.height/2)
+    }
+    else if(showOverviewForTeam == 1) {
+        drawOverviewFor(overviewTeamA, 25, 30, overviewCanvas.width-25, overviewCanvas.height*0.75);
+        displayEventList(25, overviewCanvas.width-25,  overviewCanvas.height*0.75+50)
+    }
+    else if(showOverviewForTeam == 2) {
+        drawOverviewFor(overviewTeamB, 25, 30, overviewCanvas.width-25, overviewCanvas.height*0.75);
+        displayEventList(25, overviewCanvas.width-25,  overviewCanvas.height*0.75+50)
+    }
 
 }
 
 function drawOverviewFor(data, x0, y0, x1, y1) {
+
+    if(data.dataComputed == false) {
+        overviewCanvas.ctx.strokeRect(x0, y0+(y1-y0)/2-5, (x1-x0), 10);
+        overviewCanvas.ctx.fillRect(x0, y0+(y1-y0)/2-5, (x1-x0)*data.dataComputedUntil/maxFrame, 10);
+
+        return;
+    }
   
     var minFrameLoc = $( "#slider-range" ).slider( "values", 0 );
     var maxFrameLoc = $( "#slider-range" ).slider( "values", 1 );

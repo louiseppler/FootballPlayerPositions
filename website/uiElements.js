@@ -43,6 +43,12 @@ function setupUIElements() {
     showGraphForTeam = +($('input[name=graph_select]:checked').val());
 
 
+    $("#overview_select_group").click(function() {
+        showOverviewForTeam = +($('input[name=overview_select]:checked').val());
+    })
+    showOverviewForTeam = +($('input[name=overview_select]:checked').val());
+
+
 
       $("#team_select_group").click(function() {
         setShowTeam( $('input[name=team_select]:checked').val() );   
