@@ -1,3 +1,7 @@
+html, body{
+  height: 100%;
+}
+
 .slidecontainer {
     width: 100%; /* Width of the outside container */
   }
@@ -18,4 +22,9 @@
   /* Mouse-over effects */
   .slider:hover {
     opacity: 1; /* Fully shown on mouse-over */
+  }
+
+  img.icon {
+    width: 20px;
+    height: 20px;
   }

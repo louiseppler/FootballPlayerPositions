@@ -6,7 +6,6 @@ function setupUIElements() {
 
     setupViewSettings();
 
-
     $('#duration_slider').prop("min", minFrame);
     $('#duration_slider').prop("max", maxFrame-2);
 

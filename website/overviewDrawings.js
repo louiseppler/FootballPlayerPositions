@@ -41,20 +41,17 @@ function draw2() {
     debugFlagSet = false
 
     if(showOverviewForTeam == 0) {
-        drawOverviewFor(overviewTeamA, 25, 30, overviewCanvas.width-25, overviewCanvas.height*0.45-25);
-        drawOverviewFor(overviewTeamB, 25, overviewCanvas.height*0.45+25, overviewCanvas.width-25, overviewCanvas.height-30);
-        displayEventList(25, overviewCanvas.width-25,  overviewCanvas.height*0.45);
-        drawIconExplanation(25,  overviewCanvas.height-12);
+        drawOverviewFor(overviewTeamA, 25, 30, overviewCanvas.width-25, overviewCanvas.height*0.5-25);
+        drawOverviewFor(overviewTeamB, 25, overviewCanvas.height*0.5+25, overviewCanvas.width-25, overviewCanvas.height-30);
+        displayEventList(25, overviewCanvas.width-25,  overviewCanvas.height*0.5);
     }
     else if(showOverviewForTeam == 1) {
         drawOverviewFor(overviewTeamA, 25, 30, overviewCanvas.width-25, overviewCanvas.height*0.75);
         displayEventList(25, overviewCanvas.width-25,  overviewCanvas.height*0.75+30)
-        drawIconExplanation(25,  overviewCanvas.height-30);
     }
     else if(showOverviewForTeam == 2) {
         drawOverviewFor(overviewTeamB, 25, 30, overviewCanvas.width-25, overviewCanvas.height*0.75);
         displayEventList(25, overviewCanvas.width-25,  overviewCanvas.height*0.75+30)
-        drawIconExplanation(25,  overviewCanvas.height-30);
     }
 
 }
