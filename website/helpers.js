@@ -81,8 +81,13 @@ class CanvasHelper {
     }
 
     fillTextCenter(str, x, y) {
-        var textWidth = gameCanvas.ctx.measureText(str).width;
+        var textWidth = this.ctx.measureText(str).width;
         this.ctx.fillText("" + str, x-textWidth/2, y); 
+    }
+
+    fillTextRight(str, x, y) {
+        var textWidth = this.ctx.measureText(str).width;
+        this.ctx.fillText("" + str, x-textWidth, y); 
     }
 
     clearCanvas() {

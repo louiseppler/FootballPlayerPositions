@@ -55,8 +55,26 @@ function draw2() {
 function drawOverviewFor(data, x0, y0, x1, y1) {
 
     if(data.dataComputed == false) {
-        overviewCanvas.ctx.strokeRect(x0, y0+(y1-y0)/2-5, (x1-x0), 10);
-        overviewCanvas.ctx.fillRect(x0, y0+(y1-y0)/2-5, (x1-x0)*data.dataComputedUntil/maxFrame, 10);
+
+        var ys = (y1-y0)/10;
+
+        for(var j = 0; j < 10; j++) {
+            overviewCanvas.ctx.fillStyle = "#F9F9F9"
+            overviewCanvas.ctx.fillRect(x0, y0+j*ys, (x1-x0), ys*(0.45));
+            overviewCanvas.ctx.fillStyle = "#F1F1F1"
+            overviewCanvas.ctx.fillRect(x0, y0+j*ys+ys*(0.45), (x1-x0), ys*0.45);
+        }
+
+
+        overviewCanvas.ctx.fillStyle = "#FFF"
+        overviewCanvas.ctx.fillRect(x0+10, y0+(y1-y0)/2-7.5, (x1-x0-20), 15);
+        overviewCanvas.ctx.fillStyle = "#000"
+        overviewCanvas.ctx.strokeRect(x0+10, y0+(y1-y0)/2-7.5, (x1-x0-20), 15);
+        overviewCanvas.ctx.fillRect(x0+10, y0+(y1-y0)/2-7.5, (x1-x0-20)*data.dataComputedUntil/maxFrame, 15);
+
+        overviewCanvas.ctx.font= "12px sans-serif"  
+        overviewCanvas.fillTextRight("Computing player positions " + Math.floor(data.dataComputedUntil*100/maxFrame) + "%", x1-10, y0+(y1-y0)/2+15+8);
+        overviewCanvas.ctx.font= "10px sans-serif"  
 
         return;
     }
@@ -64,24 +82,9 @@ function drawOverviewFor(data, x0, y0, x1, y1) {
     var minFrameLoc = $( "#slider-range" ).slider( "values", 0 );
     var maxFrameLoc = $( "#slider-range" ).slider( "values", 1 );
 
-
-    // minFrameLoc = 100;
-    // maxFrameLoc = 10000;
-
-    //overviewCanvas.logLive("We are ready")
-
-    //var x0 = 50;
-    //var x1 = overviewCanvas.width-50;
-
-    //var y0 = 30;
     var ys = (y1-y0)/10;
     
-    //if(overviewIsExpanded) ys = 60;
-
-
     var scaling = new Scaling(minFrameLoc, maxFrameLoc, x0, x1, data.substitutionFrames);
-
-    //var scaling = (maxFrameLoc-minFrameLoc) / (x1-x0);
 
     if(overviewCanvas.mouseIsPressed && overviewCanvas.mouseY > y0-10 && overviewCanvas.mouseY < y1+10) {
         frameNr = scaling.pixelToFrame(overviewCanvas.mouseX)
