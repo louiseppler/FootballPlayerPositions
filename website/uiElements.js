@@ -105,11 +105,34 @@ function setupViewSettings() {
     document.getElementById("show_other_team_btn").checked = true;
     document.getElementById("show_goal_keeper_btn").checked = true;
     document.getElementById("show_shape_graph_btn").checked = true;
-    viewSettingsChanged();
+    viewSettingsPitchChanged();
+
+    document.getElementById("show_subs_btn").checked = true;
+    document.getElementById("show_subs_minimal_btn").checked = false;
+    document.getElementById("show_shape_graph_btn").checked = false;
+    viewSettingsOverviewChanged();
+
+    document.getElementById("show_events_btn").checked = true;
+    document.getElementById("show_posession_timeline_btn").checked = true;
+    viewSettingsTimelineChanged();
 }
 
-function viewSettingsChanged() {
+function viewSettingsPitchChanged() {
     showOtherTeam =  document.getElementById("show_other_team_btn").checked;
     showGoalKeepers = document.getElementById("show_goal_keeper_btn").checked;
     showShapeGraph = document.getElementById("show_shape_graph_btn").checked;
 }
+
+function viewSettingsOverviewChanged() {
+    showSubs = document.getElementById("show_subs_btn").checked;
+    showSubsMinimal =  document.getElementById("show_subs_minimal_btn").checked;
+    showPossesionInOverview =  document.getElementById("show_posession_overview_btn").checked;
+}
+
+function viewSettingsTimelineChanged() {
+    showEvents = document.getElementById("show_events_btn").checked;
+    showPossesionInTimeline = document.getElementById("show_posession_timeline_btn").checked;
+}
+
+
+

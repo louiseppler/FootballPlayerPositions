@@ -1,7 +1,14 @@
 var overviewTeamA;
 var overviewTeamB;
 
+//View Settings
 var showOverviewForTeam = 0; //0: both; 1: team A, 2: team B
+var showSubs = true;
+var showSubsMinimal = false;
+var showPossesionInOverview = false;
+
+var showEvents = true;
+var showPossesionInTimeline = true;
 
 // Images
 img_corner = new Image();
@@ -172,9 +179,11 @@ function drawOverviewFor(data, x0, y0, x1, y1) {
                 overviewCanvas.ctx.fillStyle = "#000"
             }
 
-            if(possesions.outOfPossesion(frame, frameNext, data.team)) {
-                overviewCanvas.ctx.fillStyle = "rgba(255, 255, 255, 0.8)";
-                overviewCanvas.ctx.fillRect(i, y0, (i2-i), (y1-y0));
+            if(showPossesionInOverview) {
+                if(possesions.outOfPossesion(frame, frameNext, data.team)) {
+                    overviewCanvas.ctx.fillStyle = "rgba(255, 255, 255, 0.8)";
+                    overviewCanvas.ctx.fillRect(i, y0, (i2-i), (y1-y0));
+                }
             }
         }
 
@@ -227,65 +236,69 @@ function displayEventList(x0, x1, y0) {
     var levels = {0: 0, 1: 5_000, 2: 10_000, 3: 40_000, 4: 70_000, 5: 100_000, 9: 1_000_000}
     var frameDiff = maxFrameLoc-minFrameLoc;
 
-    for(var i = 0; i < eventList.length; i++) {
-        var frame = eventList[i].start.frame;
+    if(showEvents) {
+        for(var i = 0; i < eventList.length; i++) {
+            var frame = eventList[i].start.frame;
 
-        const [typeName, team] = getType(eventList[i]);
-        const type = gameEvents[typeName]
+            const [typeName, team] = getType(eventList[i]);
+            const type = gameEvents[typeName]
 
-        overviewCanvas.drawLine(x0, y0, x1, y0);
+            overviewCanvas.drawLine(x0, y0, x1, y0);
 
-        if(type != null) {
-            level = type.res
+            if(type != null) {
+                level = type.res
 
-            if(frame > minFrameLoc && frame < maxFrameLoc && frameDiff < levels[level]) {
-                //overviewCanvas.ctx.fillText(type.letter + "*",  1/scaling*(frame-minFrameLoc)-5+x0,y0+10.5*ys);
-                //overviewCanvas.ctx.fillText(type.letter + "*",  scaling.frameToPixel(frame)-5+x0,y0+10.5*ys);
+                if(frame > minFrameLoc && frame < maxFrameLoc && frameDiff < levels[level]) {
+                    //overviewCanvas.ctx.fillText(type.letter + "*",  1/scaling*(frame-minFrameLoc)-5+x0,y0+10.5*ys);
+                    //overviewCanvas.ctx.fillText(type.letter + "*",  scaling.frameToPixel(frame)-5+x0,y0+10.5*ys);
 
-                var img = null
-                switch(type.icon) {
-                    case "goal":
-                        img = img_goal; break;
-                    case "corner":
-                        img = img_corner; break;
-                    case "red":
-                        img = img_redcard; break;
-                    case "yellow":
-                        img = img_yellowcard; break;
-                    case "freekick":
-                        img = img_freekick; break;
-                }
+                    var img = null
+                    switch(type.icon) {
+                        case "goal":
+                            img = img_goal; break;
+                        case "corner":
+                            img = img_corner; break;
+                        case "red":
+                            img = img_redcard; break;
+                        case "yellow":
+                            img = img_yellowcard; break;
+                        case "freekick":
+                            img = img_freekick; break;
+                    }
 
-                if(img != null) { 
-                    overviewCanvas.drawLine(scaling.frameToPixel(frame), y0-2, scaling.frameToPixel(frame), y0+2);
-                    if(team == 1) {
-                        overviewCanvas.ctx.drawImage(img, scaling.frameToPixel(frame)-7.5,y0-20, 15, 15);
+                    if(img != null) { 
+                        overviewCanvas.drawLine(scaling.frameToPixel(frame), y0-2, scaling.frameToPixel(frame), y0+2);
+                        if(team == 1) {
+                            overviewCanvas.ctx.drawImage(img, scaling.frameToPixel(frame)-7.5,y0-20, 15, 15);
+                        }
+                        else {
+                            overviewCanvas.ctx.drawImage(img, scaling.frameToPixel(frame)-7.5,y0+5, 15, 15);
+                        }
                     }
                     else {
-                        overviewCanvas.ctx.drawImage(img, scaling.frameToPixel(frame)-7.5,y0+5, 15, 15);
+                        //overviewCanvas.ctx.fillText(type.letter + "*",  scaling.frameToPixel(frame)-5+x0,y0+5);
                     }
                 }
-                else {
-                    //overviewCanvas.ctx.fillText(type.letter + "*",  scaling.frameToPixel(frame)-5+x0,y0+5);
-                }
-            }
-        }        
+            }        
+        }
     }
 
-    if(possesions != null) {
-        var smoothing = +($('#smoothing_slider').val())
+    if(showPossesionInTimeline) {
+        if(possesions != null) {
+            var smoothing = +($('#smoothing_slider').val())
 
-        for(var i = x0; i < x1; i += smoothing) {
-            var frame = scaling.pixelToFrame(i);
-            var frameNext = scaling.pixelToFrame(i+smoothing);
+            for(var i = x0; i < x1; i += smoothing) {
+                var frame = scaling.pixelToFrame(i);
+                var frameNext = scaling.pixelToFrame(i+smoothing);
 
-            overviewCanvas.ctx.fillStyle = "#575757"
+                overviewCanvas.ctx.fillStyle = "#575757"
 
-            if(possesions.isInPossesion(frame, frameNext, 1)) {
-                overviewCanvas.ctx.fillRect(i, y0-5, smoothing, 5);
-            }
-            if(possesions.isInPossesion(frame, frameNext, 2)) {
-                overviewCanvas.ctx.fillRect(i, y0, smoothing, 5);
+                if(possesions.isInPossesion(frame, frameNext, 1)) {
+                    overviewCanvas.ctx.fillRect(i, y0-5, smoothing, 5);
+                }
+                if(possesions.isInPossesion(frame, frameNext, 2)) {
+                    overviewCanvas.ctx.fillRect(i, y0, smoothing, 5);
+                }
             }
         }
     }
