@@ -171,6 +171,11 @@ function drawOverviewFor(data, x0, y0, x1, y1) {
                 
                 overviewCanvas.ctx.fillStyle = "#000"
             }
+
+            if(possesions.outOfPossesion(frame, frameNext, data.team)) {
+                overviewCanvas.ctx.fillStyle = "rgba(255, 255, 255, 0.8)";
+                overviewCanvas.ctx.fillRect(i, y0, (i2-i), (y1-y0));
+            }
         }
 
     }
@@ -276,10 +281,10 @@ function displayEventList(x0, x1, y0) {
 
             overviewCanvas.ctx.fillStyle = "#575757"
 
-            if(possesions.teamA[frameNext] % 2 == 1 || possesions.teamA[frameNext]-possesions.teamA[frame] > 0) {
+            if(possesions.isInPossesion(frame, frameNext, 1)) {
                 overviewCanvas.ctx.fillRect(i, y0-5, smoothing, 5);
             }
-            if(possesions.teamB[frameNext] % 2 == 1 || possesions.teamB[frameNext]-possesions.teamB[frame] > 0) {
+            if(possesions.isInPossesion(frame, frameNext, 2)) {
                 overviewCanvas.ctx.fillRect(i, y0, smoothing, 5);
             }
         }
