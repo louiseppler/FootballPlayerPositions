@@ -266,6 +266,24 @@ function displayEventList(x0, x1, y0) {
             }
         }        
     }
+
+    if(possesions != null) {
+        var smoothing = +($('#smoothing_slider').val())
+
+        for(var i = x0; i < x1; i += smoothing) {
+            var frame = scaling.pixelToFrame(i);
+            var frameNext = scaling.pixelToFrame(i+smoothing);
+
+            overviewCanvas.ctx.fillStyle = "#575757"
+
+            if(possesions.teamA[frameNext] % 2 == 1 || possesions.teamA[frameNext]-possesions.teamA[frame] > 0) {
+                overviewCanvas.ctx.fillRect(i, y0-5, smoothing, 5);
+            }
+            if(possesions.teamB[frameNext] % 2 == 1 || possesions.teamB[frameNext]-possesions.teamB[frame] > 0) {
+                overviewCanvas.ctx.fillRect(i, y0, smoothing, 5);
+            }
+        }
+    }
 }
 
 function drawIconExplanation(x0, y0) {

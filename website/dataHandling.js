@@ -1,8 +1,11 @@
 var link = "http://127.0.0.1:8125/data/tracking_small.csv"
 var link2 = "http://127.0.0.1:8125/data/tracking.csv"
+var linkPosession = "http://127.0.0.1:8125/data/phase.csv"
 var eventsLink = "http://127.0.0.1:8125/data/events.json"
 
 var tracking_data = null
+
+var possesions = null
 
 var eventList = null
 
@@ -28,6 +31,13 @@ var game = {
 	}
 }
 
+Papa.parse(linkPosession, {
+	download: true,
+	//worker: true,
+	complete: function(results) {
+		possesions = new Possesion(results.data);
+	}
+});
 
 
 Papa.parse(link2, {
