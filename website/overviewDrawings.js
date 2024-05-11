@@ -100,7 +100,7 @@ function drawOverviewFor(data, x0, y0, x1, y1) {
 
     var ys = (y1-y0)/10;
     
-    var scaling = new Scaling(minFrameLoc, maxFrameLoc, x0, x1, data.substitutionFrames);
+    var scaling = new Scaling(minFrameLoc, maxFrameLoc, x0, x1, getSubsitutionFrames(data.substitutionFrames));
 
     if(overviewCanvas.mouseIsPressed && overviewCanvas.mouseY > y0-10 && overviewCanvas.mouseY < y1+10) {
         frameNr = scaling.pixelToFrame(overviewCanvas.mouseX)
@@ -143,9 +143,10 @@ function drawOverviewFor(data, x0, y0, x1, y1) {
     }
 
     var substitutionFramesLoc = [minFrameLoc];
-    for(var k = 1; k < data.substitutionFrames.length-1; k++) {
-        if(minFrameLoc <= data.substitutionFrames[k] && data.substitutionFrames[k] < maxFrameLoc) {
-            substitutionFramesLoc.push(data.substitutionFrames[k])
+    var combindedSubstituions = getSubsitutionFrames(data.substitutionFrames)
+    for(var k = 1; k < combindedSubstituions.length-1; k++) {
+        if(minFrameLoc <= combindedSubstituions[k] && combindedSubstituions[k] < maxFrameLoc) {
+            substitutionFramesLoc.push(combindedSubstituions[k])
         }
     }
     substitutionFramesLoc.push(maxFrameLoc-2);
@@ -190,17 +191,18 @@ function drawOverviewFor(data, x0, y0, x1, y1) {
     }
     
   
-    //Displaying Substituiton Indices
-    for(var i = 0; i < data.substitutionIndices.length; i++) {
-        var frame = data.substitutionFrames[i+1];
-        if(frame > maxFrameLoc || frame < minFrameLoc) continue;
-        var loc = scaling.frameToPixel(frame);
+    if(showSubs) {
+        //Displaying Substituiton Indices
+        for(var i = 0; i < data.substitutionIndices.length; i++) {
+            var frame = data.substitutionFrames[i+1];
+            if(frame > maxFrameLoc || frame < minFrameLoc) continue;
+            var loc = scaling.frameToPixel(frame);
 
-        for(var pos of data.substitutionIndices[i]) {
-            overviewCanvas.ctx.fillStyle = "#575757"
-            overviewCanvas.ctx.fillRect(loc+scaling.dist*0.25, y0+ys*(pos+0.15), scaling.dist*0.5,ys*0.6);
+            for(var pos of data.substitutionIndices[i]) {
+                overviewCanvas.ctx.fillStyle = "#575757"
+                overviewCanvas.ctx.fillRect(loc+scaling.dist*0.25, y0+ys*(pos+0.15), scaling.dist*0.5,ys*0.6);
+            }
         }
-
     }
 
 
@@ -226,6 +228,52 @@ function drawOverviewFor(data, x0, y0, x1, y1) {
 
     overviewCanvas.ctx.font= "10px sans-serif"  
 }
+
+function getSubsitutionFrames(singleSubs) {
+    if(showSubs == false) {
+        return [];
+    }
+    if(showSubsMinimal) {
+        return singleSubs;
+    }
+    else {
+
+        if(overviewTeamA.dataComputed == false || overviewTeamB.dataComputed == false) return singleSubs;
+
+        //Merging of substitutionFrames
+
+        var i1 = 1;
+        var i2 = 1;
+        var subsA = overviewTeamA.substitutionFrames;
+        var subsB = overviewTeamB.substitutionFrames;
+
+        if(subsA.length < 2) subsA = [0, maxFrame-2];
+        if(subsB.length < 2) subsB = [0, maxFrame-2];
+
+        var frames = [0];
+
+        while(i1 < subsA.length-1 || i2 < subsB.length-1) {
+            if(subsA[i1] == subsB[i2]) {
+                frames.push(subsA[i1]);
+                i1 += 1;
+                i2 += 1;
+            }
+            else if(subsA[i1] < subsB[i2]) {
+                frames.push(subsA[i1]);
+                i1 += 1;
+            }
+            else {
+                frames.push(subsB[i2]);
+                i2 += 1;
+            }
+        }
+
+        frames.push(maxFrame-2);
+
+        return frames;
+    }
+}
+
 
 function displayEventList(x0, x1, y0) {
     var minFrameLoc = $( "#slider-range" ).slider( "values", 0 );
@@ -341,7 +389,10 @@ class Scaling {
             }
         }
 
-        if(this.holes.length > 3) {
+        if(this.holes.length > 8) {
+            this.dist = 5;
+        }
+        else if(this.holes.length > 3) {
             this.dist = 10;
         }
         else {
