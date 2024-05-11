@@ -37,7 +37,7 @@
             <h1>Home 1 : 0 Away</h1>
             <hr>
             <div class="row">
-                <div class="col">
+                <div class="col" id="main_div_diagram">
                     <div class="row justify-content-center pb-2">
 
                         <div class="col-md-auto">
@@ -131,7 +131,7 @@
                     </div>
                 </div>
 
-                <div class="col-md-auto">
+                <div class="col-md-auto" id="main_div_pitch">
                     <div class="row justify-content-center pb-2"> <!-- Button Selection 2&3 -->
                         <div class="col-md-auto">
                             <div class="btn-group btn-group-sm" role="group" aria-label="Basic radio toggle button group" id="graph_select_group">
@@ -300,6 +300,18 @@
                         </div>
                     </div>
                 </div>
+                <div class="col-md-auto">
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" value="checked" id="show_diagram_btn" name="show_diagram" onchange="globalViewSettingsChanged()" checked/>
+                        <label class="form-check-label text-left" for="show_diagram_btn">Show Diagram</label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" value="checked" id="show_pitch_btn" name="show_pitch" onchange="globalViewSettingsChanged()" checked/>
+                        <label class="form-check-label text-left" for="show_pitch_btn">Show Pitch</label>
+                    </div>
+                </div>
+
+            
             </div>
             
             <hr>

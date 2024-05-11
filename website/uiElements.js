@@ -134,5 +134,20 @@ function viewSettingsTimelineChanged() {
     showPossesionInTimeline = document.getElementById("show_posession_timeline_btn").checked;
 }
 
+function globalViewSettingsChanged() {
+    if(document.getElementById("show_diagram_btn").checked) {
+        $("#main_div_diagram").show();
+    }
+    else {
+        $("#main_div_diagram").hide();
+    }
+
+    if(document.getElementById("show_pitch_btn").checked) {
+        $("#main_div_pitch").show();
+    }
+    else {
+        $("#main_div_pitch").hide();
+    }
+}
 
 
