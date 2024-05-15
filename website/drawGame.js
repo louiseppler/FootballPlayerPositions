@@ -1,13 +1,13 @@
 var scaling = 6;
-var pitchOffsetX = 0;
-var pitchOffsetY = 0;
+var pitchOffsetX = -1;
+var pitchOffsetY = -1;
 
 function convertX(x) {
-    return pitchOffsetX+(+x+game.pitch.height/2)*scaling
+    return pitchOffsetX+(+x+gameData.pitch.height/2)*scaling
 }
 
 function convertY(y) {
-    return pitchOffsetY+(+y+game.pitch.width/2)*scaling
+    return pitchOffsetY+(+y+gameData.pitch.width/2)*scaling
 }
 
 function convertDist(d) {
@@ -15,8 +15,8 @@ function convertDist(d) {
 }
 
 function drawGameSetup() {
-    pitchOffsetX = (gameCanvas.width-convertDist(game.pitch.height))/2;
-    pitchOffsetY = (gameCanvas.height-convertDist(game.pitch.width))/2;
+    pitchOffsetX = (gameCanvas.width-convertDist(gameData.pitch.height))/2;
+    pitchOffsetY = (gameCanvas.height-convertDist(gameData.pitch.width))/2;
 }
 
 function drawGame(frame) {
@@ -24,9 +24,14 @@ function drawGame(frame) {
     gameCanvas.ctx.fillStyle = "#000"
     gameCanvas.ctx.strokeStyle = "#000"
 
+    if(gameData == null) return;
     if(tracking_data == null) {
         gameCanvas.logLive("loading tracking data")
         return;
+    }
+
+    if(pitchOffsetX == -1) {
+        drawGameSetup();
     }
 
     for(var i = 0; i < 23; i++) {
@@ -35,8 +40,8 @@ function drawGame(frame) {
         var playerId = dataLine[5];
 
         
-        var isInTeamA = game.players.teamA.includes(playerId);
-        var isInTeamB = game.players.teamB.includes(playerId);
+        var isInTeamA = gameData.players.team1.includes(playerId);
+        var isInTeamB = gameData.players.team2.includes(playerId);
 
         if(showTeamA == false && isInTeamA) continue;
         if(showTeamB == false && isInTeamB) continue;
@@ -69,8 +74,8 @@ function drawPlayerLabels(frame) {
 
         var playerId = dataLine[5];
 
-        var isInTeamA = game.players.teamA.includes(playerId);
-        var isInTeamB = game.players.teamB.includes(playerId);
+        var isInTeamA = gameData.players.team1.includes(playerId);
+        var isInTeamB = gameData.players.team2.includes(playerId);
         
         if(playerId == "25") {
             var x = 0;
@@ -96,13 +101,13 @@ function drawPlayerLabels(frame) {
             gameCanvas.ctx.fillStyle = "#575757"
         }
 
-        if(showGoalKeepers == false && game.goalKeepers.includes(playerId)) continue;
+        if(showGoalKeepers == false && gameData.goalKeepers.includes(playerId)) continue;
 
-        if(showGraphForTeam != 0 && game.goalKeepers.includes(playerId)) {
+        if(showGraphForTeam != 0 && gameData.goalKeepers.includes(playerId)) {
             gameCanvas.ctx.fillStyle = "#575757"
         }
 
-        gameCanvas.fillTextCenter(game.getShirtNumberLabel(playerId), convertX(y), convertY(x)+3)
+        //gameCanvas.fillTextCenter(getShirtNumberLabel(playerId), convertX(y), convertY(x)+3)
     }
 }
 
@@ -117,8 +122,8 @@ function drawBall(frame) {
 
         if(playerId != "-1") continue;
         
-        var isInTeamA = game.players.teamA.includes(playerId);
-        var isInTeamB = game.players.teamB.includes(playerId);
+        var isInTeamA = gameData.players.team1.includes(playerId);
+        var isInTeamB = gameData.players.team2.includes(playerId);
 
         var x = dataLine[6]
         var y = dataLine[7]
@@ -153,10 +158,10 @@ function getGoalKeepers(frame) {
         var x = dataLine[6]
         var y = dataLine[7]
 
-        var isInTeamA = game.players.teamA.includes(playerId);
-        var isInTeamB = game.players.teamB.includes(playerId);
+        var isInTeamA = gameData.players.team1.includes(playerId);
+        var isInTeamB = gameData.players.team2.includes(playerId);
 
-        if(game.goalKeepers.includes(playerId)) {
+        if(gameData.players.goalKeepers.includes(playerId)) {
             if(isInTeamA) {
                 points.push([convertX(y),convertY(x),1])
             }
@@ -188,13 +193,13 @@ function getGamePoints(frame, team) {
         var x = dataLine[6]
         var y = dataLine[7]
 
-        if(game.goalKeepers.includes(playerId)) continue;
+        if(gameData.players.goalKeepers.includes(playerId)) continue;
 
-        if(team == 1 && game.players.teamA.includes(playerId)) {
+        if(team == 1 && gameData.players.team1.includes(playerId)) {
             points.push(convertX(y),convertY(x));
             playerIDs.push(playerId)
         }
-        if(team == 2 && game.players.teamB.includes(playerId)) {
+        if(team == 2 && gameData.players.team2.includes(playerId)) {
             points.push(convertX(y),convertY(x));
             playerIDs.push(playerId)
         }
@@ -209,19 +214,22 @@ function drawPitch() {
     gameCanvas.ctx.fillStyle = "#8C8C8C"
     gameCanvas.ctx.strokeStyle = "#8C8C8C"
 
-    gameCanvas.drawLine(convertX(-game.pitch.height/2),convertY(0),convertX(game.pitch.height/2),convertY(0));
+    var height = gameData.pitch.height;
+    var width = gameData.pitch.width;
+
+    gameCanvas.drawLine(convertX(-height/2),convertY(0),convertX(height/2),convertY(0));
 
     //Touch line (outside line)
-    gameCanvas.drawLine(convertX(-game.pitch.height/2),convertY(-game.pitch.width/2),convertX(game.pitch.height/2),convertY(-game.pitch.width/2));
-    gameCanvas.drawLine(convertX(-game.pitch.height/2),convertY(game.pitch.width/2),convertX(game.pitch.height/2),convertY(game.pitch.width/2));
-    gameCanvas.drawLine(convertX(-game.pitch.height/2),convertY(-game.pitch.width/2),convertX(-game.pitch.height/2),convertY(game.pitch.width/2));
-    gameCanvas.drawLine(convertX(game.pitch.height/2),convertY(-game.pitch.width/2),convertX(game.pitch.height/2),convertY(game.pitch.width/2));
+    gameCanvas.drawLine(convertX(-height/2),convertY(-width/2),convertX(height/2),convertY(-width/2));
+    gameCanvas.drawLine(convertX(-height/2),convertY(width/2),convertX(height/2),convertY(width/2));
+    gameCanvas.drawLine(convertX(-height/2),convertY(-width/2),convertX(-height/2),convertY(width/2));
+    gameCanvas.drawLine(convertX(height/2),convertY(-width/2),convertX(height/2),convertY(width/2));
 
 
-    var h0 = -game.pitch.height/2;
-    var h1 = game.pitch.height/2;
-    var w0 = -game.pitch.width/2;
-    var w1 = game.pitch.width/2;
+    var h0 = -height/2;
+    var h1 = height/2;
+    var w0 = -width/2;
+    var w1 = width/2;
 
     //Goal Posts
     gameCanvas.drawLine(convertX(-3.66),convertY(w0)-3,convertX(-3.66),convertY(w0)+3);

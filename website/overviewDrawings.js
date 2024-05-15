@@ -24,6 +24,7 @@ img_yellowcard.src = 'imgs/yellowcard.png';
 
 function draw2() {
     if(overviewCanvas == null) return;
+    if(gameData == null) return;
 
     overviewCanvas.clearCanvasWhite();
     overviewCanvas.logLive("Computing Data")
@@ -217,13 +218,13 @@ function drawOverviewFor(data, x0, y0, x1, y1) {
 
         var pos = data.playerIndices[data.roles[minFrameLoc][j].playerID];
 
-        overviewCanvas.fillTextCenter(game.getShirtNumberLabel(data.roles[minFrameLoc][j].playerID), x0-15, y0+ys*(pos+0.5)+6);
+        overviewCanvas.fillTextCenter(getShirtNumberLabel(data.roles[minFrameLoc][j].playerID), x0-15, y0+ys*(pos+0.5)+6);
     }
     for(var j = 0; j < data.roles[maxFrameLoc-2].length; j++) {
 
         var pos = data.playerIndices[data.roles[maxFrameLoc-2][j].playerID];
 
-        overviewCanvas.fillTextCenter(game.getShirtNumberLabel(data.roles[maxFrameLoc-2][j].playerID), x1+10, y0+ys*(pos+0.5)+4);
+        overviewCanvas.fillTextCenter(getShirtNumberLabel(data.roles[maxFrameLoc-2][j].playerID), x1+10, y0+ys*(pos+0.5)+4);
     }
 
     overviewCanvas.ctx.font= "10px sans-serif"  
@@ -276,6 +277,8 @@ function getSubsitutionFrames(singleSubs) {
 
 
 function displayEventList(x0, x1, y0) {
+    return;
+
     var minFrameLoc = $( "#slider-range" ).slider( "values", 0 );
     var maxFrameLoc = $( "#slider-range" ).slider( "values", 1 );
     var scaling = new Scaling(minFrameLoc, maxFrameLoc, x0, x1, []);

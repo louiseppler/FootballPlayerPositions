@@ -58,6 +58,7 @@ var t = 0;
 function draw() { 
 
     if(gameCanvas == null) return;
+    if(gameData == null) return;
 
     gameCanvas.clearCanvasWhite();
     gameCanvas.logLive("frame: " + frameNr);
@@ -100,7 +101,7 @@ function handleFrameNr() {
     if(isPlaying && frameNr < maxFrame) {
         if(Date.now() > nextFrameAt) {
             frameNr++;
-            nextFrameAt = Date.now() + 1000/(game.frameRate*playBackSpeed)
+            nextFrameAt = Date.now() + 1000/(gameData.frameRate*playBackSpeed)
         }
 
         $('#duration_slider').val(frameNr);
