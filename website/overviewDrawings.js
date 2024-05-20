@@ -10,18 +10,6 @@ var showPossesionInOverview = false;
 var showEvents = true;
 var showPossesionInTimeline = true;
 
-// Images
-img_corner = new Image();
-img_corner.src = 'imgs/corner.jpg';
-img_freekick = new Image();
-img_freekick.src = 'imgs/freekick.png';
-img_goal = new Image();
-img_goal.src = 'imgs/goal.png';
-img_redcard = new Image();
-img_redcard.src = 'imgs/redcard.png';
-img_yellowcard = new Image();
-img_yellowcard.src = 'imgs/yellowcard.png';
-
 function draw2() {
     if(overviewCanvas == null) return;
     if(gameData == null) return;
@@ -275,10 +263,26 @@ function getSubsitutionFrames(singleSubs) {
     }
 }
 
+function drawEventIcon(x,y, type) {
+    switch(type) {
+        case "OFF_TARGET":
+            overviewCanvas.drawCircle(x,y,6);
+            break;
+        case "ON_TARGET":
+            overviewCanvas.drawCircle(x,y,6);
+            overviewCanvas.drawDot(x,y,2);
+            break;
+        case "GOAL":
+            overviewCanvas.drawDot(x,y,6);
+            break;
+        case "CORNER":
+            overviewCanvas.drawLine(x-6,y-6,x-6,y+6);
+            overviewCanvas.drawLine(x-6,y+6,x+6,y+6);
+            break;
+    }
+}
 
 function displayEventList(x0, x1, y0) {
-    return;
-
     var minFrameLoc = $( "#slider-range" ).slider( "values", 0 );
     var maxFrameLoc = $( "#slider-range" ).slider( "values", 1 );
     var scaling = new Scaling(minFrameLoc, maxFrameLoc, x0, x1, []);
@@ -288,47 +292,21 @@ function displayEventList(x0, x1, y0) {
     var frameDiff = maxFrameLoc-minFrameLoc;
 
     if(showEvents) {
-        for(var i = 0; i < eventList.length; i++) {
-            var frame = eventList[i].start.frame;
-
-            const [typeName, team] = getType(eventList[i]);
-            const type = gameEvents[typeName]
+        for(var i = 0; i < gameData.events.length; i++) {
+            var event = gameData.events[i];
+            var frame = event.frame;
 
             overviewCanvas.drawLine(x0, y0, x1, y0);
 
-            if(type != null) {
-                level = type.res
+            var level = 9;
 
-                if(frame > minFrameLoc && frame < maxFrameLoc && frameDiff < levels[level]) {
-                    //overviewCanvas.ctx.fillText(type.letter + "*",  1/scaling*(frame-minFrameLoc)-5+x0,y0+10.5*ys);
-                    //overviewCanvas.ctx.fillText(type.letter + "*",  scaling.frameToPixel(frame)-5+x0,y0+10.5*ys);
-
-                    var img = null
-                    switch(type.icon) {
-                        case "goal":
-                            img = img_goal; break;
-                        case "corner":
-                            img = img_corner; break;
-                        case "red":
-                            img = img_redcard; break;
-                        case "yellow":
-                            img = img_yellowcard; break;
-                        case "freekick":
-                            img = img_freekick; break;
-                    }
-
-                    if(img != null) { 
-                        overviewCanvas.drawLine(scaling.frameToPixel(frame), y0-2, scaling.frameToPixel(frame), y0+2);
-                        if(team == 1) {
-                            overviewCanvas.ctx.drawImage(img, scaling.frameToPixel(frame)-7.5,y0-20, 15, 15);
-                        }
-                        else {
-                            overviewCanvas.ctx.drawImage(img, scaling.frameToPixel(frame)-7.5,y0+5, 15, 15);
-                        }
-                    }
-                    else {
-                        //overviewCanvas.ctx.fillText(type.letter + "*",  scaling.frameToPixel(frame)-5+x0,y0+5);
-                    }
+            if(frame > minFrameLoc && frame < maxFrameLoc && frameDiff < levels[level]) {
+               
+                if(event.team == 1) {
+                    drawEventIcon(scaling.frameToPixel(frame), y0-15, event.type);
+                }
+                else {
+                    drawEventIcon(scaling.frameToPixel(frame), y0+15, event.type);
                 }
             }        
         }

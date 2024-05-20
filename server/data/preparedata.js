@@ -8,20 +8,20 @@ function getType(data) {
     var time = data.start.frame;
 
     if(data.subtypes != null && data.subtypes.name == "CORNER KICK") {
-        return {type: "CORNER", team: team, time: time};
+        return {type: "CORNER", team: team, frame: time};
     }
     if(data.subtypes != null &&  data.subtypes.name == "GOAL KICK") {
-        return {type: "GOAL", team: team, time: time};
+        return {type: "GOAL", team: team, frame: time};
     }
     if(data.type.name == "SHOT") {
         if(data.subtypes instanceof Array) {
             for(var subtype of data.subtypes) {
                 if(subtype.name == "ON TARGET") {
-                    return {type: "ON_TARGET", team: team, time: time};
+                    return {type: "ON_TARGET", team: team, frame: time};
 
                 }
                 if(subtype.name == "OFF TARGET") {
-                    return {type: "OFF_TARGET", team: team, time: time};
+                    return {type: "OFF_TARGET", team: team, frame: time};
                 }
             }
         }
