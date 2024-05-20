@@ -100,6 +100,8 @@ function computeRoles(points, extremaLines, graph, isReversed, playerIDs) {
 function computeExtremaLines(surfaces, points, showDrawings) {
     var extremaLines = {}
 
+    var extremeSurface = null
+
     var centers = [];
 
     var min_x = gameCanvas.width+5;
@@ -133,6 +135,7 @@ function computeExtremaLines(surfaces, points, showDrawings) {
 
         if(y < min_y) {
             min_y = y;
+            extremeSurface = surface
         }
         if(y > max_y) {
             max_y = y;
@@ -144,6 +147,27 @@ function computeExtremaLines(surfaces, points, showDrawings) {
     extremaLines.min_y = min_y;
     extremaLines.max_y = max_y;
 
+    if(extremeSurface != null && showExtremaLines && showDrawings) {
+
+        gameCanvas.ctx.fillStyle = '#E2E2E2';
+        gameCanvas.ctx.beginPath();
+
+        for(var j = 0; j < extremeSurface.length; j++) {
+            var i = extremeSurface[j];
+            if(j == 0) {
+                gameCanvas.ctx.moveTo(points[i*2], points[i*2+1]);
+            }
+            else {
+                gameCanvas.ctx.lineTo(points[i*2], points[i*2+1]);
+            }
+        }
+
+        gameCanvas.ctx.closePath();
+        gameCanvas.ctx.fill();
+    }
+
+
+
     if(showExtremaLines && showDrawings) {
         gameCanvas.ctx.setLineDash([5, 15]);
 
@@ -153,7 +177,7 @@ function computeExtremaLines(surfaces, points, showDrawings) {
         }
         else {
             gameCanvas.drawLine(0, min_y, gameCanvas.width, min_y);
-            gameCanvas.drawLine(0, max_y, gameCanvas.width, max_y);
+            //gameCanvas.drawLine(0, max_y, gameCanvas.width, max_y);
         }
         gameCanvas.ctx.setLineDash([]);
     }

@@ -181,8 +181,16 @@ function shapeGraphMain(array, isReversed, showDrawings = true, playerIDs = null
 
     if(showBaseGraph && showDrawings) {
         gameCanvas.ctx.strokeStyle = "#d3c3c3"
+        gameCanvas.ctx.strokeStyle = "#d38383"
         drawGraph(delaunay.points, graph)
         gameCanvas.ctx.strokeStyle = "#000"
+    }
+    else if(showDrawings) {
+        gameCanvas.ctx.strokeStyle = "#575757"
+
+        gameCanvas.ctx.lineWidth = 3;
+        drawGraph(delaunay.points, graph)
+        gameCanvas.ctx.lineWidth = 1;
     }
 
     computeShapeGraph(delaunay, graph);
@@ -192,8 +200,10 @@ function shapeGraphMain(array, isReversed, showDrawings = true, playerIDs = null
 
     if(!showDrawings) return roles;
 
-    if(team == showGraphForTeam && showShapeGraph) {
+    if(team == showGraphForTeam && showShapeGraph && showBaseGraph) {
         gameCanvas.ctx.strokeStyle = "#A9A9A9"
+        gameCanvas.ctx.strokeStyle = "#575757"
+
         gameCanvas.ctx.lineWidth = 3;
         drawGraph(delaunay.points, graph)
         gameCanvas.ctx.lineWidth = 1;
@@ -254,6 +264,13 @@ function drawDotsRoles(points, roles, team) {
             else {
                 gameCanvas.ctx.fillStyle = "#B73B92";
             }
+
+            gameCanvas.ctx.fillStyle = "#575757";
+
+            if(roles[i].x_role == -2 && showGraphColorMode == 1) {
+                gameCanvas.ctx.fillStyle = "#C55D57";
+            }
+
             gameCanvas.drawDot(points[i*2],points[i*2+1], 8);
         }       
         return
