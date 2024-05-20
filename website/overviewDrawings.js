@@ -202,7 +202,7 @@ function drawOverviewFor(data, x0, y0, x1, y1) {
 
             for(var pos of data.substitutionIndices[i]) {
                 overviewCanvas.ctx.fillStyle = "#575757"
-                overviewCanvas.ctx.fillRect(loc+scaling.dist*0.25, y0+ys*(pos+0.15), scaling.dist*0.5,ys*0.6);
+                overviewCanvas.drawDot(loc+scaling.dist*0.5, y0+ys*(pos+0.5), scaling.dist*0.3);
             }
         }
     }
