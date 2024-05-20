@@ -98,7 +98,20 @@ function drawOverviewFor(data, x0, y0, x1, y1) {
     }
 
     var smoothing = +($('#smoothing_slider').val())
-    document.getElementById("smoothing_text").innerHTML = "Smoothing " + smoothing
+    var smoothing_seconds = smoothing*(scaling.scaling)/gameData.frameRate;
+    var smoothing_text = ""
+    if(smoothing_seconds >= 120) {
+        smoothing_text = Math.floor(smoothing_seconds/60) + "min"
+    }
+    else if(smoothing_seconds >= 1) {
+        smoothing_text = Math.floor(smoothing_seconds) + "s"
+
+    }
+    else {
+        smoothing_text = Math.floor(smoothing_seconds*10)/10 + "s"
+    }
+
+    document.getElementById("smoothing_text").innerHTML = "Smoothing " + smoothing_text
 
     //var currentX = 1/scaling*(frameNr-minFrameLoc)+x0;
     var currentX = scaling.frameToPixel(frameNr);
