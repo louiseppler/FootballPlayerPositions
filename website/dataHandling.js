@@ -16,7 +16,7 @@ var gameData = null;
 function getShirtNumberLabel(playerId) {
 	for(var elm of gameData.shirtNumbers) {
 		if(elm[0] == playerId) {
-			return elm[1];
+			return ""+elm[1];
 		}
 	}
 	return "";

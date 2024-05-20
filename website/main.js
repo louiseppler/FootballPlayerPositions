@@ -63,6 +63,10 @@ function draw() {
     gameCanvas.clearCanvasWhite();
     gameCanvas.logLive("frame: " + frameNr);
 
+    if(pitchOffsetX == -1) {
+        drawGameSetup();
+    }
+
     handleFrameNr();
     drawPitch();
 

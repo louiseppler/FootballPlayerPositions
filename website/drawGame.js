@@ -15,6 +15,7 @@ function convertDist(d) {
 }
 
 function drawGameSetup() {
+    console.log("draw game setup");
     pitchOffsetX = (gameCanvas.width-convertDist(gameData.pitch.height))/2;
     pitchOffsetY = (gameCanvas.height-convertDist(gameData.pitch.width))/2;
 }
@@ -28,10 +29,6 @@ function drawGame(frame) {
     if(tracking_data == null) {
         gameCanvas.logLive("loading tracking data")
         return;
-    }
-
-    if(pitchOffsetX == -1) {
-        drawGameSetup();
     }
 
     for(var i = 0; i < 23; i++) {
@@ -107,7 +104,7 @@ function drawPlayerLabels(frame) {
             gameCanvas.ctx.fillStyle = "#575757"
         }
 
-        //gameCanvas.fillTextCenter(getShirtNumberLabel(playerId), convertX(y), convertY(x)+3)
+        gameCanvas.fillTextCenter(getShirtNumberLabel(playerId), convertX(y), convertY(x)+3)
     }
 }
 
