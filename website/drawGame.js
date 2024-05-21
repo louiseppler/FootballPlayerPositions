@@ -2,12 +2,14 @@ var scaling = 6;
 var pitchOffsetX = -1;
 var pitchOffsetY = -1;
 
+var flipPitch = false;
+
 function convertX(x) {
-    return pitchOffsetX+(+x+gameData.pitch.height/2)*scaling
+    return pitchOffsetX+((flipPitch*-2+1)*(+x)+gameData.pitch.height/2)*scaling
 }
 
 function convertY(y) {
-    return pitchOffsetY+(+y+gameData.pitch.width/2)*scaling
+    return pitchOffsetY+((flipPitch*-2+1)*(+y)+gameData.pitch.width/2)*scaling
 }
 
 function convertDist(d) {

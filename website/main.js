@@ -67,6 +67,14 @@ function draw() {
     }
 
     handleFrameNr();
+
+    if(getIsSecondHalf(frameNr)) {
+        flipPitch = true;
+    }
+    else {
+        flipPitch = false;
+    }
+
     drawPitch();
 
     if(gameCanvas.mouseIsPressed) {
@@ -317,7 +325,9 @@ function drawPointNumbers(points) {
     }
 }
 
-function drawArrows(isSecondHalf) {   
+function drawArrows(isSecondHalf) {
+    var arrowDirection = flipPitch? !isSecondHalf : isSecondHalf
+
     gameCanvas.ctx.strokeStyle = "#575757";
     var outlined = false;
     
@@ -328,7 +338,7 @@ function drawArrows(isSecondHalf) {
     }
     if(showGraphForTeam == 1) gameCanvas.ctx.fillStyle = "#575757";
     
-    if(!isSecondHalf) drawArrowUp(outlined);
+    if(!arrowDirection) drawArrowUp(outlined);
     else drawArrowDown(outlined);
 
     outlined = false;
@@ -340,7 +350,7 @@ function drawArrows(isSecondHalf) {
     }
     if(showGraphForTeam == 2) gameCanvas.ctx.fillStyle = "#575757";
     
-    if(!isSecondHalf) drawArrowDown(outlined);
+    if(!arrowDirection) drawArrowDown(outlined);
     else drawArrowUp(outlined);
 }
 
