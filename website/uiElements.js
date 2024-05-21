@@ -109,7 +109,7 @@ function setupViewSettings() {
 
     document.getElementById("show_subs_btn").checked = true;
     document.getElementById("show_subs_minimal_btn").checked = false;
-    document.getElementById("show_shape_graph_btn").checked = false;
+    document.getElementById("show_posession_overview_btn").checked = false;
     viewSettingsOverviewChanged();
 
     document.getElementById("show_events_btn").checked = true;

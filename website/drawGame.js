@@ -97,9 +97,9 @@ function drawPlayerLabels(frame) {
             gameCanvas.ctx.fillStyle = "#575757"
         }
 
-        if(showGoalKeepers == false && gameData.goalKeepers.includes(playerId)) continue;
+        if(showGoalKeepers == false && gameData.players.goalKeepers.includes(playerId)) continue;
 
-        if(showGraphForTeam != 0 && gameData.goalKeepers.includes(playerId)) {
+        if(showGraphForTeam != 0 && gameData.players.goalKeepers.includes(playerId)) {
             gameCanvas.ctx.fillStyle = "#575757"
         }
 
