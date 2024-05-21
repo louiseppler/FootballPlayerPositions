@@ -39,4 +39,5 @@ $.getJSON(dataLink, function(data) {
 	maxFrame = Math.floor(data.tracking.length/23)-1;
 	setupSlider();
 	gameData = data
+	possesions = new Possesion();
 });
