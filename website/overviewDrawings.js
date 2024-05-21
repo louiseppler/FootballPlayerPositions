@@ -154,14 +154,7 @@ function drawOverviewFor(data, x0, y0, x1, y1) {
         }
     }
 
-    var substitutionFramesLoc = [minFrameLoc];
-    var combindedSubstituions = getSubsitutionFrames(data.substitutionFrames)
-    for(var k = 1; k < combindedSubstituions.length-1; k++) {
-        if(minFrameLoc <= combindedSubstituions[k] && combindedSubstituions[k] < maxFrameLoc) {
-            substitutionFramesLoc.push(combindedSubstituions[k])
-        }
-    }
-    substitutionFramesLoc.push(maxFrameLoc-2);
+    var substitutionFramesLoc = getSubsitutionFramesLocal(minFrameLoc, maxFrameLoc, data.substitutionFrames)
 
     for(var k = 0; k < substitutionFramesLoc.length-1; k++) {
         var k1Frame = substitutionFramesLoc[k]+1;
@@ -171,8 +164,10 @@ function drawOverviewFor(data, x0, y0, x1, y1) {
 
         for(var i = k1Pixel; i < k2Pixel; i += smoothing) {
             var i2 = i+smoothing;
+            var glitchDelta = 1; //add extra pixel to avoid rendering errors
             if(i2 > k2Pixel) {
                 i2 = k2Pixel
+                glitchDelta = 0;
             }
 
             var frame = scaling.pixelToFrame(i);
@@ -185,9 +180,9 @@ function drawOverviewFor(data, x0, y0, x1, y1) {
                 const [xRole, yRole] = Role.getMostFrequentRole(data.roles[frame][j].roleCount,data.roles[frameNext][j].roleCount)
 
                 overviewCanvas.ctx.fillStyle = Role.colorsX[xRole+2]
-                overviewCanvas.ctx.fillRect(i, y0+pos*ys, (i2-i), ys*(0.45));
+                overviewCanvas.ctx.fillRect(i, y0+pos*ys, (i2-i)+glitchDelta, ys*(0.45));
                 overviewCanvas.ctx.fillStyle = Role.colorsY[yRole+2]
-                overviewCanvas.ctx.fillRect(i, y0+pos*ys+ys*(0.45+0.225*overviewIsExpanded), (i2-i), ys*0.45);
+                overviewCanvas.ctx.fillRect(i, y0+pos*ys+ys*(0.45+0.225*overviewIsExpanded), (i2-i)+glitchDelta, ys*0.45);
                 
                 overviewCanvas.ctx.fillStyle = "#000"
             }
@@ -195,7 +190,7 @@ function drawOverviewFor(data, x0, y0, x1, y1) {
             if(showPossesionInOverview) {
                 if(possesions.outOfPossesion(frame, frameNext, data.team)) {
                     overviewCanvas.ctx.fillStyle = "rgba(255, 255, 255, 0.8)";
-                    overviewCanvas.ctx.fillRect(i, y0, (i2-i), (y1-y0));
+                    overviewCanvas.ctx.fillRect(i, y0, (i2-i)+glitchDelta, (y1-y0));
                 }
             }
         }
@@ -261,6 +256,22 @@ function frameToTime(frame) {
     return minText + ":" + secondsText;
 }
 
+/**
+ * Returns combined substition frames that are within minFrameLoc and maxFrameLoc
+ */
+function getSubsitutionFramesLocal(minFrameLoc, maxFrameLoc, substitutionFrames) {
+    var substitutionFramesLoc = [minFrameLoc];
+    var combindedSubstituions = getSubsitutionFrames(substitutionFrames)
+    for(var k = 1; k < combindedSubstituions.length-1; k++) {
+        if(minFrameLoc <= combindedSubstituions[k] && combindedSubstituions[k] < maxFrameLoc) {
+            substitutionFramesLoc.push(combindedSubstituions[k])
+        }
+    }
+    substitutionFramesLoc.push(maxFrameLoc-2);
+
+    return substitutionFramesLoc;
+}
+
 function getSubsitutionFrames(singleSubs) {
     if(showSubs == false) {
         return [];
@@ -269,8 +280,15 @@ function getSubsitutionFrames(singleSubs) {
         return singleSubs;
     }
     else {
-
-        if(overviewTeamA.dataComputed == false || overviewTeamB.dataComputed == false) return singleSubs;
+        if(overviewTeamA.dataComputed == false || overviewTeamB.dataComputed == false) {
+            if(overviewTeamA.dataComputed) {
+                return overviewTeamA.substitutionFrames;
+            }
+            if(overviewTeamB.dataComputed) {
+                return overviewTeamB.substitutionFrames;
+            }
+            return singleSubs;
+        }
 
         //Merging of substitutionFrames
 
@@ -328,18 +346,29 @@ function drawEventIcon(x,y, type) {
 function displayEventList(x0, x1, y0) {
     var minFrameLoc = $( "#slider-range" ).slider( "values", 0 );
     var maxFrameLoc = $( "#slider-range" ).slider( "values", 1 );
-    var scaling = new Scaling(minFrameLoc, maxFrameLoc, x0, x1, []);
+    var scaling = new Scaling(minFrameLoc, maxFrameLoc, x0, x1, getSubsitutionFrames([])); //TODO: holes
+    var substitutionFramesLoc = getSubsitutionFramesLocal(minFrameLoc, maxFrameLoc, [])
 
     //Display Event List
     var levels = {0: 0, 1: 5_000, 2: 10_000, 3: 40_000, 4: 70_000, 5: 100_000, 9: 1_000_000}
     var frameDiff = maxFrameLoc-minFrameLoc;
 
+    //Draws event timeline
+    if(showEvents || showPossesionInTimeline) {
+        for(var k = 0; k < substitutionFramesLoc.length-1; k++) {
+            var k1Frame = substitutionFramesLoc[k]+1;
+            var k2Frame = substitutionFramesLoc[k+1];
+            var k1Pixel = scaling.frameToPixel(k1Frame);
+            var k2Pixel = scaling.frameToPixel(k2Frame);
+
+            overviewCanvas.drawLine(k1Pixel, y0, k2Pixel, y0);
+        }
+    }
+
     if(showEvents) {
         for(var i = 0; i < gameData.events.length; i++) {
             var event = gameData.events[i];
             var frame = event.frame;
-
-            overviewCanvas.drawLine(x0, y0, x1, y0);
 
             var level = 9;
 
@@ -359,17 +388,29 @@ function displayEventList(x0, x1, y0) {
         if(possesions != null) {
             var smoothing = +($('#smoothing_slider').val())
 
-            for(var i = x0; i < x1; i += smoothing) {
-                var frame = scaling.pixelToFrame(i);
-                var frameNext = scaling.pixelToFrame(i+smoothing);
+            overviewCanvas.ctx.fillStyle = "#575757"
 
-                overviewCanvas.ctx.fillStyle = "#575757"
+            for(var k = 0; k < substitutionFramesLoc.length-1; k++) {
+                var k1Frame = substitutionFramesLoc[k]+1;
+                var k2Frame = substitutionFramesLoc[k+1];
+                var k1Pixel = scaling.frameToPixel(k1Frame);
+                var k2Pixel = scaling.frameToPixel(k2Frame);
 
-                if(possesions.isInPossesion(frame, frameNext, 1)) {
-                    overviewCanvas.ctx.fillRect(i, y0-5, smoothing, 5);
-                }
-                if(possesions.isInPossesion(frame, frameNext, 2)) {
-                    overviewCanvas.ctx.fillRect(i, y0, smoothing, 5);
+                for(var i = k1Pixel; i < k2Pixel; i += smoothing) {
+                    var i2 = i+smoothing;
+                    if(i2 > k2Pixel) {
+                        i2 = k2Pixel
+                    }
+
+                    var frame = scaling.pixelToFrame(i);
+                    var frameNext = scaling.pixelToFrame(i2);
+
+                    if(possesions.isInPossesion(frame, frameNext, 1)) {
+                        overviewCanvas.ctx.fillRect(i, y0-5, (i2-i)+0.5, 5);
+                    }
+                    if(possesions.isInPossesion(frame, frameNext, 2)) {
+                        overviewCanvas.ctx.fillRect(i, y0, (i2-i)+0.5, 5);
+                    }
                 }
             }
         }
