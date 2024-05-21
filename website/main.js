@@ -66,6 +66,8 @@ function draw() {
 
     handleFrameNr();
 
+    document.getElementById("time_label_text").innerHTML = frameToTime(frameNr);
+
     if(getIsSecondHalf(frameNr)) {
         flipPitch = true;
     }
