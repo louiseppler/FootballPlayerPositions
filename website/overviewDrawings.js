@@ -303,8 +303,8 @@ function getSubsitutionFrames(singleSubs) {
         var subsA = overviewTeamA.substitutionFrames;
         var subsB = overviewTeamB.substitutionFrames;
 
-        if(subsA.length < 2) subsA = [0, maxFrame-2];
-        if(subsB.length < 2) subsB = [0, maxFrame-2];
+        if(subsA.length < 2) subsA = [0, maxFrame];
+        if(subsB.length < 2) subsB = [0, maxFrame];
 
         var frames = [0];
 
@@ -324,7 +324,7 @@ function getSubsitutionFrames(singleSubs) {
             }
         }
 
-        frames.push(maxFrame-2);
+        frames.push(maxFrame);
 
         return frames;
     }

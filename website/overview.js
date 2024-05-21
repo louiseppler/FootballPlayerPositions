@@ -26,7 +26,7 @@ class OverviewData {
 
     computeChunk(size) {
         for(var i = this.dataComputedUntil; i < this.dataComputedUntil+size; i++) {
-            if(i > maxFrame-2) {
+            if(i > maxFrame) {
                 this.finishComputation();
                 return;
             }
@@ -37,7 +37,7 @@ class OverviewData {
     }
 
     finishComputation() {
-        this.substitutionFrames.push(maxFrame-2);        
+        this.substitutionFrames.push(maxFrame);        
         this.computePlayerOrdering(this.substitutionFrames);
         this.dataComputed = true;
     }
@@ -82,11 +82,11 @@ class OverviewData {
     computeAllRoles() {
         console.log("Starting role computation");
 
-        for(var i = minFrame; i < maxFrame-2; i++) {
+        for(var i = minFrame; i < maxFrame; i++) {
             this.computeFrame(i)
         }   
 
-        this.substitutionFrames.push(maxFrame-2);
+        this.substitutionFrames.push(maxFrame);
 
         console.log("Computed Roles!");
         console.log("substitutionFrames " + substitutionFrames);

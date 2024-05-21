@@ -36,6 +36,7 @@ Papa.parse(linkPosession, {
 console.log("Loading game data...");
 $.getJSON(dataLink, function(data) {
 	console.log("Loaded game data");
-	console.log(data);
+	maxFrame = Math.floor(data.tracking.length/23)-1;
+	setupSlider();
 	gameData = data
 });

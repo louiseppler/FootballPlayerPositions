@@ -1,14 +1,28 @@
 var minFrame = 0;
-var maxFrame = 143761-2;
+var maxFrame = 0//143761-2;
 
+function setupSlider() {
+    $('#duration_slider').prop("min", minFrame);
+    $('#duration_slider').prop("max", maxFrame);
+
+    $( "#slider-range" ).slider({
+        range: true,
+        min: minFrame,
+        max: maxFrame,
+        values: [ minFrame, maxFrame ],
+        slide: function( event, ui ) {
+          //get called when slider is updated
+        }
+      });
+
+}
 
 function setupUIElements() {
     
     $("#main_div_error").hide()
     setupViewSettings();
 
-    $('#duration_slider').prop("min", minFrame);
-    $('#duration_slider').prop("max", maxFrame-2);
+
 
     $("#play_button").click(function() {
         isPlaying = !isPlaying;
@@ -24,17 +38,6 @@ function setupUIElements() {
     $("#smoothing_slider").click(function() {
         //debugFlagSet = true;
     });
-
-    $( "#slider-range" ).slider({
-        range: true,
-        min: minFrame,
-        max: maxFrame,
-        values: [ minFrame, maxFrame ],
-        slide: function( event, ui ) {
-          //get called when slider is updated
-        }
-      });
-
       
 
     $("#graph_select_group").click(function() {
