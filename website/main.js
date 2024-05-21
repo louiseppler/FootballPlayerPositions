@@ -61,7 +61,6 @@ function draw() {
     if(gameData == null) return;
 
     gameCanvas.clearCanvasWhite();
-    gameCanvas.logLive("frame: " + frameNr);
 
     if(pitchOffsetX == -1) {
         drawGameSetup();

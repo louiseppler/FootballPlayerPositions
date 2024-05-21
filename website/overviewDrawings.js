@@ -15,7 +15,6 @@ function draw2() {
     if(gameData == null) return;
 
     overviewCanvas.clearCanvasWhite();
-    overviewCanvas.logLive("Computing Data")
     
 
     overviewTeamA.isComputing = false;
@@ -36,16 +35,23 @@ function draw2() {
 
     debugFlagSet = false
 
+    overviewCanvas.ctx.fillStyle = "#000"
+    overviewCanvas.ctx.font= "16px sans-serif"
+
     if(showOverviewForTeam == 0) {
+        overviewCanvas.fillTextRight("Home", overviewCanvas.width-25, 20);
+        overviewCanvas.fillTextRight("Away", overviewCanvas.width-25, overviewCanvas.height-15);
         drawOverviewFor(overviewTeamA, 25, 30, overviewCanvas.width-25, overviewCanvas.height*0.5-25);
         drawOverviewFor(overviewTeamB, 25, overviewCanvas.height*0.5+25, overviewCanvas.width-25, overviewCanvas.height-30);
         displayEventList(25, overviewCanvas.width-25,  overviewCanvas.height*0.5);
     }
     else if(showOverviewForTeam == 1) {
+        overviewCanvas.fillTextRight("Home", overviewCanvas.width-25, 20);
         drawOverviewFor(overviewTeamA, 25, 30, overviewCanvas.width-25, overviewCanvas.height*0.75);
         displayEventList(25, overviewCanvas.width-25,  overviewCanvas.height*0.75+30)
     }
     else if(showOverviewForTeam == 2) {
+        overviewCanvas.fillTextRight("Away", overviewCanvas.width-25, 20);
         drawOverviewFor(overviewTeamB, 25, 30, overviewCanvas.width-25, overviewCanvas.height*0.75);
         displayEventList(25, overviewCanvas.width-25,  overviewCanvas.height*0.75+30)
     }
@@ -211,8 +217,6 @@ function drawOverviewFor(data, x0, y0, x1, y1) {
     //Displaying Player IDs
     overviewCanvas.ctx.fillStyle = "#000"
     
-    overviewCanvas.logLive(overviewCanvas.ctx.font)
-
     overviewCanvas.ctx.font= "12px sans-serif"
 
     for(var j = 0; j < data.roles[minFrameLoc].length; j++) {

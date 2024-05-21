@@ -27,7 +27,6 @@ function drawGame(frame) {
 
     if(gameData == null) return;
     if(tracking_data == null) {
-        gameCanvas.logLive("loading tracking data")
         return;
     }
 
