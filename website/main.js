@@ -27,8 +27,6 @@ var debugFlagSet = false;
 
 var overviewIsExpanded = false;
 
-var axisIsFlipped = true; //varies for role computations, use if game plays from bottom to top
-
 // ============= Function Variables =============
 
 //only used before calculation of triangles, use delaunay.points

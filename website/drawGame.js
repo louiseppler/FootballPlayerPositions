@@ -2,7 +2,7 @@ var scaling = 6;
 var pitchOffsetX = -1;
 var pitchOffsetY = -1;
 
-var flipPitch = false;
+var flipPitch = false; //filps the whole coordinate system
 
 function convertX(x) {
     return pitchOffsetX+((flipPitch*-2+1)*(+x)+gameData.pitch.height/2)*scaling
@@ -201,6 +201,10 @@ function getGamePoints(frame, team) {
             points.push(convertX(y),convertY(x));
             playerIDs.push(playerId)
         }
+    }
+
+    if(flipPitch) {
+        isReversed = !isReversed;
     }
 
     return [points, isReversed, playerIDs];
