@@ -39,26 +39,28 @@ function draw2() {
     overviewCanvas.ctx.font= "16px sans-serif"
 
     if(showOverviewForTeam == 0) {
-        overviewCanvas.fillTextRight("Home", overviewCanvas.width-25, 20);
-        overviewCanvas.fillTextRight("Away", overviewCanvas.width-25, overviewCanvas.height-15);
-        drawOverviewFor(overviewTeamA, 25, 30, overviewCanvas.width-25, overviewCanvas.height*0.5-25);
-        drawOverviewFor(overviewTeamB, 25, overviewCanvas.height*0.5+25, overviewCanvas.width-25, overviewCanvas.height-30);
+        overviewCanvas.fillTextRight("Away", overviewCanvas.width-25, 20);
+        overviewCanvas.fillTextRight("Home", overviewCanvas.width-25, overviewCanvas.height-15);
+
+        drawOverviewFor(overviewTeamB, 25, 30, overviewCanvas.width-25, overviewCanvas.height*0.5-25, true);
+        drawOverviewFor(overviewTeamA, 25, overviewCanvas.height*0.5+25, overviewCanvas.width-25, overviewCanvas.height-30, false);
+
         displayEventList(25, overviewCanvas.width-25,  overviewCanvas.height*0.5);
     }
     else if(showOverviewForTeam == 1) {
         overviewCanvas.fillTextRight("Home", overviewCanvas.width-25, 20);
-        drawOverviewFor(overviewTeamA, 25, 30, overviewCanvas.width-25, overviewCanvas.height*0.75);
+        drawOverviewFor(overviewTeamA, 25, 30, overviewCanvas.width-25, overviewCanvas.height*0.75, false);
         displayEventList(25, overviewCanvas.width-25,  overviewCanvas.height*0.75+30)
     }
     else if(showOverviewForTeam == 2) {
         overviewCanvas.fillTextRight("Away", overviewCanvas.width-25, 20);
-        drawOverviewFor(overviewTeamB, 25, 30, overviewCanvas.width-25, overviewCanvas.height*0.75);
+        drawOverviewFor(overviewTeamB, 25, 30, overviewCanvas.width-25, overviewCanvas.height*0.75, false);
         displayEventList(25, overviewCanvas.width-25,  overviewCanvas.height*0.75+30)
     }
 
 }
 
-function drawOverviewFor(data, x0, y0, x1, y1) {
+function drawOverviewFor(data, x0, y0, x1, y1, flipped) {
 
     if(data.dataComputed == false) {
 
@@ -176,6 +178,9 @@ function drawOverviewFor(data, x0, y0, x1, y1) {
             for(var j = 0; j < data.roles[frame].length; j++) {
 
                 var pos = data.playerIndices[data.roles[frame][j].playerID];
+                if(flipped) {
+                    pos = 9-pos;
+                }
 
                 const [xRole, yRole] = Role.getMostFrequentRole(data.roles[frame][j].roleCount,data.roles[frameNext][j].roleCount)
 
@@ -221,13 +226,19 @@ function drawOverviewFor(data, x0, y0, x1, y1) {
     for(var j = 0; j < data.roles[minFrameLoc].length; j++) {
 
         var pos = data.playerIndices[data.roles[minFrameLoc][j].playerID];
+        if(flipped) {
+            pos = 9-pos;
+        }
 
         overviewCanvas.fillTextCenter(getShirtNumberLabel(data.roles[minFrameLoc][j].playerID), x0-15, y0+ys*(pos+0.5)+6);
     }
     for(var j = 0; j < data.roles[maxFrameLoc-2].length; j++) {
 
         var pos = data.playerIndices[data.roles[maxFrameLoc-2][j].playerID];
-
+        if(flipped) {
+            pos = 9-pos;
+        }
+        
         overviewCanvas.fillTextCenter(getShirtNumberLabel(data.roles[maxFrameLoc-2][j].playerID), x1+10, y0+ys*(pos+0.5)+4);
     }
 
