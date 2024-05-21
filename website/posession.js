@@ -1,4 +1,4 @@
-class Possesion {
+class Possession {
     constructor() {
         console.log("Computing Posessions");
         this.teamA = this.constructArray(gameData.possessions.team1);

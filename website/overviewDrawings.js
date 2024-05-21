@@ -188,7 +188,7 @@ function drawOverviewFor(data, x0, y0, x1, y1, flipped) {
             }
 
             if(showPossesionInOverview) {
-                if(possesions.outOfPossesion(frame, frameNext, data.team)) {
+                if(possessions.outOfPossesion(frame, frameNext, data.team)) {
                     overviewCanvas.ctx.fillStyle = "rgba(255, 255, 255, 0.8)";
                     overviewCanvas.ctx.fillRect(i, y0, (i2-i)+glitchDelta, (y1-y0));
                 }
@@ -391,7 +391,7 @@ function displayEventList(x0, x1, y0) {
     }
 
     if(showPossesionInTimeline) {
-        if(possesions != null) {
+        if(possessions != null) {
             var smoothing = +($('#smoothing_slider').val())
 
             overviewCanvas.ctx.fillStyle = "#575757"
@@ -411,10 +411,10 @@ function displayEventList(x0, x1, y0) {
                     var frame = scaling.pixelToFrame(i);
                     var frameNext = scaling.pixelToFrame(i2);
 
-                    if(possesions.isInPossesion(frame, frameNext, 1)) {
+                    if(possessions.isInPossesion(frame, frameNext, 1)) {
                         overviewCanvas.ctx.fillRect(i, y0-5, (i2-i)+0.5, 5);
                     }
-                    if(possesions.isInPossesion(frame, frameNext, 2)) {
+                    if(possessions.isInPossesion(frame, frameNext, 2)) {
                         overviewCanvas.ctx.fillRect(i, y0, (i2-i)+0.5, 5);
                     }
                 }
