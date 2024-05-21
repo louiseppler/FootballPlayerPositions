@@ -317,36 +317,85 @@ function drawPointNumbers(points) {
     }
 }
 
-function drawArrows(isSecondHalf) {    
+function drawArrows(isSecondHalf) {   
+    gameCanvas.ctx.strokeStyle = "#575757";
+    var outlined = false;
+    
+    //Arrow Team 1
     gameCanvas.ctx.fillStyle = "#3395AB";
-    if(showGraphForTeam == 2) gameCanvas.ctx.fillStyle = "#CCE4EA";
+    if(showGraphForTeam == 2) {
+        outlined = true;
+    }
     if(showGraphForTeam == 1) gameCanvas.ctx.fillStyle = "#575757";
     
-    if(!isSecondHalf) drawArrowUp();
-    else drawArrowDown();
+    if(!isSecondHalf) drawArrowUp(outlined);
+    else drawArrowDown(outlined);
 
+    outlined = false;
+
+    //Arrow Team 2
     gameCanvas.ctx.fillStyle = "#B73B92";
-    if(showGraphForTeam == 1) gameCanvas.ctx.fillStyle = "#EFD0E3";
+    if(showGraphForTeam == 1) {
+        outlined = true;
+    }
     if(showGraphForTeam == 2) gameCanvas.ctx.fillStyle = "#575757";
     
-    if(!isSecondHalf) drawArrowDown();
-    else drawArrowUp();
+    if(!isSecondHalf) drawArrowDown(outlined);
+    else drawArrowUp(outlined);
 }
 
-function drawArrowDown() {
+function drawArrowDown(outlined) {
     const h0A = gameCanvas.height/2+25;
     const h0B = gameCanvas.height/2-25;
-    const h = 12; const w = 3; const h1 = 8;
-    gameCanvas.ctx.fillRect(w, h0B-h, w, h*2);
-    gameCanvas.drawTriangle(0, h0B+h, w*3, h0B+h, w*1.5, h0B+h+h1);
+    const h = 12; const h1 = 8;
+    const w = 3; const w0 = 10;
+    //gameCanvas.ctx.fillRect(w, h0B-h, w, h*2);
+    //gameCanvas.drawTriangle(0, h0B+h, w*3, h0B+h, w*1.5, h0B+h+h1);
+
+    gameCanvas.ctx.beginPath();
+    gameCanvas.ctx.moveTo(w0+w*1.5, h0B+h+h1); 
+    gameCanvas.ctx.lineTo(w0+w*3, h0B+h);
+    gameCanvas.ctx.lineTo(w0+w*2, h0B+h);
+    gameCanvas.ctx.lineTo(w0+w*2, h0B-h);
+    gameCanvas.ctx.lineTo(w0+w, h0B-h);
+    gameCanvas.ctx.lineTo(w0+w, h0B+h);
+    gameCanvas.ctx.lineTo(w0, h0B+h);
+
+    gameCanvas.ctx.closePath();
+    if(outlined) {
+        gameCanvas.ctx.stroke();
+    }
+    else {
+        gameCanvas.ctx.fill();
+    }
 }
 
-function drawArrowUp() {
+function drawArrowUp(outlined) {
     const h0A = gameCanvas.height/2+25;
     const h0B = gameCanvas.height/2-25;
-    const h = 12; const w = 3; const h1 = 8;
-    gameCanvas.ctx.fillRect(w, h0A-h, w, h*2);
-    gameCanvas.drawTriangle(0, h0A-h, w*3, h0A-h, w*1.5, h0A-h-h1);
+    const h = 12; const h1 = 8;
+    const w = 3; const w0 = 10;
+
+    //gameCanvas.ctx.fillRect(w, h0A-h, w, h*2);
+    //gameCanvas.drawTriangle(0, h0A-h, w*3, h0A-h, w*1.5, h0A-h-h1);
+
+    gameCanvas.ctx.beginPath();
+    gameCanvas.ctx.moveTo(w0+w*1.5, h0A-h-h1); 
+    gameCanvas.ctx.lineTo(w0+w*3, h0A-h);
+    gameCanvas.ctx.lineTo(w0+w*2, h0A-h);
+    gameCanvas.ctx.lineTo(w0+w*2, h0A+h);
+    gameCanvas.ctx.lineTo(w0+w, h0A+h);
+    gameCanvas.ctx.lineTo(w0+w, h0A-h);
+    gameCanvas.ctx.lineTo(w0, h0A-h);
+
+    gameCanvas.ctx.closePath();
+    if(outlined) {
+        gameCanvas.ctx.stroke();
+    }
+    else {
+        gameCanvas.ctx.fill();
+    }
+
 }
 
 function drawHull(delaunay) {
