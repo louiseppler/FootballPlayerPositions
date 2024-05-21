@@ -263,11 +263,11 @@ function drawPitch() {
     const radius = convertDist(9.15);
 
     gameCanvas.ctx.beginPath();
-    gameCanvas.ctx.arc(convertX(0),convertY(w0+11), radius, Math.PI/2-0.92592839678, Math.PI/2+0.92592839678);
+    gameCanvas.ctx.arc(convertX(0),convertY(w0+(flipPitch*-2+1)*11), radius, Math.PI/2-0.92592839678, Math.PI/2+0.92592839678);
     gameCanvas.ctx.stroke();
 
     gameCanvas.ctx.beginPath();
-    gameCanvas.ctx.arc(convertX(0),convertY(w1-11), radius, -Math.PI/2-0.92592839678, -Math.PI/2+0.92592839678);
+    gameCanvas.ctx.arc(convertX(0),convertY(w1-(flipPitch*-2+1)*11), radius, -Math.PI/2-0.92592839678, -Math.PI/2+0.92592839678);
     gameCanvas.ctx.stroke();
 
     gameCanvas.drawDot(convertX(0),convertY(0),2)

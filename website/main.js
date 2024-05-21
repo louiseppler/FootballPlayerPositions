@@ -68,7 +68,7 @@ function draw() {
 
     document.getElementById("time_label_text").innerHTML = frameToTime(frameNr);
 
-    if(getIsSecondHalf(frameNr)) {
+    if((showOverviewForTeam == 2)? !getIsSecondHalf(frameNr) : getIsSecondHalf(frameNr)) {
         flipPitch = true;
     }
     else {
