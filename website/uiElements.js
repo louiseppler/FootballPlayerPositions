@@ -3,7 +3,8 @@ var maxFrame = 143761-2;
 
 
 function setupUIElements() {
-
+    
+    $("#main_div_error").hide()
     setupViewSettings();
 
     $('#duration_slider').prop("min", minFrame);
@@ -147,6 +148,13 @@ function globalViewSettingsChanged() {
     }
     else {
         $("#main_div_pitch").hide();
+    }
+
+    if(document.getElementById("show_diagram_btn").checked == false && document.getElementById("show_pitch_btn").checked == false) {
+        $("#main_div_error").show()
+    }
+    else {
+        $("#main_div_error").hide()
     }
 }
 
