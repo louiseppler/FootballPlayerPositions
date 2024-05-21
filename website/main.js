@@ -260,10 +260,10 @@ function drawDotsRoles(points, roles, team) {
     if(showGraphForTeam == 0) {
         for(var i = 0; i < roles.length; i++) {
             if(team == 1) {
-                gameCanvas.ctx.fillStyle = "#3395AB";   
+                gameCanvas.ctx.fillStyle = gameData.team1.color;   
             }
             else {
-                gameCanvas.ctx.fillStyle = "#B73B92";
+                gameCanvas.ctx.fillStyle = gameData.team2.color;
             }
             gameCanvas.drawDot(points[i*2],points[i*2+1], 8);
         }       
@@ -328,11 +328,11 @@ function drawPointNumbers(points) {
 function drawArrows(isSecondHalf) {
     var arrowDirection = flipPitch? !isSecondHalf : isSecondHalf
 
-    gameCanvas.ctx.strokeStyle = "#575757";
+    gameCanvas.ctx.strokeStyle = gameData.team1.color;
     var outlined = false;
     
     //Arrow Team 1
-    gameCanvas.ctx.fillStyle = "#3395AB";
+    gameCanvas.ctx.fillStyle = gameData.team1.color;
     if(showGraphForTeam == 2) {
         outlined = true;
     }
@@ -344,7 +344,7 @@ function drawArrows(isSecondHalf) {
     outlined = false;
 
     //Arrow Team 2
-    gameCanvas.ctx.fillStyle = "#B73B92";
+    gameCanvas.ctx.fillStyle = gameData.team2.color;
     if(showGraphForTeam == 1) {
         outlined = true;
     }
