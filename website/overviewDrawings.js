@@ -103,6 +103,8 @@ function drawOverviewFor(data, x0, y0, x1, y1) {
         $('#duration_slider').val(frameNr);
     }
 
+
+
     var smoothing = +($('#smoothing_slider').val())
     var smoothing_seconds = smoothing*(scaling.scaling)/gameData.frameRate;
     var smoothing_text = ""
@@ -118,6 +120,8 @@ function drawOverviewFor(data, x0, y0, x1, y1) {
     }
 
     document.getElementById("smoothing_text").innerHTML = "Smoothing " + smoothing_text
+
+    document.getElementById("time_duration_text").innerHTML = frameToTime(minFrameLoc) + " - " + frameToTime(maxFrameLoc);
 
     //var currentX = 1/scaling*(frameNr-minFrameLoc)+x0;
     var currentX = scaling.frameToPixel(frameNr);
@@ -233,6 +237,28 @@ function drawOverviewFor(data, x0, y0, x1, y1) {
     }
 
     overviewCanvas.ctx.font= "10px sans-serif"  
+}
+
+function frameToTime(frame) {
+    var secondsTotal = frame/gameData.frameRate;
+
+    var secondsText = "";
+    if(secondsTotal % 60 < 10) {
+        secondsText = "0" + Math.floor(secondsTotal % 60);
+    }
+    else {
+        secondsText = "" + Math.floor(secondsTotal % 60);
+    }
+
+    var minText = "";
+    if(Math.floor(secondsTotal/60) < 10) {
+        minText = "0" + Math.floor(secondsTotal/60);
+    }
+    else {
+        minText = "" + Math.floor(secondsTotal/60)
+    }
+
+    return minText + ":" + secondsText;
 }
 
 function getSubsitutionFrames(singleSubs) {
