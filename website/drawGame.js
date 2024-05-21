@@ -28,9 +28,6 @@ function drawGame(frame) {
     gameCanvas.ctx.strokeStyle = "#000"
 
     if(gameData == null) return;
-    // if(tracking_data == null) {
-    //     return;
-    // }
 
     for(var i = 0; i < 23; i++) {
         var dataLine = gameData.tracking[i+frame*23];
@@ -64,9 +61,6 @@ function drawGame(frame) {
 }
 
 function drawPlayerLabels(frame) {
-    if(tracking_data == null) {
-        return
-    }
     for(var i = 0; i < 23; i++) {
         var dataLine = gameData.tracking[i+frame*23];
 
@@ -110,9 +104,6 @@ function drawPlayerLabels(frame) {
 }
 
 function drawBall(frame) {
-    // if(tracking_data == null) {
-    //     return
-    // }
     for(var i = 0; i < 23; i++) {
         var dataLine = gameData.tracking[i+frame*23];
 
@@ -139,14 +130,10 @@ function drawBall(frame) {
 }
 
 function getIsSecondHalf(frame) {
-    //if(tracking_data == null) return false;
-
-    return (gameData.tracking[1+0+frame*23][2] != "One")
+    return (gameData.tracking[0+frame*23][TRACKING_HALF] != "One")
 }
 
 function getGoalKeepers(frame) {
-    //if(tracking_data == null) return null
-
     var points = [];
 
     for(var i = 0; i < 23; i++) {
@@ -173,16 +160,14 @@ function getGoalKeepers(frame) {
 }
 
 function getGamePoints(frame, team) {
-    //if(tracking_data == null) return [null, null, null]
-
     var points = [];
 
     var isReversed = false;
 
     var playerIDs = [];
 
-    if((gameData.tracking[0+frame*23][2] != "One") && team == 1) isReversed = true;
-    if((gameData.tracking[0+frame*23][2] == "One") && team == 2) isReversed = true;
+    if((gameData.tracking[0+frame*23][TRACKING_HALF] != "One") && team == 1) isReversed = true;
+    if((gameData.tracking[0+frame*23][TRACKING_HALF] == "One") && team == 2) isReversed = true;
 
     for(var i = 0; i < 23; i++) {
         var dataLine = gameData.tracking[i+frame*23];
