@@ -28,14 +28,14 @@ function drawGame(frame) {
     gameCanvas.ctx.strokeStyle = "#000"
 
     if(gameData == null) return;
-    if(tracking_data == null) {
-        return;
-    }
+    // if(tracking_data == null) {
+    //     return;
+    // }
 
     for(var i = 0; i < 23; i++) {
-        var dataLine = tracking_data[1+i+frame*23];
+        var dataLine = gameData.tracking[i+frame*23];
 
-        var playerId = dataLine[5];
+        var playerId = dataLine[TRACKING_PID];
 
         
         var isInTeamA = gameData.players.team1.includes(playerId);
@@ -44,8 +44,8 @@ function drawGame(frame) {
         if(showTeamA == false && isInTeamA) continue;
         if(showTeamB == false && isInTeamB) continue;
         
-        var x = dataLine[6]
-        var y = dataLine[7]
+        var x = dataLine[TRACKING_X]
+        var y = dataLine[TRACKING_Y]
 
         if(x == "Inf" || y == "Inf") {
             continue;
@@ -68,9 +68,9 @@ function drawPlayerLabels(frame) {
         return
     }
     for(var i = 0; i < 23; i++) {
-        var dataLine = tracking_data[1+i+frame*23];
+        var dataLine = gameData.tracking[i+frame*23];
 
-        var playerId = dataLine[5];
+        var playerId = dataLine[TRACKING_PID];
 
         var isInTeamA = gameData.players.team1.includes(playerId);
         var isInTeamB = gameData.players.team2.includes(playerId);
@@ -84,8 +84,8 @@ function drawPlayerLabels(frame) {
             if(showGraphForTeam == 2 && isInTeamA) return;
         }
 
-        var x = dataLine[6]
-        var y = dataLine[7]
+        var x = dataLine[TRACKING_X]
+        var y = dataLine[TRACKING_Y]
 
         if(x == "Inf" || y == "Inf") {
             continue;
@@ -110,22 +110,22 @@ function drawPlayerLabels(frame) {
 }
 
 function drawBall(frame) {
-    if(tracking_data == null) {
-        return
-    }
+    // if(tracking_data == null) {
+    //     return
+    // }
     for(var i = 0; i < 23; i++) {
-        var dataLine = tracking_data[1+i+frame*23];
+        var dataLine = gameData.tracking[i+frame*23];
 
-        var playerId = dataLine[5];
+        var playerId = dataLine[TRACKING_PID];
 
         if(playerId != "-1") continue;
         
         var isInTeamA = gameData.players.team1.includes(playerId);
         var isInTeamB = gameData.players.team2.includes(playerId);
 
-        var x = dataLine[6]
-        var y = dataLine[7]
-        var z = +(dataLine[8])
+        var x = dataLine[TRACKING_X]
+        var y = dataLine[TRACKING_Y]
+        var z = +(dataLine[TRACKING_Z])
 
         if(x == "Inf" || y == "Inf") {
             continue;
@@ -139,22 +139,22 @@ function drawBall(frame) {
 }
 
 function getIsSecondHalf(frame) {
-    if(tracking_data == null) return false;
+    //if(tracking_data == null) return false;
 
-    return (tracking_data[1+0+frame*23][2] != "One")
+    return (gameData.tracking[1+0+frame*23][2] != "One")
 }
 
 function getGoalKeepers(frame) {
-    if(tracking_data == null) return null
+    //if(tracking_data == null) return null
 
     var points = [];
 
     for(var i = 0; i < 23; i++) {
-        var dataLine = tracking_data[1+i+frame*23];
+        var dataLine = gameData.tracking[i+frame*23];
 
-        var playerId = dataLine[5];
-        var x = dataLine[6]
-        var y = dataLine[7]
+        var playerId = dataLine[TRACKING_PID];
+        var x = dataLine[TRACKING_X]
+        var y = dataLine[TRACKING_Y]
 
         var isInTeamA = gameData.players.team1.includes(playerId);
         var isInTeamB = gameData.players.team2.includes(playerId);
@@ -173,7 +173,7 @@ function getGoalKeepers(frame) {
 }
 
 function getGamePoints(frame, team) {
-    if(tracking_data == null) return [null, null, null]
+    //if(tracking_data == null) return [null, null, null]
 
     var points = [];
 
@@ -181,15 +181,15 @@ function getGamePoints(frame, team) {
 
     var playerIDs = [];
 
-    if((tracking_data[1+0+frame*23][2] != "One") && team == 1) isReversed = true;
-    if((tracking_data[1+0+frame*23][2] == "One") && team == 2) isReversed = true;
+    if((gameData.tracking[0+frame*23][2] != "One") && team == 1) isReversed = true;
+    if((gameData.tracking[0+frame*23][2] == "One") && team == 2) isReversed = true;
 
     for(var i = 0; i < 23; i++) {
-        var dataLine = tracking_data[1+i+frame*23];
+        var dataLine = gameData.tracking[i+frame*23];
 
-        var playerId = dataLine[5];
-        var x = dataLine[6]
-        var y = dataLine[7]
+        var playerId = dataLine[TRACKING_PID];
+        var x = dataLine[TRACKING_X]
+        var y = dataLine[TRACKING_Y]
 
         if(gameData.players.goalKeepers.includes(playerId)) continue;
 

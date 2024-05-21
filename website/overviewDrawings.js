@@ -20,17 +20,17 @@ function draw2() {
     overviewTeamA.isComputing = false;
     overviewTeamB.isComputing = false;
     if(overviewTeamA.dataComputed == false && showOverviewForTeam != 2) {
-        if(tracking_data != null) {
+        //if(tracking_data != null) {
             overviewTeamA.computeChunk(500); 
             overviewTeamA.isComputing = true;
-        }
+        //}
     }
     else if(overviewTeamB.dataComputed == false && showOverviewForTeam != 1) {
     
-        if(tracking_data != null) {
+        //if(tracking_data != null) {
             overviewTeamB.computeChunk(500); 
             overviewTeamB.isComputing = true;
-        }
+        //}
     }
 
     debugFlagSet = false
