@@ -73,7 +73,7 @@ class OverviewData {
         }
 
         if(hasSubstitution) {
-            this.substitutionFrames.push(i);
+            this.substitutionFrames.push(i-1);
         }
 
         this.roles.push(roles.slice())
