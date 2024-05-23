@@ -23,6 +23,8 @@ function setupUIElements() {
     setupViewSettings();
 
 
+    $("#error_div_possessions").hide();
+    $("#error_div_events").hide();
 
     $("#play_button").click(function() {
         isPlaying = !isPlaying;

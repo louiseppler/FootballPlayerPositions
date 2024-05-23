@@ -173,7 +173,7 @@ function drawOverviewFor(data, x0, y0, x1, y1, flipped) {
                 overviewCanvas.ctx.fillStyle = "#000"
             }
 
-            if(showPossesionInOverview) {
+            if(showPossesionInOverview && possessions != null) {
                 if(possessions.outOfPossesion(frame, frameNext, data.team)) {
                     overviewCanvas.ctx.fillStyle = "rgba(255, 255, 255, 0.8)";
                     overviewCanvas.ctx.fillRect(i, y0, (i2-i)+glitchDelta, (y1-y0));
@@ -394,7 +394,7 @@ function displayEventList(x0, x1, y0) {
         }
     }
 
-    if(showEvents) {
+    if(showEvents && gameData.events != null) {
         for(var i = 0; i < gameData.events.length; i++) {
             var event = gameData.events[i];
             var frame = event.frame;
@@ -421,7 +421,7 @@ function displayEventList(x0, x1, y0) {
         }
     }
 
-    if(showPossesionInTimeline) {
+    if(showPossesionInTimeline && possessions != null) {
         if(possessions != null) {
             var smoothing = +($('#smoothing_slider').val())
 

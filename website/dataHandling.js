@@ -32,6 +32,14 @@ function dataLoaded() {
 		possessions = new Possession();
 	}
 
+	if(gameData.possessions == null) {
+		$("#error_div_possessions").show();
+	}
+	if(gameData.events == null) {
+		$("#error_div_events").show();
+	}
+
+
 	//Filling in default information if empty
 	if(gameData.team1 == null) gameData.team1 = {};
 	if(gameData.team2 == null) gameData.team2 = {};
@@ -69,6 +77,12 @@ function dataLoaded() {
 }
 
 function computeFinalScore() {
+	if(gameData.events == null) {
+		var text =  gameData.team1.name + " vs. " + gameData.team2.name;
+		document.getElementById("title_text").innerHTML = text
+		return;
+	}
+
 	var score1 = 0;
 	var score2 = 0;
 	for(const event of gameData.events) {
