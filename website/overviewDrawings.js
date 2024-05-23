@@ -336,7 +336,7 @@ function getSubsitutionFrames(singleSubs) {
     }
 }
 
-function drawEventIcon(x,y, type) {
+function drawEventIcon(x,y, type, cornerIsFlipped) {
     switch(type) {
         case "OFF_TARGET":
             overviewCanvas.drawCircle(x,y,6);
@@ -348,9 +348,26 @@ function drawEventIcon(x,y, type) {
         case "GOAL":
             overviewCanvas.drawDot(x,y,6);
             break;
+        case "CORNER_L":
+            if(cornerIsFlipped) {
+                overviewCanvas.drawLine(x+6,y-6,x+6,y+6);
+                overviewCanvas.drawLine(x-6,y+6,x+6,y+6);
+            }
+            else {
+                overviewCanvas.drawLine(x-6,y-6,x-6,y+6);
+                overviewCanvas.drawLine(x-6,y-6,x+6,y-6);
+            }
+            break;
+        case "CORNER_R":
         case "CORNER":
-            overviewCanvas.drawLine(x-6,y-6,x-6,y+6);
-            overviewCanvas.drawLine(x-6,y+6,x+6,y+6);
+            if(cornerIsFlipped) {
+                overviewCanvas.drawLine(x-6,y-6,x-6,y+6);
+                overviewCanvas.drawLine(x-6,y+6,x+6,y+6);
+            }
+            else {
+                overviewCanvas.drawLine(x+6,y-6,x+6,y+6);
+                overviewCanvas.drawLine(x-6,y-6,x+6,y-6);
+            }
             break;
     }
 }
@@ -390,12 +407,16 @@ function displayEventList(x0, x1, y0) {
                
                 overviewCanvas.drawLine(pixel, y0-3, pixel, y0+3);
 
+                var direction = (showOverviewForTeam != 1)? +1 : -1;
+                var cornerIsFlipped = (showOverviewForTeam == 2)
+
                 if(event.team == 1) {
-                    drawEventIcon(pixel, y0-15, event.type);
+                    drawEventIcon(pixel, y0+(15*direction), event.type, cornerIsFlipped);
                 }
                 else {
-                    drawEventIcon(pixel, y0+15, event.type);
+                    drawEventIcon(pixel, y0-(15*direction), event.type, !cornerIsFlipped);
                 }
+    
             }        
         }
     }
