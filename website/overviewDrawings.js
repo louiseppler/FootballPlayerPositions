@@ -345,6 +345,14 @@ function drawEventIcon(x,y, type, cornerIsFlipped) {
             overviewCanvas.drawCircle(x,y,6);
             overviewCanvas.drawDot(x,y,2);
             break;
+        case "YELLOW":
+            overviewCanvas.ctx.fillStyle = "#F9DF4B"
+            overviewCanvas.ctx.fillRect(x-4,y-6,8,12);
+            break;
+        case "RED":
+            overviewCanvas.ctx.fillStyle = "#BD3531"
+            overviewCanvas.ctx.fillRect(x-4,y-6,8,12);
+            break;
         case "GOAL":
             overviewCanvas.drawDot(x,y,6);
             break;
@@ -370,6 +378,7 @@ function drawEventIcon(x,y, type, cornerIsFlipped) {
             }
             break;
     }
+    overviewCanvas.ctx.fillStyle = "#000"
 }
 
 function displayEventList(x0, x1, y0) {

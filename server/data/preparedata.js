@@ -31,6 +31,12 @@ function getType(data) {
     if(data.subtypes != null &&  data.subtypes.name == "GOAL KICK") {
         return {type: "GOAL", team: team, frame: time};
     }
+    if(data.subtypes != null && data.subtypes.name == "YELLOW") {
+      return {type: "YELLOW", team: team, frame: time};
+    }
+    if(data.subtypes != null && data.subtypes.name == "RED") {
+      return {type: "RED", team: team, frame: time};
+    }
     if(data.type.name == "SHOT") {
         if(data.subtypes instanceof Array) {
             for(var subtype of data.subtypes) {
