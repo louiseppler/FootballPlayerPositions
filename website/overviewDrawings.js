@@ -94,14 +94,6 @@ function drawOverviewFor(data, x0, y0, x1, y1, flipped) {
     
     var scaling = new Scaling(minFrameLoc, maxFrameLoc, x0, x1, getSubsitutionFrames(data.substitutionFrames));
 
-    if(overviewCanvas.mouseIsPressed && overviewCanvas.mouseY > y0-10 && overviewCanvas.mouseY < y1+10) {
-        frameNr = scaling.pixelToFrame(overviewCanvas.mouseX)
-        //frameNr = (overviewCanvas.mouseX-x0)*scaling+minFrameLoc;
-        $('#duration_slider').val(frameNr);
-    }
-
-
-
     var smoothing = +($('#smoothing_slider').val())
     var smoothing_seconds = smoothing*(scaling.scaling)/gameData.frameRate;
     var smoothing_text = ""
@@ -120,12 +112,6 @@ function drawOverviewFor(data, x0, y0, x1, y1, flipped) {
 
     document.getElementById("time_duration_text").innerHTML = frameToTime(minFrameLoc) + " - " + frameToTime(maxFrameLoc);
 
-    //var currentX = 1/scaling*(frameNr-minFrameLoc)+x0;
-    var currentX = scaling.frameToPixel(frameNr);
-
-    //Displays the current selected frame
-    overviewCanvas.ctx.strokeStyle = "black";
-    overviewCanvas.drawLine(currentX, y0-10, currentX, y1+10);
 
     if(overviewIsExpanded) {
         //Calculates + Displaying the average
@@ -238,6 +224,22 @@ function drawOverviewFor(data, x0, y0, x1, y1, flipped) {
     }
 
     overviewCanvas.ctx.font= "10px sans-serif"  
+
+    
+    //Displays the current selected frame
+    if(minFrameLoc < frameNr && frameNr < maxFrameLoc) {
+        var currentX = scaling.frameToPixel(frameNr);
+
+        overviewCanvas.ctx.strokeStyle = "black";
+        overviewCanvas.drawLine(currentX, y0-10, currentX, y1+10);
+    }
+
+    if(overviewCanvas.mouseIsPressed && overviewCanvas.mouseY > y0-10 && overviewCanvas.mouseY < y1+10) {
+        if(overviewCanvas.mouseX > x0 && overviewCanvas.mouseX < x1) {
+            frameNr = scaling.pixelToFrame(overviewCanvas.mouseX)
+            $('#duration_slider').val(frameNr);
+        }
+    }
 }
 
 function frameToTime(frame) {
