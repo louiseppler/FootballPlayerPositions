@@ -302,7 +302,7 @@
             </div>
             <hr>
         
-            <div class="row">
+            <div class="row justify-content-between">
                 <div class="col-4">
                     <h3 class="pb-1">Player Positions</h3>
                     <table class="table table-sm">
@@ -364,37 +364,43 @@
                         </tr>
                     </table>
                 </div>
-                <div class="col">
+                <div class="col-4">
                     <h3 class="pb-1">Event Icons</h3>
-                    <div class="row">
-                        <div class="col-4 pb-2">
-                            <img class="icon" src="imgs/goal.png" alt="Icon for goal">
-                            Goal
-                        </div>
-                        <div class="col-4 pb-2">
-                            <img class="icon" src="imgs/corner.jpg" alt="Icon for corner">
-                            Corner
-                        </div>
-                        <div class="col-4 pb-2">
-                            <img class="icon" src="imgs/freekick.png" alt="Icon for goal kick">
-                            Goal Kick
-                        </div>
-                        <div class="col-4 pb-2">
-                            <img class="icon" src="imgs/yellowcard.png" alt="Icon for yellow card">
-                            Yellow Card
-                        </div>
-                        <div class="col-4 pb-2">
-                            <img class="icon" src="imgs/redcard.png" alt="Icon for red card">
-                            Red Card
+                    <div class="row d-flex justify-content-center">
+                        <div class="row d-flex justify-content-center">
+                            <div class="pb-2 text-start">
+                                <img class="icon" src="imgs/goal.png" alt="Icon for goal">
+                                Goal
+                            </div>
+                            <div class="pb-2 text-start">
+                                <img class="icon" src="imgs/off_target.png" alt="Icon for goal kick">
+                                Goal Kick - Off Target
+                            </div>
+                            <div class="pb-2 text-start">
+                                <img class="icon" src="imgs/on_target.png" alt="Icon for yellow card">
+                                Goal Kick - On Target
+                            </div>
+                            <div class="pb-2 text-start">
+                                <img class="icon" src="imgs/corner.png" alt="Icon for corner">
+                                Corner
+                            </div>
+                            <div class="pb-2 text-start">
+                                <img class="icon" src="imgs/red.png" alt="Icon for red card">
+                                Red Card
+                            </div>
+                            <div class="pb-2 text-start">
+                                <img class="icon" src="imgs/yellow.png" alt="Icon for red card">
+                                Yellow Card
+                            </div>
                         </div>
                     </div>
-                </div>
+                </div>                
                 <div class="col-md-auto">
-                    <div class="form-check">
+                    <div class="form-check text-start">
                         <input class="form-check-input" type="checkbox" value="checked" id="show_diagram_btn" name="show_diagram" onchange="globalViewSettingsChanged()" checked/>
                         <label class="form-check-label text-left" for="show_diagram_btn">Show Position Plot</label>
                     </div>
-                    <div class="form-check">
+                    <div class="form-check text-start">
                         <input class="form-check-input" type="checkbox" value="checked" id="show_pitch_btn" name="show_pitch" onchange="globalViewSettingsChanged()" checked/>
                         <label class="form-check-label text-left" for="show_pitch_btn">Show Pitch</label>
                     </div>
