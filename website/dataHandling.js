@@ -24,10 +24,18 @@ $.getJSON(dataLink, function(data) {
 	console.log("Loaded game data");
 	gameData = data
 	dataLoaded();
-
+}).fail(function() {
+    console.log("Error loading data");
+	$("#error_div_tracking_data").show();
 });
 
 function dataLoaded() {
+	if(gameData.tracking == null) {
+		gameData = null
+		$("#error_div_tracking_data").show();
+		return;
+	}
+
 	if(gameData.possessions != null) {
 		possessions = new Possession();
 	}
@@ -71,7 +79,6 @@ function dataLoaded() {
 	setupTeamLabels();
 	computeFinalScore();
  
-
 	maxFrame = Math.floor(gameData.tracking.length/23)-1;
 	setupSlider();
 }

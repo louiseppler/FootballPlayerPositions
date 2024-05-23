@@ -23,6 +23,7 @@ function setupUIElements() {
     setupViewSettings();
 
 
+    $("#error_div_tracking_data").hide();
     $("#error_div_possessions").hide();
     $("#error_div_events").hide();
 
