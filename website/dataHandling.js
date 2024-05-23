@@ -50,6 +50,16 @@ function dataLoaded() {
 		gameData.team2.name = "Away";
 	}
 
+	if(gameData.positionColors != null) {
+		if(gameData.positionColors.colorsX != null) {
+			Role.colorsX = gameData.positionColors.colorsX;
+		}
+		if(gameData.positionColors.colorsY != null) {
+			Role.colorsY = gameData.positionColors.colorsY;
+		}
+
+	}
+
 	setupTeamLabels();
 	computeFinalScore();
  

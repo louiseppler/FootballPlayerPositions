@@ -17,7 +17,7 @@
         "color": null
     },
     "positionColors": {
-        "colorsX": ["#B7352D","#D48681","#E2E2E2","#7A9DCF","#215CAF"],
-        "colorsY": ["#8E6713","#D2C2A1","#E2E2E2","#C0C7A1","#627313"]
+        "colorsX": null,
+        "colorsY": null
     }
 }
