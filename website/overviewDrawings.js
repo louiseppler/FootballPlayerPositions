@@ -192,6 +192,10 @@ function drawOverviewFor(data, x0, y0, x1, y1, flipped) {
             var loc = scaling.frameToPixel(frame);
 
             for(var pos of data.substitutionIndices[i]) {
+                if(flipped) {
+                    pos = 9-pos;
+                }
+                
                 overviewCanvas.ctx.fillStyle = "#575757"
                 overviewCanvas.drawDot(loc+scaling.dist*0.5, y0+ys*(pos+0.5), scaling.dist*0.3);
             }
