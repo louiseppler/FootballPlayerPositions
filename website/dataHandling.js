@@ -78,6 +78,7 @@ function dataLoaded() {
 
 	setupTeamLabels();
 	computeFinalScore();
+	createPositionTable();
  
 	maxFrame = Math.floor(gameData.tracking.length/23)-1;
 	setupSlider();
@@ -113,4 +114,20 @@ function setupTeamLabels() {
 	document.getElementById("team2_name_label_1").innerHTML = gameData.team1.name
 	document.getElementById("team1_name_label_2").innerHTML = gameData.team1.name
 	document.getElementById("team2_name_label_2").innerHTML = gameData.team1.name
+}
+
+function createPositionTable() {
+	var x = gameData
+
+	$("#y-color-0").css('background-color', Role.colorsY[0]);
+	$("#y-color-1").css('background-color', Role.colorsY[1]);
+	$("#y-color-2").css('background-color', Role.colorsY[2]);
+	$("#y-color-3").css('background-color', Role.colorsY[3]);
+	$("#y-color-4").css('background-color', Role.colorsY[4]);
+
+	$("#x-color-0").css('background-color', Role.colorsX[0]);
+	$("#x-color-1").css('background-color', Role.colorsX[1]);
+	$("#x-color-2").css('background-color', Role.colorsX[2]);
+	$("#x-color-3").css('background-color', Role.colorsX[3]);
+	$("#x-color-4").css('background-color', Role.colorsX[4]);
 }

@@ -28,3 +28,21 @@ html, body{
     width: 20px;
     height: 20px;
   }
+
+  table {
+    border-collapse: collapse;
+  }
+
+
+
+  tr {
+    border: 0;
+    border-bottom: 0;
+    border-color: white;
+  }
+
+  td.playerposition {
+    border: 1px solid;
+    align-items: center;
+    align-content: center;
+  }
