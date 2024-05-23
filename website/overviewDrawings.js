@@ -195,7 +195,7 @@ function drawOverviewFor(data, x0, y0, x1, y1, flipped) {
                 if(flipped) {
                     pos = 9-pos;
                 }
-                
+
                 overviewCanvas.ctx.fillStyle = "#575757"
                 overviewCanvas.drawDot(loc+scaling.dist*0.5, y0+ys*(pos+0.5), scaling.dist*0.3);
             }
@@ -385,12 +385,16 @@ function displayEventList(x0, x1, y0) {
             var level = 9;
 
             if(frame > minFrameLoc && frame < maxFrameLoc && frameDiff < levels[level]) {
+
+                var pixel = scaling.frameToPixel(frame);
                
+                overviewCanvas.drawLine(pixel, y0-3, pixel, y0+3);
+
                 if(event.team == 1) {
-                    drawEventIcon(scaling.frameToPixel(frame), y0-15, event.type);
+                    drawEventIcon(pixel, y0-15, event.type);
                 }
                 else {
-                    drawEventIcon(scaling.frameToPixel(frame), y0+15, event.type);
+                    drawEventIcon(pixel, y0+15, event.type);
                 }
             }        
         }
