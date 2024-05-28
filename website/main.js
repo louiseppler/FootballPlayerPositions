@@ -14,7 +14,10 @@ var showPlayerLabels = true;
 var isPlaying = false;
 var playBackSpeed = 2;
 var frameNr = 0;
+var frameDelta = 0;
 var nextFrameAt = 0; //timestamp for when the frame should increase
+
+var timestampOffset = 0;
 
 var showOtherTeam = true;
 var showGoalKeepers = true;
@@ -54,6 +57,10 @@ var t = 0;
  * handles drawing of the game
  */
 function draw() { 
+
+    if(timestampOffset == 0) {
+        timestampOffset = Date.now()
+    }
 
     if(gameCanvas == null) return;
     if(gameData == null) return;
@@ -106,14 +113,37 @@ function drawTeam(team) {
     }
 }
 
+function setFrameNr(frameNrLoc) {
+    if(frameNrLoc != null) frameNr = frameNrLoc
+    $('#duration_slider').val(frameNr);
+
+    timestampOffset = Date.now()-frameNr*1000/(gameData.frameRate*playBackSpeed);
+}
+
 function handleFrameNr() {
-    frameNr = $('#duration_slider').val()
+    
+    var newFrameNr = +$('#duration_slider').val()
+    if(Math.abs(newFrameNr-frameNr) > 2) {
+        setFrameNr(newFrameNr);
+    }
+
 
     if(isPlaying && frameNr < maxFrame) {
-        if(Date.now() > nextFrameAt) {
-            frameNr++;
-            nextFrameAt = Date.now() + 1000/(gameData.frameRate*playBackSpeed)
-        }
+
+        var frameDouble = (Date.now()-timestampOffset)/1000*(gameData.frameRate*playBackSpeed)
+
+        frameDelta = frameDouble % 1;
+        frameNr = Math.floor(frameDouble);
+
+        if(frameNr < 0) frameNr = 0;
+        if(frameNr > maxFrame) frameNr = maxFrame-2;
+
+        // if(Date.now() > nextFrameAt) {
+        //     frameNr++;
+        //     nextFrameAt = Date.now() + 1000/(gameData.frameRate*playBackSpeed)
+
+
+        // }
 
         $('#duration_slider').val(frameNr);
     }

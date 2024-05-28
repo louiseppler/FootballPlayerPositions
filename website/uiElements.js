@@ -29,7 +29,7 @@ function setupUIElements() {
 
     $("#play_button").click(function() {
         isPlaying = !isPlaying;
-        nextFrameAt = Date.now()
+        setFrameNr(null)
     });
 
     $("#dubug_button").click(function() {
@@ -79,7 +79,7 @@ function setupUIElements() {
 function changePlaybackSpeed(val) {
     playBackSpeed = val;
     isPlaying = true;
-    nextFrameAt = Date.now()
+    setFrameNr(null)
     $("#button_pause").show();
     $("#button_play").hide();
 }

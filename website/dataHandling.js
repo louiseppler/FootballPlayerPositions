@@ -80,7 +80,7 @@ function dataLoaded() {
 	computeFinalScore();
 	createPositionTable();
  
-	maxFrame = Math.floor(gameData.tracking.length/23)-1;
+	maxFrame = Math.floor(gameData.tracking.length/23)-2; //-2 because of framedeltas
 	setupSlider();
 }
 

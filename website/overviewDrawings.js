@@ -240,8 +240,7 @@ function drawOverviewFor(data, x0, y0, x1, y1, flipped) {
 
     if(overviewCanvas.mouseIsPressed && overviewCanvas.mouseY > y0-10 && overviewCanvas.mouseY < y1+10) {
         if(overviewCanvas.mouseX > x0 && overviewCanvas.mouseX < x1) {
-            frameNr = scaling.pixelToFrame(overviewCanvas.mouseX)
-            $('#duration_slider').val(frameNr);
+            setFrameNr(scaling.pixelToFrame(overviewCanvas.mouseX))
         }
     }
 }

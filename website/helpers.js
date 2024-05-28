@@ -112,11 +112,48 @@ function setup() {
 
     console.log("in setup function");
 
-    gameCanvas = new CanvasHelper("container", 480, 650, () => {mouseClick();}, () => {mouseDown();}, () => {draw();});
+    var windowSize = $(window).width()
+    
+    //TODO: include height in calculations
+    //TODO: set min and max size
+    
+    console.log(windowSize);
+
+
+
+    var w1 = windowSize/3;
+    var h1 = w1*1.35;
+    var w2 = windowSize/2;
+    var h2 = w2*0.8;
+
+    h1 = Math.floor(h1);
+    h2 = Math.floor(h2);
+    w1 = Math.floor(w1);
+    w2= Math.floor(w2);
+
+    // var w1 = 480;
+    // var h1 = 650;
+    // var w2 = 750;
+    // var h2 = 600;
+
+    // if(windowSize < 1200) {
+    //     w1 *= 0.6
+    //     h1 *= 0.6
+    //     w2 *= 0.6
+    //     h2 *= 0.6
+    // }
+    // else if(windowSize < 1400) {
+    //     w1 *= 0.8
+    //     h1 *= 0.8
+    //     w2 *= 0.8
+    //     h2 *= 0.8
+    // }
+
+    gameCanvas = new CanvasHelper("container", w1, h1, () => {mouseClick();}, () => {mouseDown();}, () => {draw();});
 
     gameCanvas.clearCanvas()
 
-    overviewCanvas = new CanvasHelper("container2", 750, 600, () => {empty();}, () => {empty();}, () => {draw2();});
+    overviewCanvas = new CanvasHelper("container2", w2, h2, () => {empty();}, () => {empty();}, () => {draw2();});
 
     overviewCanvas.clearCanvas()
 

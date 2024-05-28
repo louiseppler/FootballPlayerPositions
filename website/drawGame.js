@@ -22,47 +22,10 @@ function drawGameSetup() {
     pitchOffsetY = (gameCanvas.height-convertDist(gameData.pitch.width))/2;
 }
 
-function drawGame(frame) {
-
-    gameCanvas.ctx.fillStyle = "#000"
-    gameCanvas.ctx.strokeStyle = "#000"
-
-    if(gameData == null) return;
-
-    for(var i = 0; i < 23; i++) {
-        var dataLine = gameData.tracking[i+frame*23];
-
-        var playerId = dataLine[TRACKING_PID];
-
-        
-        var isInTeamA = gameData.players.team1.includes(playerId);
-        var isInTeamB = gameData.players.team2.includes(playerId);
-
-        if(showTeamA == false && isInTeamA) continue;
-        if(showTeamB == false && isInTeamB) continue;
-        
-        var x = dataLine[TRACKING_X]
-        var y = dataLine[TRACKING_Y]
-
-        if(x == "Inf" || y == "Inf") {
-            continue;
-        }
-
-        if(isInTeamA) gameCanvas.ctx.fillStyle = "#3395AB"
-        if(isInTeamB) gameCanvas.ctx.fillStyle = "#B73B92"
-
-        if(showGraphForTeam == 0) {
-            if((showGraphForTeam == 1 && isInTeamA) || (showGraphForTeam == 2 && isInTeamB)) {}
-            else gameCanvas.drawDot(convertX(y),convertY(x),4);
-        }
-
-        //drawDot((game.pitch.width+x)*scaling,(game.pitch.height+y)*scaling,3);
-    }
-}
-
 function drawPlayerLabels(frame) {
     for(var i = 0; i < 23; i++) {
         var dataLine = gameData.tracking[i+frame*23];
+        var dataLine2 = gameData.tracking[i+(frame+1)*23];
 
         var playerId = dataLine[TRACKING_PID];
 
@@ -78,12 +41,13 @@ function drawPlayerLabels(frame) {
             if(showGraphForTeam == 2 && isInTeamA) return;
         }
 
-        var x = dataLine[TRACKING_X]
-        var y = dataLine[TRACKING_Y]
+        var x1 = +dataLine[TRACKING_X]
+        var y1 = +dataLine[TRACKING_Y]
+        var x2 = +dataLine2[TRACKING_X]
+        var y2 = +dataLine2[TRACKING_Y]
 
-        if(x == "Inf" || y == "Inf") {
-            continue;
-        }
+        var x = x1+(x2-x1)*frameDelta;
+        var y = y1+(y2-y1)*frameDelta;
 
         if(showGraphForTeam == 0 || (showGraphForTeam == 1 && isInTeamA) || (showGraphForTeam == 2 && isInTeamB)) {
             gameCanvas.ctx.fillStyle = "#FFF"
@@ -106,6 +70,7 @@ function drawPlayerLabels(frame) {
 function drawBall(frame) {
     for(var i = 0; i < 23; i++) {
         var dataLine = gameData.tracking[i+frame*23];
+        var dataLine2 = gameData.tracking[i+(frame+1)*23];
 
         var playerId = dataLine[TRACKING_PID];
 
@@ -114,13 +79,25 @@ function drawBall(frame) {
         var isInTeamA = gameData.players.team1.includes(playerId);
         var isInTeamB = gameData.players.team2.includes(playerId);
 
+        if(dataLine[TRACKING_X] == "Inf" || dataLine[TRACKING_Y] == "Inf") {
+            continue;
+        }
+
+
         var x = dataLine[TRACKING_X]
         var y = dataLine[TRACKING_Y]
         var z = +(dataLine[TRACKING_Z])
 
-        if(x == "Inf" || y == "Inf") {
-            continue;
-        }
+        var x1 = +dataLine[TRACKING_X]
+        var y1 = +dataLine[TRACKING_Y]
+        var z1 = +dataLine[TRACKING_Z]
+        var x2 = +dataLine2[TRACKING_X]
+        var y2 = +dataLine2[TRACKING_Y]
+        var z2 = +dataLine2[TRACKING_Z]
+
+        var x = x1+(x2-x1)*frameDelta;
+        var y = y1+(y2-y1)*frameDelta;
+        var z = z1+(z2-z1)*frameDelta;
 
         gameCanvas.ctx.fillStyle = grayScale(Math.min(z/2,0.5));
 
@@ -138,10 +115,16 @@ function getGoalKeepers(frame) {
 
     for(var i = 0; i < 23; i++) {
         var dataLine = gameData.tracking[i+frame*23];
+        var dataLine2 = gameData.tracking[i+(frame+1)*23];
 
         var playerId = dataLine[TRACKING_PID];
-        var x = dataLine[TRACKING_X]
-        var y = dataLine[TRACKING_Y]
+        var x1 = +dataLine[TRACKING_X]
+        var y1 = +dataLine[TRACKING_Y]
+        var x2 = +dataLine2[TRACKING_X]
+        var y2 = +dataLine2[TRACKING_Y]
+
+        var x = x1+(x2-x1)*frameDelta;
+        var y = y1+(y2-y1)*frameDelta;
 
         var isInTeamA = gameData.players.team1.includes(playerId);
         var isInTeamB = gameData.players.team2.includes(playerId);
@@ -171,10 +154,20 @@ function getGamePoints(frame, team) {
 
     for(var i = 0; i < 23; i++) {
         var dataLine = gameData.tracking[i+frame*23];
+        var dataLine2 = gameData.tracking[i+(frame+1)*23];
+
+        if(dataLine2 == null) {
+            var x = maxFrame;
+        }
 
         var playerId = dataLine[TRACKING_PID];
-        var x = dataLine[TRACKING_X]
-        var y = dataLine[TRACKING_Y]
+        var x1 = +dataLine[TRACKING_X]
+        var y1 = +dataLine[TRACKING_Y]
+        var x2 = +dataLine2[TRACKING_X]
+        var y2 = +dataLine2[TRACKING_Y]
+
+        var x = x1+(x2-x1)*frameDelta;
+        var y = y1+(y2-y1)*frameDelta;
 
         if(gameData.players.goalKeepers.includes(playerId)) continue;
 
