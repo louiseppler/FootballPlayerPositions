@@ -51,14 +51,16 @@
                     moveDots();
                 }
 
-                gameCanvas.clearCanvas();
+                gameCanvas.clearCanvasWhite();
+                gameCanvas.ctx.strokeStyle = "#000"
+                gameCanvas.ctx.strokeRect(0,0,gameCanvas.width, gameCanvas.height);
                 drawDotsSimple();
 
                 var points = [];
                 for(dot of dots) {
                     points.push(dot.x, dot.y);
                 }
-                shapeGraphMain(points, false, true);
+                shapeGraphMain(points, false, true, null, 1);
                 doPrint = false;
             }
 
@@ -72,6 +74,13 @@
 
             gameCanvas = new CanvasHelper("container", 750, 500, () => {mouseClickLoc();}, () => {mouseDownLoc();}, () => {drawLoc();});
 
+            showGraphForTeam = 1;
+
+            gameData = {};
+            gameData.team2 = {}
+            gameData.team1 = {}
+            gameData.team1.color = "#3395AB";
+            gameData.team2.color = "#B73B92";
 
             // =============== Setup Buttons ===============
 

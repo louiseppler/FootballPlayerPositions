@@ -221,7 +221,7 @@ function shapeGraphMain(array, isReversed, showDrawings = true, playerIDs = null
     var graph = computeBaseGraph(delaunay);
 
     if(showBaseGraph && showDrawings) {
-        gameCanvas.ctx.strokeStyle = "#d3c3c3"
+        gameCanvas.ctx.strokeStyle = "#f3d3d3"
         drawGraph(delaunay.points, graph)
         gameCanvas.ctx.strokeStyle = "#000"
     }
