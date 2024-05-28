@@ -37,8 +37,8 @@ function drawPlayerLabels(frame) {
         }
 
         if(showOtherTeam == false) {
-            if(showGraphForTeam == 1 && isInTeamB) return;
-            if(showGraphForTeam == 2 && isInTeamA) return;
+            if(showGraphForTeam == 1 && isInTeamB) continue;
+            if(showGraphForTeam == 2 && isInTeamA) continue;
         }
 
         var x1 = +dataLine[TRACKING_X]

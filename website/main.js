@@ -275,7 +275,7 @@ function drawGoalKeepers(points) {
     if(points == null) return
 
     for(const point of points) {
-        if(showOtherTeam == false && point[3] == 1+(1-(showGraphForTeam-1))) continue;
+        if(showOtherTeam == false && point[2] == 1+(1-(showGraphForTeam-1))) continue;
 
         gameCanvas.ctx.fillStyle = "#575757";
         gameCanvas.ctx.strokeStyle = "#575757";

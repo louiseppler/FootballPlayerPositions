@@ -111,8 +111,8 @@ function computeFinalScore() {
 
 function setupTeamLabels() {
 	document.getElementById("team1_name_label_1").innerHTML = gameData.team1.name
-	document.getElementById("team2_name_label_1").innerHTML = gameData.team1.name
-	document.getElementById("team1_name_label_2").innerHTML = gameData.team2.name
+	document.getElementById("team2_name_label_1").innerHTML = gameData.team2.name
+	document.getElementById("team1_name_label_2").innerHTML = gameData.team1.name
 	document.getElementById("team2_name_label_2").innerHTML = gameData.team2.name
 }
 
