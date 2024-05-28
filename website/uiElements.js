@@ -112,6 +112,7 @@ function setupViewSettings() {
     document.getElementById("show_other_team_btn").checked = true;
     document.getElementById("show_goal_keeper_btn").checked = true;
     document.getElementById("show_shape_graph_btn").checked = true;
+    document.getElementById("show_shirt_number_btn").checked = true;
     viewSettingsPitchChanged();
 
     document.getElementById("show_subs_btn").checked = true;
@@ -128,6 +129,7 @@ function viewSettingsPitchChanged() {
     showOtherTeam =  document.getElementById("show_other_team_btn").checked;
     showGoalKeepers = document.getElementById("show_goal_keeper_btn").checked;
     showShapeGraph = document.getElementById("show_shape_graph_btn").checked;
+    showPlayerLabels = document.getElementById("show_shirt_number_btn").checked;
 }
 
 function viewSettingsOverviewChanged() {

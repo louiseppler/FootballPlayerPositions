@@ -102,7 +102,7 @@ function draw() {
 
     if(showGoalKeepers) drawGoalKeepers(getGoalKeepers(frameNr));
 
-    drawPlayerLabels(frameNr);
+    if(showPlayerLabels) drawPlayerLabels(frameNr);
     drawBall(frameNr);
 }
 
