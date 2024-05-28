@@ -21,11 +21,16 @@ function draw2() {
     overviewTeamB.isComputing = false;
     if(overviewTeamA.dataComputed == false && showOverviewForTeam != 2) {
         overviewTeamA.computeChunk(1000); 
+        overviewCanvas.limitedRefresh = false;
         overviewTeamA.isComputing = true;
     }
     else if(overviewTeamB.dataComputed == false && showOverviewForTeam != 1) {
         overviewTeamB.computeChunk(1000); 
+        overviewCanvas.limitedRefresh = false;
         overviewTeamB.isComputing = true;
+    }
+    else {
+        overviewCanvas.limitedRefresh = true;
     }
 
     debugFlagSet = false

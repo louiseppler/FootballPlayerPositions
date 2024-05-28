@@ -6,7 +6,9 @@ var gameCanvas;
 var overviewCanvas;
 
 class CanvasHelper {
-    constructor(id, width, height, mouseClick, mouseDown, draw) {
+    constructor(id, width, height, mouseClick, mouseDown, draw, limitedRefresh = false) {
+        this.limitedRefresh = limitedRefresh;
+        this.count = 0;
         this.mouseX = 0;
         this.mouseY = 0;
         this.mouseIsPressed = false;
@@ -47,8 +49,16 @@ class CanvasHelper {
         this.clearCanvas()
     }
 
-    drawHandler() {    
-        this.draw();
+    drawHandler() { 
+        if(!this.limitedRefresh) {   
+            this.draw();
+        }
+        else {
+            this.count += 1;
+            if(this.mouseIsPressed || this.count % 20 == 0) {
+                this.draw();
+            }
+        }
 
         window.requestAnimationFrame(() => {this.drawHandler()});
     }
@@ -163,7 +173,7 @@ function setup() {
 
     gameCanvas.clearCanvas()
 
-    overviewCanvas = new CanvasHelper("container2", w2, h2, () => {empty();}, () => {empty();}, () => {draw2();});
+    overviewCanvas = new CanvasHelper("container2", w2, h2, () => {empty();}, () => {empty();}, () => {draw2();}, true);
 
     overviewCanvas.clearCanvas()
 
