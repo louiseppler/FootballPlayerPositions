@@ -112,13 +112,23 @@ function setup() {
 
     console.log("in setup function");
 
-    var windowSize = $(window).width()
+    var windowSize = Math.min($(window).width(),$(window).height()*1.8);
+
+    if(windowSize == null) {
+        windowSize = 1200;
+    }
+    if(windowSize > 2000) {
+        windowSize = 2000;
+    }
+    if(windowSize < 600) {
+        windowSize = 600;
+    }
+
     
     //TODO: include height in calculations
     //TODO: set min and max size
     
     console.log(windowSize);
-
 
 
     var w1 = windowSize/3;
