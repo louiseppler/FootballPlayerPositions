@@ -118,7 +118,7 @@ class CanvasHelper {
     }
 }
 
-function setup() {
+function setupCanvases() {
 
     console.log("in setup function");
 
@@ -181,7 +181,4 @@ function setup() {
 
     overviewTeamA = new OverviewData(1);
     overviewTeamB = new OverviewData(2);
-
-    setupUIElements()
-
 }

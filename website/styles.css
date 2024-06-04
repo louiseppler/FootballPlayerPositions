@@ -46,3 +46,14 @@ html, body{
     align-items: center;
     align-content: center;
   }
+
+  #drop_zone {
+    border: 2px dashed gray;
+    border-radius: 10px;
+    width: 500px;
+    height: 250px;
+  }
+
+  #fileInput {
+    display: none;
+}

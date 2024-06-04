@@ -18,14 +18,19 @@ function setupSlider() {
 }
 
 function setupUIElements() {
+
+    $("#website_view").hide();
     
     $("#main_div_error").hide()
     setupViewSettings();
 
-
     $("#error_div_tracking_data").hide();
     $("#error_div_possessions").hide();
     $("#error_div_events").hide();
+
+    $("#link_from").submit(function(e) {
+        e.preventDefault();
+    });
 
     $("#play_button").click(function() {
         isPlaying = !isPlaying;

@@ -1,4 +1,6 @@
-var dataLink = "http://127.0.0.1:8125/data/data.json"
+var dataLink2 = "http://127.0.0.1:8125/data/data.json"
+
+var dataLink = null
 
 const TRACKING_HALF = 1;
 const TRACKING_PID = 2;
@@ -19,15 +21,18 @@ function getShirtNumberLabel(playerId) {
 	return "";
 }
 
-console.log("Loading game data...");
-$.getJSON(dataLink, function(data) {
-	console.log("Loaded game data");
-	gameData = data
-	dataLoaded();
-}).fail(function() {
-    console.log("Error loading data");
-	$("#error_div_tracking_data").show();
-});
+function loadDataFromSever() {
+	dataReceived();
+	console.log("Loading game data...");
+	$.getJSON(dataLink, function(data) {
+		console.log("Loaded game data");
+		gameData = data
+		dataLoaded();
+	}).fail(function() {
+		console.log("Error loading data");
+		$("#error_div_tracking_data").show();
+	});
+}
 
 function dataLoaded() {
 	if(gameData.tracking == null) {
@@ -130,4 +135,69 @@ function createPositionTable() {
 	$("#x-color-2").css('background-color', Role.colorsX[2]);
 	$("#x-color-3").css('background-color', Role.colorsX[3]);
 	$("#x-color-4").css('background-color', Role.colorsX[4]);
+}
+
+function dataReceived() {
+	$("#website_view").show();
+	$("#entry_view").hide();
+	setupCanvases();
+}
+
+function dropHandler(ev) {
+	console.log("File(s) dropped");
+  
+	// Prevent default behavior (Prevent file from being opened)
+	ev.preventDefault();
+  
+	if (ev.dataTransfer.items) {
+	  // Use DataTransferItemList interface to access the file(s)
+	  [...ev.dataTransfer.items].forEach((item, i) => {
+		// If dropped items aren't files, reject them
+		if (item.kind === "file") {
+			const file = item.getAsFile();
+		  	console.log(`recived file[${i}] with name ${file.name}`);
+
+			readFile(file);
+		}
+	  });
+	} else {
+	  // Use DataTransfer interface to access the file(s)
+	  [...ev.dataTransfer.files].forEach((file, i) => {
+		console.log(`… file[${i}].name = ${file.name}`);
+	  });
+	}
+  }
+
+function dragOverHandler(ev) {
+	ev.preventDefault();
+}
+
+function readFile(file) {
+	var reader = new FileReader();
+	reader.addEventListener("loadend", function(event) {
+		console.log("Read content of file");
+			if(gameData == null) {
+			gameData = JSON.parse(event.target.result);
+			dataLoaded();
+			}
+	});
+	dataReceived();
+	reader.readAsText(file);
+}
+
+function handleFileUpload(event) {
+	const file = event.target.files[0];
+	if (file) {
+		console.log("File uploaded:", file.name);
+		readFile(file);	
+	}
+}
+
+function uploadFileButton() {
+	document.getElementById("fileupload").click();
+}
+
+function enteredLink() {
+	dataLink = document.getElementById("link_input_field").value
+	loadDataFromSever();
 }

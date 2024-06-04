@@ -14,7 +14,18 @@ function draw2() {
     if(overviewCanvas == null) return;
     if(gameData == null) return;
 
+    
+
     overviewCanvas.clearCanvasWhite();
+
+    // var start = Date.now()
+    // overviewTeamA.computeAllRoles();
+    // var timeA = Date.now()-start;
+    // overviewTeamB.computeAllRoles();
+    // var timeB = Date.now()-start-timeA;
+    // console.log("frames: " + maxFrame + " timeA: " + timeA + " timeB" + timeB);
+    // var end = Date.now()
+
     
 
     overviewTeamA.isComputing = false;
