@@ -141,10 +141,12 @@ function setupCanvases() {
     console.log(windowSize);
 
 
-    var w1 = windowSize/3;
+    var w1 = windowSize/3*1;
     var h1 = w1*1.35;
-    var w2 = windowSize/2;
+    var w2 = windowSize/2*1;
     var h2 = w2*0.8;
+
+    w2 = w2*1.15
 
     h1 = Math.floor(h1);
     h2 = Math.floor(h2);

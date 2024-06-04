@@ -17,9 +17,16 @@ function convertDist(d) {
 }
 
 function drawGameSetup() {
-    console.log("draw game setup");
+    console.log("draw game setup");    
+    //scaling = Math.min(gameCanvas.height/gameData.pitch.height*0.5, gameCanvas.width/gameData.pitch.width*0.5);
+
+    var scalingA = (gameCanvas.height-30)/gameData.pitch.width
+    var scalingB = (gameCanvas.width-30)/gameData.pitch.height
+    scaling = Math.min(scalingA,scalingB);
+
     pitchOffsetX = (gameCanvas.width-convertDist(gameData.pitch.height))/2;
     pitchOffsetY = (gameCanvas.height-convertDist(gameData.pitch.width))/2;
+
 }
 
 function drawPlayerLabels(frame) {
