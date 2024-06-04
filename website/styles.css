@@ -1,5 +1,15 @@
+.flex-grow {
+  flex: 1 0 auto;
+}
+
 html, body{
   height: 100%;
+}
+
+body {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
 }
 
 .slidecontainer {
@@ -56,4 +66,17 @@ html, body{
 
   #fileInput {
     display: none;
+}
+
+footer {
+  margin-top: auto;
+}
+
+img.footer-img {
+  width: 100%;
+}
+
+div.footer {
+  width: 100%;
+  background-color: #a58e71;
 }
