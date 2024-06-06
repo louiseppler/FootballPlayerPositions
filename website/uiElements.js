@@ -176,5 +176,3 @@ function globalViewSettingsChanged() {
 
     viewSettingsHaveChanged = true;
 }
-
-

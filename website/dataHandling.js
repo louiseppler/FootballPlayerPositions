@@ -202,3 +202,29 @@ function enteredLink() {
 	dataLink = document.getElementById("link_input_field").value
 	loadDataFromSever();
 }
+
+function checkUrlHeader() {
+	const url = getQueryVariable("data");
+	if(url != null) {
+		dataLink = url;
+		loadDataFromSever();
+	}
+}
+
+function getQueryVariable(variable) {
+	var query = window.location.search.substring(1);
+	var vars = query.split("&");
+	for (var i=0;i<vars.length;i++) {
+	  var pair = vars[i].split("=");
+	  if (pair[0] == variable) {
+		return decodeURIComponent(pair[1]);
+	  }
+	} 
+
+	return null
+	//alert('Query Variable ' + variable + ' not found');
+  }
+
+// encodeURIComponent("http://127.0.0.1:8125/data/data.json")
+// http%3A%2F%2F127.0.0.1%3A8125%2Fdata%2Fdata.json
+  
