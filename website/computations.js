@@ -15,7 +15,7 @@ function computeRoles(points, extremaLines, graph, isReversed, playerIDs) {
     for(var i = 0; i < N; i++) {
         roles.push(new Role())
     }
-
+    
     if(playerIDs != null) {
         for(var i = 0; i < N; i++) {
             roles[i].playerID = playerIDs[i];

@@ -59,7 +59,7 @@ var t = 0;
 function draw() { 
 
     if(timestampOffset == 0) {
-        timestampOffset = Date.now()
+        timestampOffset = Date.now() 
     }
 
     if(gameCanvas == null) return;

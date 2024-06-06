@@ -141,11 +141,15 @@ function viewSettingsOverviewChanged() {
     showSubs = document.getElementById("show_subs_btn").checked;
     showSubsMinimal =  document.getElementById("show_subs_minimal_btn").checked;
     showPossesionInOverview =  document.getElementById("show_posession_overview_btn").checked;
+
+    viewSettingsHaveChanged = true;
 }
 
 function viewSettingsTimelineChanged() {
     showEvents = document.getElementById("show_events_btn").checked;
     showPossesionInTimeline = document.getElementById("show_posession_timeline_btn").checked;
+
+    viewSettingsHaveChanged = true;
 }
 
 function globalViewSettingsChanged() {
@@ -169,6 +173,8 @@ function globalViewSettingsChanged() {
     else {
         $("#main_div_error").hide()
     }
+
+    viewSettingsHaveChanged = true;
 }
 
 

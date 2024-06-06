@@ -10,13 +10,17 @@ var showPossesionInOverview = false;
 var showEvents = true;
 var showPossesionInTimeline = true;
 
+var frameOld;
+var minFrameLocOld;
+var maxFrameLocOld;
+var viewSettingsHaveChanged = false;
+
 function draw2() {
     if(overviewCanvas == null) return;
     if(gameData == null) return;
 
     
 
-    overviewCanvas.clearCanvasWhite();
 
     // var start = Date.now()
     // overviewTeamA.computeAllRoles();
@@ -27,27 +31,29 @@ function draw2() {
     // var end = Date.now()
 
     
-
     overviewTeamA.isComputing = false;
     overviewTeamB.isComputing = false;
     if(overviewTeamA.dataComputed == false && showOverviewForTeam != 2) {
         overviewTeamA.computeChunk(1000); 
-        overviewCanvas.limitedRefresh = false;
         overviewTeamA.isComputing = true;
     }
     else if(overviewTeamB.dataComputed == false && showOverviewForTeam != 1) {
         overviewTeamB.computeChunk(1000); 
-        overviewCanvas.limitedRefresh = false;
         overviewTeamB.isComputing = true;
     }
     else {
-        overviewCanvas.limitedRefresh = true;
+        //limits refreshing
+        if(!rerenderOverview()) return;
     }
+
+    overviewCanvas.clearCanvasWhite();
 
     debugFlagSet = false
 
     overviewCanvas.ctx.fillStyle = "#000"
     overviewCanvas.ctx.font= "16px sans-serif"
+
+    
 
     if(showOverviewForTeam == 0) {
         overviewCanvas.fillTextRight(gameData.team2.name, overviewCanvas.width-25, 20);
@@ -69,6 +75,27 @@ function draw2() {
         displayEventList(25, overviewCanvas.width-25,  overviewCanvas.height*0.75+30)
     }
 
+}
+
+function rerenderOverview() {
+    var minFrameLoc = $( "#slider-range" ).slider( "values", 0 );
+    var maxFrameLoc = $( "#slider-range" ).slider( "values", 1 );
+
+    var hasUpdate = false;
+
+    if(minFrameLoc != minFrameLocOld) hasUpdate = true;
+    if(maxFrameLoc != maxFrameLocOld) hasUpdate = true;
+    if(Math.abs(frameOld-frameNr) > 10) hasUpdate = true;
+    if(overviewCanvas.mouseIsPressed) hasUpdate = true;
+    if(viewSettingsHaveChanged == true) hasUpdate = true;
+
+    frameOld = frameNr;
+    minFrameLocOld = minFrameLoc;
+    maxFrameLocOld = maxFrameLoc;
+    viewSettingsHaveChanged = false;    
+
+
+    return hasUpdate;
 }
 
 function drawOverviewFor(data, x0, y0, x1, y1, flipped) {

@@ -21,6 +21,7 @@ function getShirtNumberLabel(playerId) {
 	return "";
 }
 
+
 function loadDataFromSever() {
 	dataReceived();
 	console.log("Loading game data...");
