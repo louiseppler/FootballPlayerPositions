@@ -9,6 +9,7 @@ var frameObject = null;
 var TEMP_MAX = 50;
 
 var count = 0;
+var ownFrameCount = 0;
 
 var firstFrame = null;
 var changingFrame = null;
@@ -29,12 +30,12 @@ fs.createReadStream("./tracking.csv")
     }
 
     if(firstFrame == null) {
-      firstFrame = frame;
+      firstFrame = ownFrameCount;
     }
     if(changingFrame == null && row[2] != "One") {
-      changingFrame = frame;
+      changingFrame = ownFrameCount;
     }
-    lastFrame = frame;
+    lastFrame = ownFrameCount;
 
     if(frameObject == null) {
       frameObject = {};
@@ -44,6 +45,7 @@ fs.createReadStream("./tracking.csv")
     }
     else if(frameObject.frame != frame) {
       array.push(frameObject);
+      ownFrameCount += 1;
       frameObject = {};
       frameObject.frame = frame;
       frameObject.possession = 0;
@@ -78,9 +80,6 @@ function getType(data) {
     if(data.subtypes != null && data.subtypes.name == "CORNER KICK") {
         return {type: "CORNER", team: team, frame: time};
     }
-    if(data.subtypes != null &&  data.subtypes.name == "GOAL KICK") {
-        return {type: "GOAL", team: team, frame: time};
-    }
     if(data.subtypes != null && data.subtypes.name == "YELLOW") {
       return {type: "YELLOW", team: team, frame: time};
     }
@@ -89,6 +88,11 @@ function getType(data) {
     }
     if(data.type.name == "SHOT") {
         if(data.subtypes instanceof Array) {
+            for(var subtype of data.subtypes) {
+              if(subtype.name == "GOAL") {
+                return {type: "GOAL", team: team, frame: time};
+              }
+            }
             for(var subtype of data.subtypes) {
                 if(subtype.name == "ON TARGET") {
                     return {type: "ON_TARGET", team: team, frame: time};
@@ -203,6 +207,10 @@ function readRest() {
         
         data.events = events;
         data.tracking = array;
+        data.periods = [];
+        data.periods.push({start: firstFrame, end: changingFrame-1});
+        data.periods.push({start: changingFrame, end: lastFrame-1});
+
         //data.possessions = {}
         //data.possessions.team1 = poss1
         //data.possessions.team2 = poss2

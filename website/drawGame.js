@@ -100,6 +100,18 @@ function drawBall(frame) {
 }
 
 function getIsSecondHalf(frame) {
+    if(gameData.periods.length >= 2) {
+        if(gameData.periods[1].start < frame && frame <= gameData.periods[1].end) {
+            return true;
+        }
+    }
+
+    if(gameData.periods.length >= 4) {
+        if(gameData.periods[3].start < frame && frame <= gameData.periods[3].end) {
+            return true;
+        }
+    }
+
     //return false;
     return (frame > 69724); //TODO
     return false;
