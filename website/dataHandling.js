@@ -86,7 +86,7 @@ function dataLoaded() {
 	computeFinalScore();
 	createPositionTable();
  
-	maxFrame = Math.floor(gameData.tracking.length/23)-2; //-2 because of framedeltas
+	maxFrame = Math.floor(gameData.tracking.length)-2; //-2 because of framedeltas
 	setupSlider();
 }
 
@@ -227,4 +227,5 @@ function getQueryVariable(variable) {
 
 // encodeURIComponent("http://127.0.0.1:8125/data/data.json")
 // http%3A%2F%2F127.0.0.1%3A8125%2Fdata%2Fdata.json
-  
+
+// file:///Users/louiseppler/127/240118_Thesis/Attempt1/website/index.html?data=http%3A%2F%2F127.0.0.1%3A8125%2Fdata%2Fdata.json

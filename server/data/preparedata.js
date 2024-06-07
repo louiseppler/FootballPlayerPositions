@@ -4,11 +4,61 @@ const { parse } = require("csv-parse");
 var array = [];
 var events = null;
 
+var frameObject = null;
+
+var TEMP_MAX = 50;
+
+var count = 0;
+
+var firstFrame = null;
+var changingFrame = null;
+var lastFrame = null;
 
 fs.createReadStream("./tracking.csv")
   .pipe(parse({ delimiter: ",", from_line: 2 }))
   .on("data", function (row) {
-    array.push([row[3],row[2],row[5],row[6],row[7],row[8]])
+
+    //if(array.length > TEMP_MAX) return;
+
+    var frame = row[4];
+
+    count++;
+
+    if(count*23 % 100000 == 0) {
+      console.log("Frame " + frame);
+    }
+
+    if(firstFrame == null) {
+      firstFrame = frame;
+    }
+    if(changingFrame == null && row[2] != "One") {
+      changingFrame = frame;
+    }
+    lastFrame = frame;
+
+    if(frameObject == null) {
+      frameObject = {};
+      frameObject.frame = frame;
+      frameObject.possession = 0;
+      frameObject.objects = [];
+    }
+    else if(frameObject.frame != frame) {
+      array.push(frameObject);
+      frameObject = {};
+      frameObject.frame = frame;
+      frameObject.possession = 0;
+      frameObject.objects = [];
+    }
+    
+
+    var line = {
+      id: row[5],
+      h: row[6],
+      v: row[7],
+      z: row[8]
+    }
+    //var lines = [row[3],row[2],row[5],row[6],row[7],row[8]]
+    frameObject.objects.push(line);
   })
   .on("end", function () {
     //console.log(JSON.stringify(array))
@@ -103,6 +153,37 @@ function readPossession() {
   .on("end", function () {
     //console.log(JSON.stringify(array))
     console.log("Finished with phase data");
+
+
+    var i = 0;
+    var j = 0;
+    var frame = 0;
+    var maxFrame = array.length;
+
+    poss1.push(maxFrame+10,maxFrame+10,);
+    poss2.push(maxFrame+10,maxFrame+10,);
+
+    for(var frame = 0; frame < maxFrame; frame++) {
+
+      if(frame > poss1[i+1]) {
+        i += 2;
+      }
+      if(frame > poss1[j+1]) {
+        j += 2;
+      }
+
+      var p = 0;
+      if(poss1[i] <= frame && frame < poss1[i+1]) {
+        p = 1;
+      }
+      else if(poss2[j] <= frame && frame < poss2[j+1]) {
+        p = 2;
+      }
+
+      array[frame].possession = p;
+    }
+
+
     readRest()
   })
   .on("error", function (error) {
@@ -122,9 +203,11 @@ function readRest() {
         
         data.events = events;
         data.tracking = array;
-        data.possessions = {}
-        data.possessions.team1 = poss1
-        data.possessions.team2 = poss2
+        //data.possessions = {}
+        //data.possessions.team1 = poss1
+        //data.possessions.team2 = poss2
+
+        console.log("Frames " + firstFrame + " " + changingFrame + " " + lastFrame);
         
 
         fs.writeFile('data.json', JSON.stringify(data), function (err) {

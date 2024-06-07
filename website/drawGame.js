@@ -30,11 +30,14 @@ function drawGameSetup() {
 }
 
 function drawPlayerLabels(frame) {
-    for(var i = 0; i < 23; i++) {
-        var dataLine = gameData.tracking[i+frame*23];
-        var dataLine2 = gameData.tracking[i+(frame+1)*23];
+    var dataLine = gameData.tracking[frame];
+    var dataLine2 = gameData.tracking[frame+1];
 
-        var playerId = dataLine[TRACKING_PID];
+    for(var i = 0; i < 23; i++) {
+        var object1 = dataLine.objects[i];
+        var object2 = dataLine2.objects[i];
+
+        var playerId = object1.id;
 
         var isInTeamA = gameData.players.team1.includes(playerId);
         var isInTeamB = gameData.players.team2.includes(playerId);
@@ -48,13 +51,7 @@ function drawPlayerLabels(frame) {
             if(showGraphForTeam == 2 && isInTeamA) continue;
         }
 
-        var x1 = +dataLine[TRACKING_X]
-        var y1 = +dataLine[TRACKING_Y]
-        var x2 = +dataLine2[TRACKING_X]
-        var y2 = +dataLine2[TRACKING_Y]
-
-        var x = x1+(x2-x1)*frameDelta;
-        var y = y1+(y2-y1)*frameDelta;
+        var [x,y] = getCoordinates(object1, object2);
 
         if(showGraphForTeam == 0 || (showGraphForTeam == 1 && isInTeamA) || (showGraphForTeam == 2 && isInTeamB)) {
             gameCanvas.ctx.fillStyle = "#FFF"
@@ -75,11 +72,14 @@ function drawPlayerLabels(frame) {
 }
 
 function drawBall(frame) {
-    for(var i = 0; i < 23; i++) {
-        var dataLine = gameData.tracking[i+frame*23];
-        var dataLine2 = gameData.tracking[i+(frame+1)*23];
+    var dataLine = gameData.tracking[frame];
+    var dataLine2 = gameData.tracking[frame+1];
 
-        var playerId = dataLine[TRACKING_PID];
+    for(var i = 0; i < 23; i++) {
+        var object1 = dataLine.objects[i];
+        var object2 = dataLine2.objects[i];
+        
+        var playerId = object1.id;
 
         if(playerId != "-1") continue;
         
@@ -91,19 +91,10 @@ function drawBall(frame) {
         }
 
 
-        var x = dataLine[TRACKING_X]
-        var y = dataLine[TRACKING_Y]
-        var z = +(dataLine[TRACKING_Z])
+        var [x,y] = getCoordinates(object1, object2);
+        var z1 = +(object1.z)
+        var z2 = +(object1.z)
 
-        var x1 = +dataLine[TRACKING_X]
-        var y1 = +dataLine[TRACKING_Y]
-        var z1 = +dataLine[TRACKING_Z]
-        var x2 = +dataLine2[TRACKING_X]
-        var y2 = +dataLine2[TRACKING_Y]
-        var z2 = +dataLine2[TRACKING_Z]
-
-        var x = x1+(x2-x1)*frameDelta;
-        var y = y1+(y2-y1)*frameDelta;
         var z = z1+(z2-z1)*frameDelta;
 
         gameCanvas.ctx.fillStyle = grayScale(Math.min(z/2,0.5));
@@ -114,24 +105,24 @@ function drawBall(frame) {
 }
 
 function getIsSecondHalf(frame) {
+    //return false;
+    return (frame > 69724); //TODO
+    return false;
     return (gameData.tracking[0+frame*23][TRACKING_HALF] != "One")
 }
 
 function getGoalKeepers(frame) {
     var points = [];
 
+    var dataLine = gameData.tracking[frame];
+    var dataLine2 = gameData.tracking[frame+1];
+
     for(var i = 0; i < 23; i++) {
-        var dataLine = gameData.tracking[i+frame*23];
-        var dataLine2 = gameData.tracking[i+(frame+1)*23];
+        var object1 = dataLine.objects[i];
+        var object2 = dataLine2.objects[i];
 
-        var playerId = dataLine[TRACKING_PID];
-        var x1 = +dataLine[TRACKING_X]
-        var y1 = +dataLine[TRACKING_Y]
-        var x2 = +dataLine2[TRACKING_X]
-        var y2 = +dataLine2[TRACKING_Y]
-
-        var x = x1+(x2-x1)*frameDelta;
-        var y = y1+(y2-y1)*frameDelta;
+        var playerId = object1.id;
+        var [x,y] = getCoordinates(object1, object2);
 
         var isInTeamA = gameData.players.team1.includes(playerId);
         var isInTeamB = gameData.players.team2.includes(playerId);
@@ -149,6 +140,18 @@ function getGoalKeepers(frame) {
     return points;
 }
 
+function getCoordinates(object1, object2) {
+    var x1 = +object1.h
+    var y1 = +object1.v
+    var x2 = +object2.h
+    var y2 = +object1.v
+
+    var x = x1+(x2-x1)*frameDelta;
+    var y = y1+(y2-y1)*frameDelta;
+
+    return [x,y]
+}
+
 function getGamePoints(frame, team) {
     var points = [];
 
@@ -156,26 +159,22 @@ function getGamePoints(frame, team) {
 
     var playerIDs = [];
 
-    if((gameData.tracking[0+frame*23][TRACKING_HALF] != "One") && team == 1) isReversed = true;
-    if((gameData.tracking[0+frame*23][TRACKING_HALF] == "One") && team == 2) isReversed = true;
+    if(getIsSecondHalf(frame) && team == 1) isReversed = true;
+    if(getIsSecondHalf(frame) && team == 2) isReversed = true;
+
+    var dataLine = gameData.tracking[frame];
+    var dataLine2 = gameData.tracking[frame+1];
 
     for(var i = 0; i < 23; i++) {
-        var dataLine = gameData.tracking[i+frame*23];
-        var dataLine2 = gameData.tracking[i+(frame+1)*23];
+        var object1 = dataLine.objects[i];
+        var object2 = dataLine2.objects[i];
 
         if(dataLine2 == null) {
             var x = maxFrame;
         }
 
-        var playerId = dataLine[TRACKING_PID];
-        var x1 = +dataLine[TRACKING_X]
-        var y1 = +dataLine[TRACKING_Y]
-        var x2 = +dataLine2[TRACKING_X]
-        var y2 = +dataLine2[TRACKING_Y]
-
-        var x = x1+(x2-x1)*frameDelta;
-        var y = y1+(y2-y1)*frameDelta;
-
+        var playerId = object1.id;
+        var [x,y] = getCoordinates(object1, object2);
         if(gameData.players.goalKeepers.includes(playerId)) continue;
 
         if(team == 1 && gameData.players.team1.includes(playerId)) {
