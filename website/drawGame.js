@@ -86,11 +86,6 @@ function drawBall(frame) {
         var isInTeamA = gameData.players.team1.includes(playerId);
         var isInTeamB = gameData.players.team2.includes(playerId);
 
-        if(dataLine[TRACKING_X] == "Inf" || dataLine[TRACKING_Y] == "Inf") {
-            continue;
-        }
-
-
         var [x,y] = getCoordinates(object1, object2);
         var z1 = +(object1.z)
         var z2 = +(object1.z)
