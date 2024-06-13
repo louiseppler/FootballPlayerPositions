@@ -12,6 +12,31 @@ var possessions = null
 
 var gameData = null;
 
+/**
+ * Converts frame number into the frame number without dead-frames
+ * @param {Number} oldFrame old Frame
+ * @returns index
+ */
+function convertFrame(oldFrame) {
+	var low = 0;
+	var high = maxFrame;
+
+	while(high-low > 1) {
+		var mid = Math.floor((low+high)/2);
+
+		var frame = +gameData.tracking[mid].frame;
+
+		if(frame > oldFrame) {
+			high = mid;
+		}
+		else {
+			low = mid;
+		}
+	}
+
+	return high;
+}
+
 function getShirtNumberLabel(playerId) {
 	for(var elm of gameData.shirtNumbers) {
 		if(elm[0] == playerId) {
@@ -84,10 +109,18 @@ function dataLoaded() {
 
 	setupTeamLabels();
 	computeFinalScore();
+	maxFrame = Math.floor(gameData.tracking.length)-2; //-2 because of framedeltas
+	convertEvents();
+
 	createPositionTable();
  
-	maxFrame = Math.floor(gameData.tracking.length)-2; //-2 because of framedeltas
 	setupSlider();
+}
+
+function convertEvents() {
+	for(var event of gameData.events) {
+		event.frame = convertFrame(event.frame);
+	}
 }
 
 function computeFinalScore() {
@@ -227,5 +260,9 @@ function getQueryVariable(variable) {
 
 // encodeURIComponent("http://127.0.0.1:8125/data/data.json")
 // http%3A%2F%2F127.0.0.1%3A8125%2Fdata%2Fdata.json
+
+/// https://www.linkToWebsite.com/index.html?data=https%3A%2F%2Fwww.linkToData.com
+
+// https://www.linkToData.com
 
 // file:///Users/louiseppler/127/240118_Thesis/Attempt1/website/index.html?data=http%3A%2F%2F127.0.0.1%3A8125%2Fdata%2Fdata.json

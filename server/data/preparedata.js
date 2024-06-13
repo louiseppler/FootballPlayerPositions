@@ -21,7 +21,9 @@ fs.createReadStream("./tracking.csv")
 
     //if(array.length > TEMP_MAX) return;
 
-    var frame = row[4];
+    if(row[9] == 0) return;
+
+    var frame = row[3];
 
     count++;
 

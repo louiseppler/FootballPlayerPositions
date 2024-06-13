@@ -379,12 +379,14 @@ function getSubsitutionFrames(singleSubs) {
 }
 
 function drawEventIcon(x,y, type, cornerIsFlipped) {
+    const S = 8; //Size of goal icons
+    const C = 6; //Radius circles
     switch(type) {
         case "OFF_TARGET":
-            overviewCanvas.drawCircle(x,y,6);
+            overviewCanvas.drawCircle(x,y,C);
             break;
         case "ON_TARGET":
-            overviewCanvas.drawCircle(x,y,6);
+            overviewCanvas.drawCircle(x,y,C);
             overviewCanvas.drawDot(x,y,2);
             break;
         case "YELLOW":
@@ -396,27 +398,27 @@ function drawEventIcon(x,y, type, cornerIsFlipped) {
             overviewCanvas.ctx.fillRect(x-4,y-6,8,12);
             break;
         case "GOAL":
-            overviewCanvas.drawDot(x,y,6);
+            overviewCanvas.drawDot(x,y,C);
             break;
         case "CORNER_L":
             if(cornerIsFlipped) {
-                overviewCanvas.drawLine(x+6,y-6,x+6,y+6);
-                overviewCanvas.drawLine(x-6,y+6,x+6,y+6);
+                overviewCanvas.drawLine(x+S,y-S,x+S,y+S);
+                overviewCanvas.drawLine(x-S,y+S,x+S,y+S);
             }
             else {
-                overviewCanvas.drawLine(x-6,y-6,x-6,y+6);
-                overviewCanvas.drawLine(x-6,y-6,x+6,y-6);
+                overviewCanvas.drawLine(x-S,y-S,x-S,y+S);
+                overviewCanvas.drawLine(x-S,y-S,x+S,y-S);
             }
             break;
         case "CORNER_R":
         case "CORNER":
             if(cornerIsFlipped) {
-                overviewCanvas.drawLine(x-6,y-6,x-6,y+6);
-                overviewCanvas.drawLine(x-6,y+6,x+6,y+6);
+                overviewCanvas.drawLine(x-S,y-S,x-S,y+S);
+                overviewCanvas.drawLine(x-S,y+S,x+S,y+S);
             }
             else {
-                overviewCanvas.drawLine(x+6,y-6,x+6,y+6);
-                overviewCanvas.drawLine(x-6,y-6,x+6,y-6);
+                overviewCanvas.drawLine(x+S,y-S,x+S,y+S);
+                overviewCanvas.drawLine(x-S,y-S,x+S,y-S);
             }
             break;
     }

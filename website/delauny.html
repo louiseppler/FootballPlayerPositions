@@ -30,8 +30,9 @@
         <div id="container"></div>
 
         <br>
-        <button id="button_show_color_mode_x">Color Mode X</button>
         <button id="button_show_color_mode_d">Dominant Color</button>
+        <button id="button_show_color_mode_s">Semicircle Color</button>
+        <button id="button_show_color_mode_x">Color Mode X</button>
         <button id="button_show_color_mode_y">Color Mode Y</button>
         <br><br>
         <button id="showBaseGraph"></button>
@@ -89,6 +90,9 @@
             });
             $("#button_show_color_mode_y").click(function() {
                 showGraphColorMode = 2; 
+            });
+            $("#button_show_color_mode_s").click(function() {
+                showGraphColorMode = 3;
             });
             $("#button_show_color_mode_d").click(function() {
                 showGraphColorMode = 0;

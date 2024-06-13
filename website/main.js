@@ -74,7 +74,7 @@ function draw() {
     handleFrameNr();
 
     document.getElementById("time_label_text").innerHTML = frameToTime(frameNr);
-    document.getElementById("time_label_text").setAttribute('title','frame: ' + frameNr);
+    document.getElementById("time_label_text").setAttribute('title','frame: ' + gameData.tracking[frameNr].frame);
 
     var x = getIsSecondHalf(frameNr) ; 
 
