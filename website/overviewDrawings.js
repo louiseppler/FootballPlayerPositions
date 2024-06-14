@@ -14,6 +14,8 @@ var frameOld;
 var minFrameLocOld;
 var maxFrameLocOld;
 var viewSettingsHaveChanged = false;
+var showOverviewForTeamOld = 0;
+var smoothingOld = 0;
 
 function draw2() {
     if(overviewCanvas == null) return;
@@ -80,20 +82,29 @@ function draw2() {
 function rerenderOverview() {
     var minFrameLoc = $( "#slider-range" ).slider( "values", 0 );
     var maxFrameLoc = $( "#slider-range" ).slider( "values", 1 );
+    var smoothing = +($('#smoothing_slider').val())
 
     var hasUpdate = false;
 
     if(minFrameLoc != minFrameLocOld) hasUpdate = true;
     if(maxFrameLoc != maxFrameLocOld) hasUpdate = true;
-    if(Math.abs(frameOld-frameNr) > 10) hasUpdate = true;
+    if(showOverviewForTeamOld != showOverviewForTeam) hasUpdate = true;
+    if(smoothingOld != smoothing) hasUpdate = true;
+
+    var frameDiff = 20;
+    if(maxFrameLoc-minFrameLoc < 40_000) frameDiff = 3;
+    if(Math.abs(frameOld-frameNr) > frameDiff || frameOld == null) {
+        hasUpdate = true;
+        frameOld = frameNr;
+    }
     if(overviewCanvas.mouseIsPressed) hasUpdate = true;
     if(viewSettingsHaveChanged == true) hasUpdate = true;
 
-    frameOld = frameNr;
     minFrameLocOld = minFrameLoc;
     maxFrameLocOld = maxFrameLoc;
     viewSettingsHaveChanged = false;    
-
+    showOverviewForTeamOld = showOverviewForTeam;
+    smoothingOld = smoothing;
 
     return hasUpdate;
 }
@@ -143,7 +154,7 @@ function drawOverviewFor(data, x0, y0, x1, y1, flipped) {
     if(smoothing_seconds >= 120) {
         smoothing_text = Math.floor(smoothing_seconds/60) + "min"
     }
-    else if(smoothing_seconds >= 1) {
+    else if(smoothing_seconds >= 5) {
         smoothing_text = Math.floor(smoothing_seconds) + "s"
 
     }
@@ -447,33 +458,6 @@ function displayEventList(x0, x1, y0) {
         }
     }
 
-    if(showEvents && gameData.events != null) {
-        for(var i = 0; i < gameData.events.length; i++) {
-            var event = gameData.events[i];
-            var frame = event.frame;
-
-            var level = 9;
-
-            if(frame > minFrameLoc && frame < maxFrameLoc && frameDiff < levels[level]) {
-
-                var pixel = scaling.frameToPixel(frame);
-               
-                overviewCanvas.drawLine(pixel, y0-3, pixel, y0+3);
-
-                var direction = (showOverviewForTeam != 1)? +1 : -1;
-                var cornerIsFlipped = (showOverviewForTeam == 2)
-
-                if(event.team == 1) {
-                    drawEventIcon(pixel, y0+(15*direction), event.type, cornerIsFlipped);
-                }
-                else {
-                    drawEventIcon(pixel, y0-(15*direction), event.type, !cornerIsFlipped);
-                }
-    
-            }        
-        }
-    }
-
     if(showPossesionInTimeline && possessions != null) {
         if(possessions != null) {
             var smoothing = +($('#smoothing_slider').val())
@@ -505,6 +489,34 @@ function displayEventList(x0, x1, y0) {
             }
         }
     }
+
+    if(showEvents && gameData.events != null) {
+        for(var i = 0; i < gameData.events.length; i++) {
+            var event = gameData.events[i];
+            var frame = event.frame;
+
+            var level = 9;
+
+            if(frame > minFrameLoc && frame < maxFrameLoc && frameDiff < levels[level]) {
+
+                var pixel = scaling.frameToPixel(frame);
+               
+                overviewCanvas.drawLine(pixel, y0-3, pixel, y0+3);
+
+                var direction = (showOverviewForTeam != 1)? +1 : -1;
+                var cornerIsFlipped = (showOverviewForTeam == 2)
+
+                if(event.team == 1) {
+                    drawEventIcon(pixel, y0+(15*direction), event.type, cornerIsFlipped);
+                }
+                else {
+                    drawEventIcon(pixel, y0-(15*direction), event.type, !cornerIsFlipped);
+                }
+    
+            }        
+        }
+    }
+
 }
 
 function drawIconExplanation(x0, y0) {
