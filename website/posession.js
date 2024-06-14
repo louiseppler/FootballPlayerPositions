@@ -1,9 +1,49 @@
 class Possession {
     constructor() {
-        console.log("Computing Posessions");
-        this.teamA = this.constructArray(gameData.possessions.team1);
-        this.teamB = this.constructArray(gameData.possessions.team2);
-        console.log("Done");
+        // console.log("Computing Posessions");
+        // this.teamA = this.constructArray(gameData.possessions.team1);
+        // this.teamB = this.constructArray(gameData.possessions.team2);
+        // console.log("Done");
+
+
+        // if(gameData.tracking[0].possessions == null) {
+        //     return;
+        // }        
+
+        var prevPossess = 0;
+        this.teamA = [];
+        var valA = 0;
+        this.teamB = [];
+        var valB = 0;
+
+        for(var i = 0; i < maxFrame; i++) {
+            if(prevPossess != gameData.tracking[i].possession) {
+                if(prevPossess == 1) {
+                    valA += 1;
+                }
+                else if(prevPossess == 2) {
+                    valB += 1;
+                }
+                prevPossess = gameData.tracking[i].possession
+                this.teamA.push(valA);
+                this.teamB.push(valB);
+
+
+                if(gameData.tracking[i].possession == 1) {
+                    valA += 1;
+                }
+                else if(gameData.tracking[i].possession == 2) {
+                    valB += 1;
+                }
+            }
+            else {
+                this.teamA.push(valA);
+                this.teamB.push(valB); 
+            }
+        }
+
+        var x = this.teamA;
+
     }
 
     constructArray(data) {

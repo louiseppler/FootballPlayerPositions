@@ -67,11 +67,7 @@ function dataLoaded() {
 		return;
 	}
 
-	if(gameData.possessions != null) {
-		possessions = new Possession();
-	}
-
-	if(gameData.possessions == null) {
+	if(gameData.tracking[0].possession == null) {
 		$("#error_div_possessions").show();
 	}
 	if(gameData.events == null) {
@@ -111,6 +107,8 @@ function dataLoaded() {
 	computeFinalScore();
 	maxFrame = Math.floor(gameData.tracking.length)-2; //-2 because of framedeltas
 	convertEvents();
+	possessions = new Possession();
+
 
 	createPositionTable();
  

@@ -15,6 +15,31 @@ var firstFrame = null;
 var changingFrame = null;
 var lastFrame = null;
 
+/**
+ * Converts frame number into the frame number without dead-frames
+ * @param {Number} oldFrame old Frame
+ * @returns index
+ */
+function convertFrame(oldFrame) {
+	var low = 0;
+	var high = array.length;
+
+	while(high-low > 1) {
+		var mid = Math.floor((low+high)/2);
+
+		var frame = +array[mid].frame;
+
+		if(frame > oldFrame) {
+			high = mid;
+		}
+		else {
+			low = mid;
+		}
+	}
+
+	return high;
+}
+
 fs.createReadStream("./tracking.csv")
   .pipe(parse({ delimiter: ",", from_line: 2 }))
   .on("data", function (row) {
@@ -141,6 +166,8 @@ function readEvents() {
 poss1 = [];
 poss2 = [];
 
+var prevP = 0;
+
 function readPossession() {
   fs.createReadStream("./phase.csv")
   .pipe(parse({ delimiter: ",", from_line: 2 }))
@@ -148,10 +175,10 @@ function readPossession() {
 
     if(row[4] == "IN_POSSESSION") {
       if(row[3] == "Team A") {
-        poss1.push(row[5],row[6])
+        poss1.push(convertFrame(+row[5]),convertFrame(+row[6]))
       }
       else {
-        poss2.push(row[5],row[6])
+        poss2.push(convertFrame(+row[5]),convertFrame(+row[6]))
       }
     }
 
@@ -174,7 +201,7 @@ function readPossession() {
       if(frame > poss1[i+1]) {
         i += 2;
       }
-      if(frame > poss1[j+1]) {
+      if(frame > poss2[j+1]) {
         j += 2;
       }
 
@@ -187,6 +214,11 @@ function readPossession() {
       }
 
       array[frame].possession = p;
+
+      if(prevP != p) {
+        //console.log(p)
+        prevP = p;
+      }
     }
 
 
