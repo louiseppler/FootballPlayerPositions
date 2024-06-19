@@ -251,6 +251,31 @@ function readRest() {
 
         console.log("Frames " + firstFrame + " " + changingFrame + " " + lastFrame);
         
+        function getShirtNumberLabel(playerId) {
+          for(var elm of data.shirtNumbers) {
+            if(elm[0] == playerId) {
+              return ""+elm[1];
+            }
+          }
+          return "";
+        }
+
+
+        // var players1 = [];
+        // for(var p of data.players.team2) {
+        //   var p2 = {};
+        //     p2.id = p;
+        //     p2.isGoalie = false;
+        //     p2.row = null
+        //     p2.shirtNumber = getShirtNumberLabel(p);
+
+        //     players1.push(p2)
+        // }
+
+        // console.log(JSON.stringify(players1))
+
+
+
 
         fs.writeFile('data.json', JSON.stringify(data), function (err) {
             if (err) throw err;

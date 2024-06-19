@@ -12,6 +12,8 @@ var possessions = null
 
 var gameData = null;
 
+var playerShirtNumbers = {};
+
 /**
  * Converts frame number into the frame number without dead-frames
  * @param {Number} oldFrame old Frame
@@ -38,6 +40,8 @@ function convertFrame(oldFrame) {
 }
 
 function getShirtNumberLabel(playerId) {
+	return playerShirtNumbers[playerId] ?? "";
+
 	for(var elm of gameData.shirtNumbers) {
 		if(elm[0] == playerId) {
 			return ""+elm[1];
@@ -79,11 +83,19 @@ function dataLoaded() {
 	if(gameData.team1 == null) gameData.team1 = {};
 	if(gameData.team2 == null) gameData.team2 = {};
 
-	if(gameData.team1.color == null) {
-		gameData.team1.color = "#3395AB";
+	if(gameData.homeTeam.colorShirt == null) {
+		gameData.homeTeam.colorShirt = "#3395AB";
 	}
-	if(gameData.team2.color == null) {
-		gameData.team2.color = "#B73B92";
+	if(gameData.awayTeam.colorShirt == null) {
+		gameData.awayTeam.colorShirt = "#B73B92";
+	}
+
+	if(gameData.homeTeam.colorNumber == null) {
+		gameData.homeTeam.colorNumber = "#fff";
+	}
+
+	if(gameData.awayTeam.colorNumber == null) {
+		gameData.awayTeam.colorNumber = "#fff";
 	}
 
 	if(gameData.team1.name == null) {
@@ -103,6 +115,7 @@ function dataLoaded() {
 
 	}
 
+	getPlayers();
 	setupTeamLabels();
 	computeFinalScore();
 	maxFrame = Math.floor(gameData.tracking.length)-2; //-2 because of framedeltas
@@ -120,6 +133,43 @@ function convertEvents() {
 		event.frame = convertFrame(event.frame);
 	}
 }
+
+function getPlayers() {
+	gameData.players = {};
+	gameData.players.team1 = [];
+	gameData.players.team2 = [];
+	gameData.players.goalKeepers = [];
+
+	gameData.players.goalKeepers
+
+	for(var player of gameData.homeTeam.players) {
+		gameData.players.team1.push(player.id)
+
+		playerShirtNumbers[player.id] = player.shirtNumber;
+
+		if(player.isGoalie == true) {
+			gameData.players.goalKeepers.push(player.id);
+		}
+	}
+
+	for(var player of gameData.awayTeam.players) {
+		gameData.players.team2.push(player.id)
+
+		playerShirtNumbers[player.id] = player.shirtNumber;
+
+
+		if(player.isGoalie == true) {
+			gameData.players.goalKeepers.push(player.id);
+		}
+	}
+}
+// "homeTeam": {
+// 	"name": null,
+// 	"colorNumber": null,
+// 	"colorShirt": null,
+// 	"players": [
+// 		{
+// }
 
 function computeFinalScore() {
 	if(gameData.events == null) {

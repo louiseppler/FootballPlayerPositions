@@ -39,22 +39,30 @@ function drawPlayerLabels(frame) {
 
         var playerId = object1.id;
 
-        var isInTeamA = gameData.players.team1.includes(playerId);
-        var isInTeamB = gameData.players.team2.includes(playerId);
+        var isInTeam1 = gameData.players.team1.includes(playerId);
+        var isInTeam2 = gameData.players.team2.includes(playerId);
         
         if(playerId == "25") {
             var x = 0;
         }
 
         if(showOtherTeam == false) {
-            if(showGraphForTeam == 1 && isInTeamB) continue;
-            if(showGraphForTeam == 2 && isInTeamA) continue;
+            if(showGraphForTeam == 1 && isInTeam2) continue;
+            if(showGraphForTeam == 2 && isInTeam1) continue;
         }
 
         var [x,y] = getCoordinates(object1, object2);
 
-        if(showGraphForTeam == 0 || (showGraphForTeam == 1 && isInTeamA) || (showGraphForTeam == 2 && isInTeamB)) {
+        if(showGraphForTeam == 0 || (showGraphForTeam == 1 && isInTeam1) || (showGraphForTeam == 2 && isInTeam2)) {
             gameCanvas.ctx.fillStyle = "#FFF"
+            if(showGraphForTeam == 0) {
+                if(isInTeam1) {
+                    gameCanvas.ctx.fillStyle = gameData.homeTeam.colorNumber;
+                }
+                else {
+                    gameCanvas.ctx.fillStyle = gameData.awayTeam.colorNumber;
+                }
+            }
         }
         else {
             //case outline colors
@@ -82,9 +90,6 @@ function drawBall(frame) {
         var playerId = object1.id;
 
         if(playerId != "-1") continue;
-        
-        var isInTeamA = gameData.players.team1.includes(playerId);
-        var isInTeamB = gameData.players.team2.includes(playerId);
 
         var [x,y] = getCoordinates(object1, object2);
         var z1 = +(object1.z)
@@ -131,11 +136,11 @@ function getGoalKeepers(frame) {
         var playerId = object1.id;
         var [x,y] = getCoordinates(object1, object2);
 
-        var isInTeamA = gameData.players.team1.includes(playerId);
-        var isInTeamB = gameData.players.team2.includes(playerId);
+        var isInTeam1 = gameData.players.team1.includes(playerId);
+        var isInTeam2 = gameData.players.team2.includes(playerId);
 
         if(gameData.players.goalKeepers.includes(playerId)) {
-            if(isInTeamA) {
+            if(isInTeam1) {
                 points.push([convertX(y),convertY(x),1])
             }
             else {
