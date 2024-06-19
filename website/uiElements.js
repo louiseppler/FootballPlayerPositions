@@ -19,12 +19,12 @@ function setupSlider() {
 
 function setupUIElements() {
 
-    $("#website_view").hide();
-    
-    $("#main_div_error").hide()
+	$("#website_view").hide();
+	$("#data_error_view").hide();
+	$("#data_loading_view").hide();
+    $("#main_div_error").hide();
     setupViewSettings();
 
-    $("#error_div_tracking_data").hide();
     $("#error_div_possessions").hide();
     $("#error_div_events").hide();
 

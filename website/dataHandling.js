@@ -59,15 +59,17 @@ function loadDataFromSever() {
 		gameData = data
 		dataLoaded();
 	}).fail(function() {
-		console.log("Error loading data");
-		$("#error_div_tracking_data").show();
+		showDataError("Failed to retrieve JSON", "Please make sure you have entered a correct URL")
 	});
 }
 
 function dataLoaded() {
+	console.log("Data loaded");
+	dataFinishedReading();
+
 	if(gameData.tracking == null) {
 		gameData = null
-		$("#error_div_tracking_data").show();
+		showDataError("No tracking data found", "JSON file dose not contain field 'tracking'")
 		return;
 	}
 
@@ -219,10 +221,42 @@ function createPositionTable() {
 	$("#x-color-4").css('background-color', Role.colorsX[4]);
 }
 
-function dataReceived() {
-	$("#website_view").show();
+function dataReceived(isZipped = false) {
 	$("#entry_view").hide();
+	$("#website_view").hide();
+	$("#data_error_view").hide();
+
+	$("#data_loading_view").show();
+
+	if(isZipped) {
+		document.getElementById("dataLoadingTitle").innerHTML = "Unarchiving File..."
+		document.getElementById("dataLoadingSubtitle").innerHTML = "This may take a while"
+	}
+}
+
+function dataFinishedReading() {
+	$("#entry_view").hide();
+	$("#data_error_view").hide();
+	$("#data_loading_view").hide();
+
+	$("#website_view").show();
 	setupCanvases();
+}
+
+function showDataError(message, secondaryMessage) {
+	console.log("Showing error view");
+	$("#entry_view").hide();
+	$("#website_view").hide();
+	$("#data_loading_view").hide();
+
+	$("#data_error_view").show();
+	if(message) {
+		document.getElementById("dataErrorMessage").innerHTML = message
+	}
+	if(secondaryMessage) {
+		document.getElementById("dataErrorMessageSecondary").innerHTML = secondaryMessage
+	}
+	
 }
 
 function dropHandler(ev) {
@@ -239,7 +273,7 @@ function dropHandler(ev) {
 			const file = item.getAsFile();
 		  	console.log(`recived file[${i}] with name ${file.name}`);
 
-			readFile(file);
+			handleFile(file);
 		}
 	  });
 	} else {
@@ -254,14 +288,60 @@ function dragOverHandler(ev) {
 	ev.preventDefault();
 }
 
+function handleFile(file) {
+	//decompressFile(file);
+
+	if (file.type === 'application/zip') {
+		decompressFile(file);
+	}
+	else if(file.type === 'application/json' || file.type === 'text/plain') {
+		readFile(file);
+	}
+	else {
+		showDataError("Unsupported file type","received " + file.type + ", expected JSON");
+	}
+}
+
+
+function decompressFile(file) {
+	console.log("Decompressing file");
+	const reader = new FileReader();
+
+      reader.onload = function(e) {
+        const arrayBuffer = e.target.result;
+        const zip = new JSZip();
+
+        zip.loadAsync(arrayBuffer).then(function(zip) {
+          // Get the first file name in the zip
+          const fileName = Object.keys(zip.files)[0];
+          console.log('File in zip:', fileName);
+
+          // Read the file contents as text
+          zip.files[fileName].async('text').then(function(content) {
+
+			gameData = JSON.parse(content);
+
+			dataLoaded();
+
+			});
+        }).catch(function(err) {
+			showDataError("Failed reading zip file", err.message);
+          	console.error('Error reading zip file:', err);
+        });
+      };
+
+	dataReceived(true);
+    reader.readAsArrayBuffer(file);
+}
+
 function readFile(file) {
 	var reader = new FileReader();
 	reader.addEventListener("loadend", function(event) {
 		console.log("Read content of file");
-			if(gameData == null) {
+		if(gameData == null) {
 			gameData = JSON.parse(event.target.result);
 			dataLoaded();
-			}
+		}
 	});
 	dataReceived();
 	reader.readAsText(file);
@@ -271,7 +351,10 @@ function handleFileUpload(event) {
 	const file = event.target.files[0];
 	if (file) {
 		console.log("File uploaded:", file.name);
-		readFile(file);	
+		handleFile(file);	
+	}
+	else {
+		showDataError("No file received");
 	}
 }
 
