@@ -172,7 +172,7 @@ function getGamePoints(frame, team) {
     var playerIDs = [];
 
     if(getIsSecondHalf(frame) && team == 1) isReversed = true;
-    if(getIsSecondHalf(frame) && team == 2) isReversed = true;
+    if(!getIsSecondHalf(frame) && team == 2) isReversed = true;
 
     var dataLine = gameData.tracking[frame];
     var dataLine2 = gameData.tracking[frame+1];
