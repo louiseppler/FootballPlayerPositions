@@ -289,7 +289,6 @@ function dragOverHandler(ev) {
 }
 
 function handleFile(file) {
-	//decompressFile(file);
 
 	if (file.type === 'application/zip') {
 		decompressFile(file);
