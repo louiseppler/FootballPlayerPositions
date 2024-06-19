@@ -55,7 +55,7 @@ function drawPlayerLabels(frame) {
 
         if(showGraphForTeam == 0 || (showGraphForTeam == 1 && isInTeam1) || (showGraphForTeam == 2 && isInTeam2)) {
             gameCanvas.ctx.fillStyle = "#FFF"
-            if(showGraphForTeam == 0) {
+            if(showGraphForTeam == 0 && !gameData.players.goalKeepers.includes(playerId)) {
                 if(isInTeam1) {
                     gameCanvas.ctx.fillStyle = gameData.homeTeam.colorNumber;
                 }
