@@ -17,6 +17,8 @@ var frameNr = 0;
 var frameDelta = 0;
 var nextFrameAt = 0; //timestamp for when the frame should increase
 
+var maxEdgeDelete = 0;
+
 var timestampOffset = 0;
 
 var showOtherTeam = true;
@@ -86,11 +88,6 @@ function draw() {
     }
 
     drawPitch();
-
-    if(gameCanvas.mouseIsPressed) {
-        console.log("mouse is pressed from gameCanvas");
-        t++;
-    }
 
     if(showGraphForTeam == 0) {
         drawTeam(1);

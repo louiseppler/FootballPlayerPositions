@@ -284,6 +284,8 @@ function computeShapeGraph(delaunay, graph) {
         if(doPrint) console.log("adding edge " + ti + " " + tj + " with angle " + angle/Math.PI*180);
     }
 
+    var maxEdgeDeleteLocal = 0;
+
     while(!queue.isPriorityQueueEmpty()) {
         var queueElement = queue.dequeueFunction()
         var edge = queueElement.element;
@@ -304,7 +306,10 @@ function computeShapeGraph(delaunay, graph) {
             var prevNode = edge.a
             var node = getNextEdge(graph[edge.a], edge.b)
 
-            removeEdge(graph, edge.a, edge.b);
+            if(maxEdgeDeleteLocal < maxEdgeDelete) {
+                removeEdge(graph, edge.a, edge.b);
+                maxEdgeDeleteLocal += 1;
+            }
         
             var s = "" + prevNode + " "
             var cnt = 0;

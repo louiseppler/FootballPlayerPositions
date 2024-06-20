@@ -48,9 +48,16 @@
             function drawLoc() {
                 
 
+                t++;
+                maxEdgeDelete = Math.floor(t/60) % 6;
+
                 if(gameCanvas.mouseIsPressed) {
                     moveDots();
+                    maxEdgeDelete = 10;
                 }
+
+
+    
 
                 gameCanvas.clearCanvasWhite();
                 gameCanvas.ctx.strokeStyle = "#000"
