@@ -67,6 +67,18 @@ function dataLoaded() {
 		$("#error_div_events").show();
 	}
 
+	setupDefaultColors();
+	getPlayers();
+	setupTeamLabels();
+	computeFinalScore();
+	maxFrame = Math.floor(gameData.tracking.length)-2; //-2 because of framedeltas
+	convertEvents();
+	possessions = new Possession();
+	createPositionTable();
+	setupSlider();
+}
+
+function setupDefaultColors() {
 
 	//Filling in default information if empty
 	if(gameData.team1 == null) gameData.team1 = {};
@@ -87,13 +99,6 @@ function dataLoaded() {
 		gameData.awayTeam.colorNumber = "#fff";
 	}
 
-	if(gameData.team1.name == null) {
-		gameData.team1.name = "Home";
-	}
-	if(gameData.team2.name == null) {
-		gameData.team2.name = "Away";
-	}
-
 	if(gameData.positionColors != null) {
 		if(gameData.positionColors.colorsX != null) {
 			Role.colorsX = gameData.positionColors.colorsX;
@@ -101,20 +106,7 @@ function dataLoaded() {
 		if(gameData.positionColors.colorsY != null) {
 			Role.colorsY = gameData.positionColors.colorsY;
 		}
-
 	}
-
-	getPlayers();
-	setupTeamLabels();
-	computeFinalScore();
-	maxFrame = Math.floor(gameData.tracking.length)-2; //-2 because of framedeltas
-	convertEvents();
-	possessions = new Possession();
-
-
-	createPositionTable();
- 
-	setupSlider();
 }
 
 function convertEvents() {
@@ -152,13 +144,6 @@ function getPlayers() {
 		}
 	}
 }
-// "homeTeam": {
-// 	"name": null,
-// 	"colorNumber": null,
-// 	"colorShirt": null,
-// 	"players": [
-// 		{
-// }
 
 function computeFinalScore() {
 	if(gameData.events == null) {
@@ -186,6 +171,13 @@ function computeFinalScore() {
 }
 
 function setupTeamLabels() {
+	if(gameData.team1.name == null) {
+		gameData.team1.name = "Home";
+	}
+	if(gameData.team2.name == null) {
+		gameData.team2.name = "Away";
+	}
+
 	document.getElementById("team1_name_label_1").innerHTML = gameData.team1.name
 	document.getElementById("team2_name_label_1").innerHTML = gameData.team2.name
 	document.getElementById("team1_name_label_2").innerHTML = gameData.team1.name
