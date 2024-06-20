@@ -89,6 +89,9 @@ class CanvasHelper {
         this.ctx.fill();
     }
 
+    fillTextLeft(str, x, y) {
+        this.ctx.fillText("" + str, x, y); 
+    }
     fillTextCenter(str, x, y) {
         var textWidth = this.ctx.measureText(str).width;
         this.ctx.fillText("" + str, x-textWidth/2, y); 
