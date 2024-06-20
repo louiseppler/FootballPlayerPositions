@@ -211,12 +211,6 @@ function drawDotsSimple() {
  */
 function shapeGraphMain(array, isReversed, showDrawings = true, playerIDs = null, team = 0) {
 
-    // var array = []
-    // for(const dot of dots) {
-    //     array.push(dot.x)
-    //     array.push(dot.y)
-    // }
-
     const delaunay = new d3.Delaunay(array);
 
     const voronoi = delaunay.voronoi([0, 0, gameCanvas.width, gameCanvas.height]);
