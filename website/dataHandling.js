@@ -35,13 +35,6 @@ function convertFrame(oldFrame) {
 
 function getShirtNumberLabel(playerId) {
 	return playerShirtNumbers[playerId] ?? "";
-
-	for(var elm of gameData.shirtNumbers) {
-		if(elm[0] == playerId) {
-			return ""+elm[1];
-		}
-	}
-	return "";
 }
 
 
@@ -215,6 +208,9 @@ function createPositionTable() {
 	$("#x-color-4").css('background-color', Role.colorsX[4]);
 }
 
+// ================================================================================================
+// Update UI Functions while gameData is being populated 
+
 function dataReceived(isZipped = false) {
 	$("#entry_view").hide();
 	$("#website_view").hide();
@@ -253,6 +249,9 @@ function showDataError(message, secondaryMessage) {
 	
 }
 
+// ================================================================================================
+// Uploading File Functions
+
 function dropHandler(ev) {
 	console.log("File(s) dropped");
   
@@ -278,12 +277,12 @@ function dropHandler(ev) {
 	}
   }
 
+//prevents browser opening file when dropped
 function dragOverHandler(ev) {
 	ev.preventDefault();
 }
 
 function handleFile(file) {
-
 	if (file.type === 'application/zip') {
 		decompressFile(file);
 	}

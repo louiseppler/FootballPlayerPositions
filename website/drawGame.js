@@ -122,10 +122,10 @@ function getIsSecondHalf(frame) {
         }
     }
 
-    //return false;
-    return (frame > 69724); //TODO
     return false;
-    return (gameData.tracking[0+frame*23][TRACKING_HALF] != "One")
+    //return (frame > 69724); //TODO
+    //return false;
+    //return (gameData.tracking[0+frame*23][TRACKING_HALF] != "One")
 }
 
 function getGoalKeepers(frame) {

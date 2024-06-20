@@ -426,7 +426,7 @@ function drawEventIcon(x,y, type, cornerIsFlipped) {
 function displayEventList(x0, x1, y0) {
     var minFrameLoc = $( "#slider-range" ).slider( "values", 0 );
     var maxFrameLoc = $( "#slider-range" ).slider( "values", 1 );
-    var scaling = new Scaling(minFrameLoc, maxFrameLoc, x0, x1, getSubsitutionFrames([])); //TODO: holes
+    var scaling = new Scaling(minFrameLoc, maxFrameLoc, x0, x1, getSubsitutionFrames([])); 
     var substitutionFramesLoc = getSubsitutionFramesLocal(minFrameLoc, maxFrameLoc, [])
 
     //Display Event List
