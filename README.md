@@ -1,29 +1,101 @@
 # Football Player Positions
 
-This project is still in it's initial development. Therefor things will change and the project contains various known bugs.
+Open `index.html` and upload the JSON file.
 
-## Setup
+The webpage accepts the file as a zip as well, but decompressing in the browser is slow and it is recommended to decompress the file before uploading
 
-### Installing Node.js
-To be able to use the website a local server needs to run. This is implemented using Node.js.
-This can be installed via with [Homebrew](https://nodejs.org/en/download) (for macos) or form [nodejs.org](https://nodejs.org/en/download).
+# Preparing the JSON file
 
-Once node is installed following node packages are used: [Filesystem](https://www.npmjs.com/package/file-system), [Path](https://www.npmjs.com/package/path) and [Http-Server](https://www.npmjs.com/package/http-server).
-These packages can be installed with `npm install <package-name>`
+The JSON file that is uploaded to the webpage must have the following format:
 
-### Adding the data
-As github doesn't support big files the tracking data has to be added manually at `server/data/tracking.csv`
-This is a file with following header `id,match_id,half,frame_id,timestamp,object_id,x,y,z,is_alive`
+```
+{
+ {
+ "frameRate": Number,
+ "periods": [
+ {
+ firstFrame: Number
+ lastFrame: Number
+ }
+ ]
+ }
+ "pitch":{
+ "length": Number (in meters),
+ "width": Number (in meters)
+ },
+ "homeTeam": {
+ "name": String (optional),
+ "colorNumber": Color (optional),
+ "ColorShirt": Color (optional)
+ players: [
+ {
+ id: "P1234"
+ shirtNumber: 12
+ isGoalie: false
+ row: Number (optional)
+ },
+ ]
+ },
+ "awayTeam": {
+ ...
+ },
+ "ballId": String
+ "colorPalette: {
+ (optional)
+ ...
+ }
+ "events" : [
+ {
+ type: String
+ team: Number (1 or 2)
+ frame: Number
+ }
+ ]
+ "tracking" : [  
+ {
+ frame:xv
+ possession: Number (0,1 or 2)
+ objects: [
+ {
+ id: String
+ h: Number
+ v: Number
+ z: Number
+ }
+ ]
+ }
+ ]
+}
+Colors are represented with a string in hex including a hashtag. For example (`#F8EBEA`).
 
-(Currently the frames 0-143761 are considered. If the files has fewer frames the website will crash)
+```
+The field `teamAway` follows the same format as `teamHome`. 
 
-## Running
+In the `events` field, the team is represented with a number. `1` for the home team and `2` for the away team. The event type accepts the following types:
+- `"OFF_TARGET"`
+- `"ON_TARGET"`
+- `"GOAL"`
+- `"YELLOW"`
+- `"RED"`
+- `"CORNER"`
+- `"CORNER_L"`
+- `CORNER_R"`
 
-To start the server run
+In the array `tracking` the field `possession` takes either `0` for no team has possession, `1` if the home team has possession and `2` if the away team has possession.
 
-`node server/server.js` 
-or
+The field `colorPalette` is optional and takes the following fields:
 
-`./server/start_server.command` (on macos).
-
-Then open `website/index.html` or `website/delauny.html` to view the project
+```
+"colorPalette": {
+ L: Color
+ LC:: Color
+ C: Color
+ RC: Color
+ R: Color
+ F: Color
+ AM: Color
+ M: Color
+ DM: Color
+ B: Color
+}
+```
