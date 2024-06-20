@@ -1,10 +1,9 @@
-
-// var canvas;
-// var ctx;
-
 var gameCanvas;
 var overviewCanvas;
 
+/**
+ * A class with extra functions to draw shapes + handles user input
+ */
 class CanvasHelper {
     constructor(id, width, height, mouseClick, mouseDown, draw, limitedRefresh = false) {
         this.limitedRefresh = limitedRefresh;
@@ -120,8 +119,6 @@ class CanvasHelper {
 
 function setupCanvases() {
 
-    console.log("in setup function");
-
     var windowSize = Math.min($(window).width(),$(window).height()*1.8);
 
     if(windowSize == null) {
@@ -133,10 +130,6 @@ function setupCanvases() {
     if(windowSize < 600) {
         windowSize = 600;
     }
-
-    
-    //TODO: include height in calculations
-    //TODO: set min and max size
     
     console.log(windowSize);
 
@@ -152,24 +145,6 @@ function setupCanvases() {
     h2 = Math.floor(h2);
     w1 = Math.floor(w1);
     w2= Math.floor(w2);
-
-    // var w1 = 480;
-    // var h1 = 650;
-    // var w2 = 750;
-    // var h2 = 600;
-
-    // if(windowSize < 1200) {
-    //     w1 *= 0.6
-    //     h1 *= 0.6
-    //     w2 *= 0.6
-    //     h2 *= 0.6
-    // }
-    // else if(windowSize < 1400) {
-    //     w1 *= 0.8
-    //     h1 *= 0.8
-    //     w2 *= 0.8
-    //     h2 *= 0.8
-    // }
 
     gameCanvas = new CanvasHelper("container", w1, h1, () => {mouseClick();}, () => {mouseDown();}, () => {draw();});
 

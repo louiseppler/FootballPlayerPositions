@@ -2,7 +2,8 @@ var scaling = 6;
 var pitchOffsetX = -1;
 var pitchOffsetY = -1;
 
-var flipPitch = false; //filps the whole coordinate system
+//if true, flips the whole coordinate system (used to change the direction the game is displayed)
+var flipPitch = false; 
 
 function convertX(x) {
     return pitchOffsetX+((flipPitch*-2+1)*(+x)+gameData.pitch.height/2)*scaling
@@ -167,10 +168,11 @@ function getCoordinates(object1, object2) {
 function getGamePoints(frame, team) {
     var points = [];
 
-    var isReversed = false;
 
     var playerIDs = [];
 
+    //Indicates which way the team is playing (relative  to the coordinate system)
+    var isReversed = false;
     if(getIsSecondHalf(frame) && team == 1) isReversed = true;
     if(!getIsSecondHalf(frame) && team == 2) isReversed = true;
 
@@ -269,16 +271,4 @@ function drawPitch() {
     gameCanvas.drawDot(convertX(0),convertY(0),2)
     gameCanvas.drawDot(convertX(0),convertY(w0+11),2)
     gameCanvas.drawDot(convertX(0),convertY(w1-11),2)
-
-    //gameCanvas.drawCircle(convertX(0),convertY(w0+11),convertDist(9.15))
-
-
-
-    // gameCanvas.drawLine(convertX(),convertY(),convertX(),convertY());
-    // gameCanvas.drawLine(convertX(),convertY(),convertX(),convertY());
-    // gameCanvas.drawLine(convertX(),convertY(),convertX(),convertY());
-    // gameCanvas.drawLine(convertX(),convertY(),convertX(),convertY());
-    // gameCanvas.drawLine(convertX(),convertY(),convertX(),convertY());
-    // gameCanvas.drawLine(convertX(),convertY(),convertX(),convertY());
-
 }

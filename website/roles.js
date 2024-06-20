@@ -1,7 +1,6 @@
+// Role === Positions
 class Role {
     constructor() {
-        //-1: none, 1,5: extrema, 3: middle
-
         //-2,-1,0,1,2  --  -3 = null
         this.x_role = -3;
         this.y_role = -3;

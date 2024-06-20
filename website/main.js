@@ -54,7 +54,7 @@ var t = 0;
 
 /**
  * This function gets called once every frame and
- * handles drawing of the game
+ * handles drawing of the pitch
  */
 function draw() { 
 

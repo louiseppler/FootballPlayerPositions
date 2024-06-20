@@ -2,12 +2,6 @@ var dataLink2 = "http://127.0.0.1:8125/data/data.json"
 
 var dataLink = null
 
-const TRACKING_HALF = 1;
-const TRACKING_PID = 2;
-const TRACKING_X = 3;
-const TRACKING_Y = 4;
-const TRACKING_Z = 5;
-
 var possessions = null
 
 var gameData = null;

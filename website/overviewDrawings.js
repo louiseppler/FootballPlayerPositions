@@ -10,6 +10,7 @@ var showPossesionInOverview = false;
 var showEvents = true;
 var showPossesionInTimeline = true;
 
+//Settings to check if view needs re-rendering
 var frameOld;
 var minFrameLocOld;
 var maxFrameLocOld;
@@ -17,21 +18,22 @@ var viewSettingsHaveChanged = false;
 var showOverviewForTeamOld = 0;
 var smoothingOld = 0;
 
+/**
+ * Gets called 60 times a second, drawing loop for the position plot / overview diagram
+ */
 function draw2() {
     if(overviewCanvas == null) return;
     if(gameData == null) return;
 
-    
-
-
+    // Used for time measurement
+    // 
     // var start = Date.now()
     // overviewTeamA.computeAllRoles();
     // var timeA = Date.now()-start;
     // overviewTeamB.computeAllRoles();
     // var timeB = Date.now()-start-timeA;
     // console.log("frames: " + maxFrame + " timeA: " + timeA + " timeB" + timeB);
-    // var end = Date.now()
-
+    // alert("frames: " + maxFrame + ", team 1: " + timeA + "ms, team 2: " + timeB + "ms");
     
     overviewTeamA.isComputing = false;
     overviewTeamB.isComputing = false;
@@ -144,6 +146,10 @@ function drawOverviewFor(data, x0, y0, x1, y1, flipped) {
     var minFrameLoc = $( "#slider-range" ).slider( "values", 0 );
     var maxFrameLoc = $( "#slider-range" ).slider( "values", 1 );
 
+    if(maxFrameLoc < minFrameLoc+200) {
+        maxFrameLoc = minFrameLoc+200;
+    }
+
     var ys = (y1-y0)/10;
     
     var scaling = new Scaling(minFrameLoc, maxFrameLoc, x0, x1, getSubsitutionFrames(data.substitutionFrames));
@@ -165,31 +171,6 @@ function drawOverviewFor(data, x0, y0, x1, y1, flipped) {
     document.getElementById("smoothing_text").innerHTML = "Smoothing " + smoothing_text
 
     document.getElementById("time_duration_text").innerHTML = frameToTime(minFrameLoc) + " - " + frameToTime(maxFrameLoc);
-
-
-    if(overviewIsExpanded) {
-        //Calculates + Displaying the average
-        for(var j = 0; j < data.roles[minFrameLoc].length; j++) {
-
-            if(data.roles[maxFrameLoc-10].length <= j) continue;
-            var [avgX, avgY] = Role.getMostFrequentRole(data.roles[minFrameLoc][j].roleCount, data.roles[maxFrameLoc-10][j].roleCount);
-
-            if(debugFlagSet) console.log(j + " -> " + avgX + " " + avgY);
-
-            overviewCanvas.ctx.fillStyle = "#000";
-
-            overviewCanvas.ctx.fillStyle = Role.colorsX[avgX+2];
-            overviewCanvas.ctx.beginPath();
-            overviewCanvas.ctx.rect(x0,y0+j*ys+ys*0.225, x1-x0, ys*0.225); 
-            overviewCanvas.ctx.fill();
-    
-            overviewCanvas.ctx.fillStyle = Role.colorsY[avgY+2];
-            overviewCanvas.ctx.beginPath();
-            overviewCanvas.ctx.rect(x0,y0+j*ys+ys*0.45, x1-x0, ys*0.225);  
-            overviewCanvas.ctx.fill();  
-
-        }
-    }
 
     var substitutionFramesLoc = getSubsitutionFramesLocal(minFrameLoc, maxFrameLoc, data.substitutionFrames)
 
@@ -239,7 +220,7 @@ function drawOverviewFor(data, x0, y0, x1, y1, flipped) {
     
   
     if(showSubs) {
-        //Displaying Substituiton Indices
+        //Displaying Substitutions Indices
         for(var i = 0; i < data.substitutionIndices.length; i++) {
             var frame = data.substitutionFrames[i+1];
             if(frame > maxFrameLoc || frame < minFrameLoc) continue;
@@ -299,6 +280,11 @@ function drawOverviewFor(data, x0, y0, x1, y1, flipped) {
     }
 }
 
+/**
+ * Converts the frame to a string representing time
+ * @param {Int} frame 
+ * @returns 
+ */
 function frameToTime(frame) {
     var secondsTotal = frame/gameData.frameRate;
 
@@ -322,7 +308,7 @@ function frameToTime(frame) {
 }
 
 /**
- * Returns combined substition frames that are within minFrameLoc and maxFrameLoc
+ * Returns combined substation frames that are within minFrameLoc and maxFrameLoc
  */
 function getSubsitutionFramesLocal(minFrameLoc, maxFrameLoc, substitutionFrames) {
     var substitutionFramesLoc = [minFrameLoc];
@@ -519,26 +505,10 @@ function displayEventList(x0, x1, y0) {
 
 }
 
-function drawIconExplanation(x0, y0) {
-    var imgs = [img_goal,img_corner,img_redcard,img_yellowcard,img_freekick];
-    var labels = ["Goal","Corner","Red Card","Yellow Card","Goal Kick"]
-
-
-    var x1 = labels.reduce( (total, label) => total + overviewCanvas.ctx.measureText(label).width + 15 + 10, 0);
-
-    overviewCanvas.ctx.fillStyle = "#E2E2E2"
-    overviewCanvas.ctx.fillRect(x0,y0-12,(x1-x0)+25+5,24);
-
-    overviewCanvas.ctx.fillStyle = "#000"
-
-    x1 = x0+5;
-    for(var i = 0; i < imgs.length; i++) {
-        overviewCanvas.ctx.drawImage(imgs[i], x1, y0-7.5, 15, 15);
-        overviewCanvas.ctx.fillText(labels[i], x1+15+2, y0+4);
-        x1 += overviewCanvas.ctx.measureText(labels[i]).width + 15 + 10;
-    }
-}
-
+/**
+ * A class to help convert canvas pixels to frames and vice versa
+ * this code deals with the gaps of the substitutions
+ */
 class Scaling {
 
     constructor(minFrameLoc, maxFrameLoc, x0, x1, holeFrames) {
@@ -598,6 +568,11 @@ class Scaling {
         return Math.floor( (i-this.x0)*this.scaling+this.minFrameLoc );
     }
 
+    /**
+     * 
+     * @param {Int} i_temp pixel number
+     * @returns true if pixel is not in a gap / hole
+     */
     pixelIsActive(i_temp) {
         var i = i_temp;
 
