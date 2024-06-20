@@ -2,9 +2,17 @@ var scaling = 6;
 var pitchOffsetX = -1;
 var pitchOffsetY = -1;
 
+/*
+ * Coordinate Representation
+ * 
+ * h,v (horizontal, vertical): coordinate system used in the data json
+ * x,y : coordinate system used internally for the pitch
+ */
+
 //if true, flips the whole coordinate system (used to change the direction the game is displayed)
 var flipPitch = false; 
 
+//converts between coordinate systems
 function convertX(x) {
     return pitchOffsetX+((flipPitch*-2+1)*(+x)+gameData.pitch.height/2)*scaling
 }
@@ -43,16 +51,12 @@ function drawPlayerLabels(frame) {
         var isInTeam1 = gameData.players.team1.includes(playerId);
         var isInTeam2 = gameData.players.team2.includes(playerId);
         
-        if(playerId == "25") {
-            var x = 0;
-        }
-
         if(showOtherTeam == false) {
             if(showGraphForTeam == 1 && isInTeam2) continue;
             if(showGraphForTeam == 2 && isInTeam1) continue;
         }
 
-        var [x,y] = getCoordinates(object1, object2);
+        var [h,v] = getCoordinates(object1, object2);
 
         if(showGraphForTeam == 0 || (showGraphForTeam == 1 && isInTeam1) || (showGraphForTeam == 2 && isInTeam2)) {
             gameCanvas.ctx.fillStyle = "#FFF"
@@ -76,7 +80,7 @@ function drawPlayerLabels(frame) {
             gameCanvas.ctx.fillStyle = "#575757"
         }
 
-        gameCanvas.fillTextCenter(getShirtNumberLabel(playerId), convertX(y), convertY(x)+3)
+        gameCanvas.fillTextCenter(getShirtNumberLabel(playerId), convertX(v), convertY(h)+3)
     }
 }
 
@@ -92,7 +96,7 @@ function drawBall(frame) {
 
         if(playerId != "-1") continue;
 
-        var [x,y] = getCoordinates(object1, object2);
+        var [h,v] = getCoordinates(object1, object2);
         var z1 = +(object1.z)
         var z2 = +(object1.z)
 
@@ -100,7 +104,7 @@ function drawBall(frame) {
 
         gameCanvas.ctx.fillStyle = grayScale(Math.min(z/2,0.5));
 
-        gameCanvas.drawDot(convertX(y),convertY(x),4);
+        gameCanvas.drawDot(convertX(v),convertY(h),4);
 
     }
 }
@@ -135,17 +139,17 @@ function getGoalKeepers(frame) {
         var object2 = dataLine2.objects[i];
 
         var playerId = object1.id;
-        var [x,y] = getCoordinates(object1, object2);
+        var [h,v] = getCoordinates(object1, object2);
 
         var isInTeam1 = gameData.players.team1.includes(playerId);
         var isInTeam2 = gameData.players.team2.includes(playerId);
 
         if(gameData.players.goalKeepers.includes(playerId)) {
             if(isInTeam1) {
-                points.push([convertX(y),convertY(x),1])
+                points.push([convertX(v),convertY(h),1])
             }
             else {
-                points.push([convertX(y),convertY(x),2])
+                points.push([convertX(v),convertY(h),2])
             }
         }
     }
@@ -154,15 +158,15 @@ function getGoalKeepers(frame) {
 }
 
 function getCoordinates(object1, object2) {
-    var x1 = +object1.h
-    var y1 = +object1.v
-    var x2 = +object2.h
-    var y2 = +object1.v
+    var h1 = +object1.h
+    var v1 = +object1.v
+    var h2 = +object2.h
+    var v2 = +object1.v
 
-    var x = x1+(x2-x1)*frameDelta;
-    var y = y1+(y2-y1)*frameDelta;
+    var h = h1+(h2-h1)*frameDelta;
+    var v = v1+(v2-v1)*frameDelta;
 
-    return [x,y]
+    return [h,v]
 }
 
 function getGamePoints(frame, team) {
@@ -183,20 +187,16 @@ function getGamePoints(frame, team) {
         var object1 = dataLine.objects[i];
         var object2 = dataLine2.objects[i];
 
-        if(dataLine2 == null) {
-            var x = maxFrame;
-        }
-
         var playerId = object1.id;
-        var [x,y] = getCoordinates(object1, object2);
+        var [h,v] = getCoordinates(object1, object2);
         if(gameData.players.goalKeepers.includes(playerId)) continue;
 
         if(team == 1 && gameData.players.team1.includes(playerId)) {
-            points.push(convertX(y),convertY(x));
+            points.push(convertX(v),convertY(h));
             playerIDs.push(playerId)
         }
         if(team == 2 && gameData.players.team2.includes(playerId)) {
-            points.push(convertX(y),convertY(x));
+            points.push(convertX(v),convertY(h));
             playerIDs.push(playerId)
         }
     }
