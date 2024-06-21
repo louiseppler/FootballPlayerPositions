@@ -36,7 +36,7 @@ The JSON file that is uploaded to the webpage must have the following format:
                 id: "P1234"
                 shirtNumber: 12
                 isGoalie: false
-                row: Number (optional)
+                row: Number (optional) -- not supported yet
             },
         ]
     },
