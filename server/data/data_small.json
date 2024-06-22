@@ -4,6 +4,7 @@
         "width": 105,
         "height": 68
     },
+    "ballId": "-1",
     "homeTeam": {
         "name": null,
         "colorNumber": null,

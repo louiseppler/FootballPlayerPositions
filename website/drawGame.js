@@ -94,7 +94,7 @@ function drawBall(frame) {
         
         var playerId = object1.id;
 
-        if(playerId != "-1") continue;
+        if(playerId != gameData.ballId) continue;
 
         var [h,v] = getCoordinates(object1, object2);
         var z1 = +(object1.z)
