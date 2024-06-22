@@ -103,6 +103,9 @@ class OverviewData {
      * @param {*} substitutionFrames Array of all substitutionFrame numbers including 0, and maxFrame
      */
     computePlayerOrdering(substitutionFrames) {
+
+        if(this.readPlayerOrderingFromData()) return;
+
         var substitutionIndices = [];
         var playerPair = [];
         var firstSubIndex = substitutionFrames[1];
@@ -205,6 +208,29 @@ class OverviewData {
 
             this.substitutionIndices = substitutionIndices;
         };
-
     }
+
+    /**
+     * Read player ordering from data if there
+     * return true if found data
+     */
+    readPlayerOrderingFromData() {
+        var players = (this.team == 1)? gameData.homeTeam.players : gameData.awayTeam.players;
+
+        if(players[0].row == null) {
+            return false;
+        }
+
+        for(var player of players) {
+            if(player.row != null) {
+                this.playerIndices[player.id] = player.row;
+            }
+            else {
+                //set default to prevent crashing
+                this.playerIndices[player.id] = 0;
+            }
+        }
+
+        return true;
+    } 
 }
