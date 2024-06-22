@@ -19,28 +19,34 @@ class CanvasHelper {
 
         this.draw = draw
 
-        var canvas = d3.select('#' + id) 
-        .append('canvas') 
-        .attr('width', width) 
-        .attr('height', height); 
-        
-        this.ctx = canvas.node().getContext('2d')
+        var scaleFactor = 2; //change dpi
+
+        var canvas = document.getElementById(id);
+
+        $("#" + id).css({ "width" : "" + width, "height" : "" + height });
+
+        this.ctx = canvas.getContext("2d");
+
+        canvas.width = Math.ceil(width * scaleFactor);
+        canvas.height = Math.ceil(height * scaleFactor);
+
+        this.ctx.scale(scaleFactor, scaleFactor);
         
         window.requestAnimationFrame(() => {this.drawHandler()});
 
         var helper = this
         
-        canvas.on("mousemove", function(event) {
+        canvas.addEventListener("mousemove", function(event) {
             helper.mouseX = event.offsetX;
             helper.mouseY = event.offsetY;
         });
         
-        canvas.on("mouseup", function(event) {
+        canvas.addEventListener("mouseup", function(event) {
             mouseClick();
             helper.mouseIsPressed = false;
         });
         
-        canvas.on("mousedown", function(event) {
+        canvas.addEventListener("mousedown", function(event) {
             helper.mouseIsPressed = true;
             mouseDown();
         })
@@ -149,11 +155,11 @@ function setupCanvases() {
     w1 = Math.floor(w1);
     w2= Math.floor(w2);
 
-    gameCanvas = new CanvasHelper("container", w1, h1, () => {mouseClick();}, () => {mouseDown();}, () => {draw();});
+    gameCanvas = new CanvasHelper("canvas1", w1, h1, () => {mouseClick();}, () => {mouseDown();}, () => {draw();});
 
     gameCanvas.clearCanvas()
 
-    overviewCanvas = new CanvasHelper("container2", w2, h2, () => {empty();}, () => {empty();}, () => {draw2();}, false);
+    overviewCanvas = new CanvasHelper("canvas2", w2, h2, () => {empty();}, () => {empty();}, () => {draw2();}, false);
 
     overviewCanvas.clearCanvas()
 
@@ -161,4 +167,12 @@ function setupCanvases() {
 
     overviewTeamA = new OverviewData(1);
     overviewTeamB = new OverviewData(2);
+
+    changeResolution(overviewCanvas, 4);
+}
+
+function changeResolution(helper, scaleFactor) {
+
+    // Resize canvas and scale future draws.
+
 }
