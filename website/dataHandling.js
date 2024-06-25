@@ -8,6 +8,8 @@ var gameData = null;
 
 var playerShirtNumbers = {};
 
+var startTime = 0;
+
 /**
  * Converts frame number into the frame number without dead-frames
  * @param {Number} oldFrame old Frame

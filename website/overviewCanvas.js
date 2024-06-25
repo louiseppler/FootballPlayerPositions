@@ -287,22 +287,59 @@ function drawOverviewFor(data, x0, y0, x1, y1, flipped) {
  * @returns 
  */
 function frameToTime(frame) {
-    var secondsTotal = frame/gameData.frameRate;
+
+    var p = getPeriod(frame);
+    var pTime = 45;
+    if(p > 2) pTime = 15;
+
+    var secondsPeriod = (+gameData.tracking[frame].timestamp)/1000;
+    var additionalSeconds = 0;
+    if(secondsPeriod > pTime*60) {
+        additionalSeconds = secondsPeriod - (pTime*60);
+        secondsPeriod -= additionalSeconds;
+    }
+
+    if(p >= 1) {
+        secondsPeriod += 45*60;
+    }
+    if(p >= 2) {
+        secondsPeriod += 45*60;
+    }
+    if(p >= 3) {
+        secondsPeriod += 15*60;
+    }
+    
+    if(secondsPeriod == null) {
+        secondsPeriod = frame/gameData.frameRate;
+    }
+
+    //var secondsPeriod = frame/gameData.frameRate;
 
     var secondsText = "";
-    if(secondsTotal % 60 < 10) {
-        secondsText = "0" + Math.floor(secondsTotal % 60);
+    if(secondsPeriod % 60 < 10) {
+        secondsText = "0" + Math.floor(secondsPeriod % 60);
     }
     else {
-        secondsText = "" + Math.floor(secondsTotal % 60);
+        secondsText = "" + Math.floor(secondsPeriod % 60);
     }
 
     var minText = "";
-    if(Math.floor(secondsTotal/60) < 10) {
-        minText = "0" + Math.floor(secondsTotal/60);
+    if(Math.floor(secondsPeriod/60) < 10) {
+        minText = "0" + Math.floor(secondsPeriod/60);
     }
     else {
-        minText = "" + Math.floor(secondsTotal/60)
+        minText = "" + Math.floor(secondsPeriod/60)
+    }
+
+    if(additionalSeconds > 0) {
+        var secondsText2 = "";
+        if(additionalSeconds % 60 < 10) {
+            secondsText2 = "0" + Math.floor(additionalSeconds % 60);
+        }
+        else {
+            secondsText2 = "" + Math.floor(additionalSeconds % 60);
+        }
+        return minText + "+" + Math.floor(additionalSeconds/60) + ":" + secondsText2;
     }
 
     return minText + ":" + secondsText;

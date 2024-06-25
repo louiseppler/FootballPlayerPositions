@@ -109,6 +109,14 @@ function drawBall(frame) {
     }
 }
 
+function getPeriod(frame) {
+    for(var i = 0; i < gameData.periods.length; i++) {
+        if(frame < gameData.periods[i].end) {
+            return i;
+        }
+    }
+}
+
 function getIsSecondHalf(frame) {
     if(gameData.periods.length >= 2) {
         if(gameData.periods[1].start < frame && frame <= gameData.periods[1].end) {

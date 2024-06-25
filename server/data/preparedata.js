@@ -49,6 +49,7 @@ fs.createReadStream("./tracking.csv")
     if(row[9] == 0) return;
 
     var frame = row[3];
+    var timestamp = row[4];
 
     count++;
 
@@ -67,6 +68,7 @@ fs.createReadStream("./tracking.csv")
     if(frameObject == null) {
       frameObject = {};
       frameObject.frame = frame;
+      frameObject.timestamp = timestamp;
       frameObject.possession = 0;
       frameObject.objects = [];
     }
@@ -75,6 +77,7 @@ fs.createReadStream("./tracking.csv")
       ownFrameCount += 1;
       frameObject = {};
       frameObject.frame = frame;
+      frameObject.timestamp = timestamp;
       frameObject.possession = 0;
       frameObject.objects = [];
     }
