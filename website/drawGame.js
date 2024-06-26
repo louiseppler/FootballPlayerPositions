@@ -42,7 +42,7 @@ function drawPlayerLabels(frame) {
     var dataLine = gameData.tracking[frame];
     var dataLine2 = gameData.tracking[frame+1];
 
-    for(var i = 0; i < 23; i++) {
+    for(var i = 0; i < dataLine2.objects.length; i++) {
         var object1 = dataLine.objects[i];
         var object2 = dataLine2.objects[i];
 
@@ -88,7 +88,7 @@ function drawBall(frame) {
     var dataLine = gameData.tracking[frame];
     var dataLine2 = gameData.tracking[frame+1];
 
-    for(var i = 0; i < 23; i++) {
+    for(var i = 0; i < dataLine2.objects.length; i++) {
         var object1 = dataLine.objects[i];
         var object2 = dataLine2.objects[i];
         
@@ -111,7 +111,7 @@ function drawBall(frame) {
 
 function getPeriod(frame) {
     for(var i = 0; i < gameData.periods.length; i++) {
-        if(frame < gameData.periods[i].end) {
+        if(frame < gameData.periods[i].endFrame) {
             return i;
         }
     }
@@ -119,13 +119,13 @@ function getPeriod(frame) {
 
 function getIsSecondHalf(frame) {
     if(gameData.periods.length >= 2) {
-        if(gameData.periods[1].start < frame && frame <= gameData.periods[1].end) {
+        if(gameData.periods[1].startFrame < frame && frame <= gameData.periods[1].endFrame) {
             return true;
         }
     }
 
     if(gameData.periods.length >= 4) {
-        if(gameData.periods[3].start < frame && frame <= gameData.periods[3].end) {
+        if(gameData.periods[3].startFrame < frame && frame <= gameData.periods[3].endFrame) {
             return true;
         }
     }
@@ -142,7 +142,7 @@ function getGoalKeepers(frame) {
     var dataLine = gameData.tracking[frame];
     var dataLine2 = gameData.tracking[frame+1];
 
-    for(var i = 0; i < 23; i++) {
+    for(var i = 0; i < dataLine2.objects.length; i++) {
         var object1 = dataLine.objects[i];
         var object2 = dataLine2.objects[i];
 
@@ -191,7 +191,7 @@ function getGamePoints(frame, team) {
     var dataLine = gameData.tracking[frame];
     var dataLine2 = gameData.tracking[frame+1];
 
-    for(var i = 0; i < 23; i++) {
+    for(var i = 0; i < dataLine2.objects.length; i++) {
         var object1 = dataLine.objects[i];
         var object2 = dataLine2.objects[i];
 

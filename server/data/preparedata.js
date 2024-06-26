@@ -245,8 +245,8 @@ function readRest() {
         data.events = events;
         data.tracking = array;
         data.periods = [];
-        data.periods.push({start: firstFrame, end: changingFrame-1});
-        data.periods.push({start: changingFrame, end: lastFrame-1});
+        data.periods.push({startFrame: firstFrame, endFrame: changingFrame-1});
+        data.periods.push({startFrame: changingFrame, endFrame: lastFrame-1});
 
         //data.possessions = {}
         //data.possessions.team1 = poss1
