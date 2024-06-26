@@ -18,8 +18,8 @@ The JSON file that is uploaded to the webpage must have the following format:
         "frameRate": Number,
         "periods": [
             {
-                "firstFrame": Number
-                "lastFrame": Number
+                "startFrame": Number
+                "endFrame": Number
             }
         ]
     }
@@ -33,10 +33,10 @@ The JSON file that is uploaded to the webpage must have the following format:
         "ColorShirt": Color (optional)
     players: [
               {
-                id: "P1234"
-                shirtNumber: 12
-                isGoalie: false
-                row: Number (optional) -- not supported yet
+                id: String
+                shirtNumber: Number / Short String
+                isGoalie: Boolean
+                row: Number (optional)
             },
         ]
     },
@@ -48,7 +48,8 @@ The JSON file that is uploaded to the webpage must have the following format:
       (optional)
       ...
     }
-    "events": [
+    "events" : [
+       (optional)
           {
                 type: String
                 team: Number (1 or 2)
@@ -57,8 +58,9 @@ The JSON file that is uploaded to the webpage must have the following format:
     ],
     "tracking": [
         {
-                frame:xv
-                possession: Number (0,1 or 2)
+                frame: Number
+                timestamp: Number (in milliseconds of current period)
+                possession: Number (0,1 or 2) (optinal)
                 objects: [
                 {
                     id: String
@@ -69,10 +71,17 @@ The JSON file that is uploaded to the webpage must have the following format:
         ]
     }
 ]
+For the optional fields, the website will provide a default value if they are not defined (except for the events and possessions).
+
 ```
 Colors are represented with a string in hex including a hashtag. For example (`#F8EBEA`).
 
-The field `teamAway` follows the same format as `teamHome`. 
+The field `teamAway` follows the same format as `teamHome`. The `id` in the `objects` of the tracking data must match either the `ballId` or the `id` of one of the players.
+
+
+The tracking fields contain a frame `timestamp` and a `frame` number. The timestamp expects the number indicating the time in the current period (in milliseconds). The frame number is used to sync up the events provided in the `events` field.
+
+In the array `tracking` the field `possession` takes either `0` for no team has possession, `1` if the home team has possession and `2` if the away team has possession.
 
 In the `events` field, the team is represented with a number. `1` for the home team and `2` for the away team. The event type accepts the following types:
 - `"OFF_TARGET"`
@@ -82,9 +91,9 @@ In the `events` field, the team is represented with a number. `1` for the home t
 - `"RED"`
 - `"CORNER"`
 - `"CORNER_L"`
-- `CORNER_R"`
+- `"CORNER_R"`
 
-In the array `tracking` the field `possession` takes either `0` for no team has possession, `1` if the home team has possession and `2` if the away team has possession.
+The `row` field in the `players` array can be used to override the default ordering of the players in the position plot.
 
 The field `colorPalette` is optional and takes the following fields:
 
@@ -102,3 +111,11 @@ The field `colorPalette` is optional and takes the following fields:
  B: Color
 }
 ```
+
+# Adding a URL Parameter
+
+The data can be hosted on a server and the webpage can automatically load it from there. For this, the URL must be encoded with `encodeURIComponent()` function and then added to the `data` field. For example:
+```
+https://www.linkToWebsite.com/index.html?data=https%3A%2F%2Fwww.linkToData.com 
+```
+
