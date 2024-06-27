@@ -12,7 +12,7 @@ var showPlayerLabels = true;
 // ============= Animations Parameters =============
 
 var isPlaying = false;
-var playBackSpeed = 2;
+var playBackSpeed = 1;
 var frameNr = 0;
 var frameDelta = 0;
 var nextFrameAt = 0; //timestamp for when the frame should increase
