@@ -294,13 +294,19 @@ function drawGoalKeepers(points) {
 }
 
 function drawDotsRoles(points, roles, team) {
-    if(showGraphForTeam == 0) {
+    if(true) {
         for(var i = 0; i < roles.length; i++) {
-            if(team == 1) {
-                gameCanvas.ctx.fillStyle = gameData.homeTeam.colorShirt;   
-            }
-            else {
-                gameCanvas.ctx.fillStyle = gameData.awayTeam.colorShirt;   
+            // if(team == 1) {
+            //     gameCanvas.ctx.fillStyle = gameData.homeTeam.colorShirt;   
+            // }
+            // else {
+            //     gameCanvas.ctx.fillStyle = gameData.awayTeam.colorShirt;   
+            // }
+
+            gameCanvas.ctx.fillStyle = "#575757";
+
+            if(roles[i].x_role == -2 && showGraphColorMode == 1) {
+                gameCanvas.ctx.fillStyle = "#C55D57";
             }
 
             gameCanvas.ctx.fillStyle = "#575757";
@@ -308,6 +314,7 @@ function drawDotsRoles(points, roles, team) {
             if(roles[i].x_role == -2 && showGraphColorMode == 1) {
                 gameCanvas.ctx.fillStyle = "#C55D57";
             }
+
 
             gameCanvas.drawDot(points[i*2],points[i*2+1], 8);
         }       
@@ -326,6 +333,9 @@ function drawDotsRoles(points, roles, team) {
 
             gameCanvas.ctx.fillStyle = roles[i].getColorY()
             gameCanvas.ctx.strokeStyle = roles[i].getColorY()
+
+            gameCanvas.ctx.fillStyle = "#575757";
+
 
             if(team == showGraphForTeam) gameCanvas.drawDot(points[i*2],points[i*2+1], 8, Math.PI, 2*Math.PI);
             else gameCanvas.drawCircle(points[i*2],points[i*2+1], 8, Math.PI, 2*Math.PI);
