@@ -15,12 +15,14 @@ function computeRoles(points, extremaLines, graph, isReversed, playerIDs) {
     for(var i = 0; i < N; i++) {
         roles.push(new Role())
     }
-
+    
     if(playerIDs != null) {
         for(var i = 0; i < N; i++) {
             roles[i].playerID = playerIDs[i];
         }
     }
+    
+    const axisIsFlipped = true; //switching of x/y axis
 
     for(var i = 0; i < N; i++) {
         if(points[i*2] < extremaLines.min_x) {

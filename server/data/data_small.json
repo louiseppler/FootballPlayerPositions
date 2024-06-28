@@ -1,0 +1,236 @@
+{
+    "frameRate": 24,
+    "pitch": {
+        "width": 105,
+        "height": 68
+    },
+    "ballId": "-1",
+    "homeTeam": {
+        "name": null,
+        "colorNumber": null,
+        "colorShirt": null,
+        "players": [
+            {
+                "id": "P3578",
+                "isGoalie": true,
+                "row": null,
+                "shirtNumber": "11"
+            },
+            {
+                "id": "P3568",
+                "isGoalie": false,
+                "row": null,
+                "shirtNumber": "1"
+            },
+            {
+                "id": "P3569",
+                "isGoalie": false,
+                "row": null,
+                "shirtNumber": "2"
+            },
+            {
+                "id": "P3570",
+                "isGoalie": false,
+                "row": null,
+                "shirtNumber": "3"
+            },
+            {
+                "id": "P3571",
+                "isGoalie": false,
+                "row": null,
+                "shirtNumber": "4"
+            },
+            {
+                "id": "P3572",
+                "isGoalie": false,
+                "row": null,
+                "shirtNumber": "5"
+            },
+            {
+                "id": "P3573",
+                "isGoalie": false,
+                "row": null,
+                "shirtNumber": "6"
+            },
+            {
+                "id": "P3574",
+                "isGoalie": false,
+                "row": null,
+                "shirtNumber": "7"
+            },
+            {
+                "id": "P3575",
+                "isGoalie": false,
+                "row": null,
+                "shirtNumber": "8"
+            },
+            {
+                "id": "P3576",
+                "isGoalie": false,
+                "row": null,
+                "shirtNumber": "9"
+            },
+            {
+                "id": "P3577",
+                "isGoalie": false,
+                "row": null,
+                "shirtNumber": "10"
+            },
+            {
+                "id": "P3579",
+                "isGoalie": false,
+                "row": null,
+                "shirtNumber": "12"
+            },
+            {
+                "id": "P3580",
+                "isGoalie": false,
+                "row": null,
+                "shirtNumber": "13"
+            },
+            {
+                "id": "P3581",
+                "isGoalie": false,
+                "row": null,
+                "shirtNumber": "14"
+            },
+            {
+                "id": "P3582",
+                "isGoalie": false,
+                "row": null,
+                "shirtNumber": "15"
+            },
+            {
+                "id": "P3583",
+                "isGoalie": false,
+                "row": null,
+                "shirtNumber": "16"
+            },
+            {
+                "id": "P3584",
+                "isGoalie": false,
+                "row": null,
+                "shirtNumber": "17"
+            }
+        ]
+    },
+    "awayTeam": {
+        "name": null,
+        "colorNumber": null,
+        "colorShirt": null,
+        "players": [
+            {
+                "id": "P3595",
+                "isGoalie": true,
+                "row": null,
+                "shirtNumber": "28"
+            },
+            {
+                "id": "P3585",
+                "isGoalie": false,
+                "row": null,
+                "shirtNumber": "18"
+            },
+            {
+                "id": "P3586",
+                "isGoalie": false,
+                "row": null,
+                "shirtNumber": "19"
+            },
+            {
+                "id": "P3587",
+                "isGoalie": false,
+                "row": null,
+                "shirtNumber": "20"
+            },
+            {
+                "id": "P3588",
+                "isGoalie": false,
+                "row": null,
+                "shirtNumber": "21"
+            },
+            {
+                "id": "P3589",
+                "isGoalie": false,
+                "row": null,
+                "shirtNumber": "22"
+            },
+            {
+                "id": "P3590",
+                "isGoalie": false,
+                "row": null,
+                "shirtNumber": "23"
+            },
+            {
+                "id": "P3591",
+                "isGoalie": false,
+                "row": null,
+                "shirtNumber": "24"
+            },
+            {
+                "id": "P3592",
+                "isGoalie": false,
+                "row": null,
+                "shirtNumber": "25"
+            },
+            {
+                "id": "P3593",
+                "isGoalie": false,
+                "row": null,
+                "shirtNumber": "26"
+            },
+            {
+                "id": "P3594",
+                "isGoalie": false,
+                "row": null,
+                "shirtNumber": "27"
+            },
+            {
+                "id": "P3596",
+                "isGoalie": false,
+                "row": null,
+                "shirtNumber": "29"
+            },
+            {
+                "id": "P3597",
+                "isGoalie": false,
+                "row": null,
+                "shirtNumber": "30"
+            },
+            {
+                "id": "P3696",
+                "isGoalie": false,
+                "row": null,
+                "shirtNumber": "31"
+            },
+            {
+                "id": "P3697",
+                "isGoalie": false,
+                "row": null,
+                "shirtNumber": "32"
+            },
+            {
+                "id": "P3698",
+                "isGoalie": false,
+                "row": null,
+                "shirtNumber": "33"
+            },
+            {
+                "id": "P3699",
+                "isGoalie": false,
+                "row": null,
+                "shirtNumber": "34"
+            },
+            {
+                "id": "P3700",
+                "isGoalie": false,
+                "row": null,
+                "shirtNumber": "35"
+            }
+        ]
+    },
+    "positionColors": {
+        "colorsX": null,
+        "colorsY": null
+    }
+}

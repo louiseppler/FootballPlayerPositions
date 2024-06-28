@@ -1,5 +1,15 @@
+.flex-grow {
+  flex: 1 0 auto;
+}
+
 html, body{
   height: 100%;
+}
+
+body {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
 }
 
 .slidecontainer {
@@ -28,3 +38,45 @@ html, body{
     width: 20px;
     height: 20px;
   }
+
+  table {
+    border-collapse: collapse;
+  }
+
+
+
+  tr {
+    border: 0;
+    border-bottom: 0;
+    border-color: white;
+  }
+
+  td.playerposition {
+    border: 1px solid;
+    align-items: center;
+    align-content: center;
+  }
+
+  #drop_zone {
+    border: 2px dashed gray;
+    border-radius: 10px;
+    width: 500px;
+    height: 250px;
+  }
+
+  #fileInput {
+    display: none;
+}
+
+footer {
+  margin-top: auto;
+}
+
+img.footer-img {
+  width: 100%;
+}
+
+div.footer {
+  width: 100%;
+  background-color: #a58e71;
+}

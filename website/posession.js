@@ -1,33 +1,69 @@
-class Possesion {
-    constructor(data) {
-        console.log("Computing Posessions");
-        this.teamA = this.constructArray(data, "Team A");
-        this.teamB = this.constructArray(data, "Team B");
-        console.log("Done");
+class Possession {
+    constructor() {
+        // console.log("Computing Posessions");
+        // this.teamA = this.constructArray(gameData.possessions.team1);
+        // this.teamB = this.constructArray(gameData.possessions.team2);
+        // console.log("Done");
+
+
+        // if(gameData.tracking[0].possessions == null) {
+        //     return;
+        // }        
+
+        var prevPossess = 0;
+        this.teamA = [];
+        var valA = 0;
+        this.teamB = [];
+        var valB = 0;
+
+        for(var i = 0; i < maxFrame; i++) {
+            if(prevPossess != gameData.tracking[i].possession) {
+                if(prevPossess == 1) {
+                    valA += 1;
+                }
+                else if(prevPossess == 2) {
+                    valB += 1;
+                }
+                prevPossess = gameData.tracking[i].possession
+                this.teamA.push(valA);
+                this.teamB.push(valB);
+
+
+                if(gameData.tracking[i].possession == 1) {
+                    valA += 1;
+                }
+                else if(gameData.tracking[i].possession == 2) {
+                    valB += 1;
+                }
+            }
+            else {
+                this.teamA.push(valA);
+                this.teamB.push(valB); 
+            }
+        }
+
+        var x = this.teamA;
+
     }
 
-    constructArray(data, team) {
+    constructArray(data) {
         var array = [];
 
         var j = 0;
         var value = 0;
 
-        for(var i = 0; i < data.length; i++) {
-
-            //1,1,One,Team A,IN_POSSESSION,361,1124
-            if(data[i][3] == team && data[i][4] == "IN_POSSESSION") {
-                var start = data[i][5];
-                var end = data[i][6];
-                
-                for(; j < start; j++) {
-                    array.push(value);
-                }
-                value += 1;
-                for(; j < end; j++) {
-                    array.push(value);
-                }
-                value += 1;
+        for(var i = 0; i < data.length; i += 2) {
+            var start = data[i*2];
+            var end = data[i*2+1];
+            
+            for(; j < start; j++) {
+                array.push(value);
             }
+            value += 1;
+            for(; j < end; j++) {
+                array.push(value);
+            }
+            value += 1;
         }
 
         return array

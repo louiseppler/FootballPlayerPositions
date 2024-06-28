@@ -1,3 +1,4 @@
 .DS_Store
 server/data/tracking.csv
 server/data/tracking_small.csv
+server/data/data.json

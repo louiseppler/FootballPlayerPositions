@@ -1,7 +1,6 @@
+// Role === Positions
 class Role {
     constructor() {
-        //-1: none, 1,5: extrema, 3: middle
-
         //-2,-1,0,1,2  --  -3 = null
         this.x_role = -3;
         this.y_role = -3;
@@ -68,40 +67,6 @@ class Role {
 
         return "#A9A9A9"
     }
-
-    getGrayScaleColorIndex(mode) {
-        switch (mode) {
-            case 0:
-                if(this.x_role == -2 || this.x_role == 2) {
-                    return 2;
-                }
-                if(this.y_role == -2 || this.y_role == 2) {
-                    return 1;
-                }
-                return 0;
-
-            case 1:
-                if(this.x_role == -2 || this.x_role == 2) {
-                    return 2;
-                }
-                if(this.x_role == -1 || this.x_role == 1) {
-                    return 1;
-                }
-                return 0;
-            case 2:
-                if(this.y_role == -2 || this.y_role == 2) {
-                    return 2;
-                }
-                if(this.y_role == -1 || this.y_role == 1) {
-                    return 1;
-                }
-                return 0;
-            default:
-                return 0
-        }
-    }
-
-
 
     static getMostFrequentRoleIndex(startCount, endCount) {
         if(startCount == null || endCount == null) return null

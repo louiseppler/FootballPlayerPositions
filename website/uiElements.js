@@ -1,28 +1,9 @@
 var minFrame = 0;
-var maxFrame = 143761-2;
+var maxFrame = 0//143761-2;
 
-
-function setupUIElements() {
-
-    setupViewSettings();
-
+function setupSlider() {
     $('#duration_slider').prop("min", minFrame);
-    $('#duration_slider').prop("max", maxFrame-2);
-
-    $("#play_button").click(function() {
-        isPlaying = !isPlaying;
-        nextFrameAt = Date.now()
-    });
-
-    $("#dubug_button").click(function() {
-        //$('#duration_slider').val(34000);
-        debugFlagSet = true;
-    });
-
-
-    $("#smoothing_slider").click(function() {
-        //debugFlagSet = true;
-    });
+    $('#duration_slider').prop("max", maxFrame);
 
     $( "#slider-range" ).slider({
         range: true,
@@ -34,6 +15,37 @@ function setupUIElements() {
         }
       });
 
+}
+
+function setupUIElements() {
+
+	$("#website_view").hide();
+	$("#data_error_view").hide();
+	$("#data_loading_view").hide();
+    $("#main_div_error").hide();
+    setupViewSettings();
+
+    $("#error_div_possessions").hide();
+    $("#error_div_events").hide();
+
+    $("#link_from").submit(function(e) {
+        e.preventDefault();
+    });
+
+    $("#play_button").click(function() {
+        isPlaying = !isPlaying;
+        setFrameNr(null)
+    });
+
+    $("#dubug_button").click(function() {
+        //$('#duration_slider').val(34000);
+        debugFlagSet = true;
+    });
+
+
+    $("#smoothing_slider").click(function() {
+        //debugFlagSet = true;
+    });
       
 
     $("#graph_select_group").click(function() {
@@ -72,7 +84,7 @@ function setupUIElements() {
 function changePlaybackSpeed(val) {
     playBackSpeed = val;
     isPlaying = true;
-    nextFrameAt = Date.now()
+    setFrameNr(null)
     $("#button_pause").show();
     $("#button_play").hide();
 }
@@ -105,11 +117,12 @@ function setupViewSettings() {
     document.getElementById("show_other_team_btn").checked = true;
     document.getElementById("show_goal_keeper_btn").checked = true;
     document.getElementById("show_shape_graph_btn").checked = true;
+    document.getElementById("show_shirt_number_btn").checked = true;
     viewSettingsPitchChanged();
 
     document.getElementById("show_subs_btn").checked = true;
     document.getElementById("show_subs_minimal_btn").checked = false;
-    document.getElementById("show_shape_graph_btn").checked = false;
+    document.getElementById("show_posession_overview_btn").checked = false;
     viewSettingsOverviewChanged();
 
     document.getElementById("show_events_btn").checked = true;
@@ -121,17 +134,22 @@ function viewSettingsPitchChanged() {
     showOtherTeam =  document.getElementById("show_other_team_btn").checked;
     showGoalKeepers = document.getElementById("show_goal_keeper_btn").checked;
     showShapeGraph = document.getElementById("show_shape_graph_btn").checked;
+    showPlayerLabels = document.getElementById("show_shirt_number_btn").checked;
 }
 
 function viewSettingsOverviewChanged() {
     showSubs = document.getElementById("show_subs_btn").checked;
     showSubsMinimal =  document.getElementById("show_subs_minimal_btn").checked;
     showPossesionInOverview =  document.getElementById("show_posession_overview_btn").checked;
+
+    viewSettingsHaveChanged = true;
 }
 
 function viewSettingsTimelineChanged() {
     showEvents = document.getElementById("show_events_btn").checked;
     showPossesionInTimeline = document.getElementById("show_posession_timeline_btn").checked;
+
+    viewSettingsHaveChanged = true;
 }
 
 function globalViewSettingsChanged() {
@@ -148,6 +166,13 @@ function globalViewSettingsChanged() {
     else {
         $("#main_div_pitch").hide();
     }
+
+    if(document.getElementById("show_diagram_btn").checked == false && document.getElementById("show_pitch_btn").checked == false) {
+        $("#main_div_error").show()
+    }
+    else {
+        $("#main_div_error").hide()
+    }
+
+    viewSettingsHaveChanged = true;
 }
-
-

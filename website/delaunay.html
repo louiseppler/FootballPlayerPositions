@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script> <!-- jQuery-->
+        <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/d3@7"></script> <!-- D3 -->
+
+        <script src="priorityQueue.js"></script>
+        <script src="canvasHelper.js"></script>
+        <script src="computations.js"></script>
+        <script src="roles.js"></script>
+        <script src="overviewData.js"></script>
+        <script src="drawGame.js"></script>
+
+        <script src="gameCanvas.js"></script>
+
+        <link rel="stylesheet" href="jquery/jquery-ui.css">
+        <link rel="stylesheet" type="text/css" href="styles.css" />
+
+        <title>Shape Graph Playground</title>
+    </head>
+    <body>
+        <center>
+       
+        <h1>Shape Graph Playground</h1>
+
+        <p>Add and move points on canvas with your mouse</p>
+
+        <div id="container">
+            <canvas id="canvas"></canvas>
+        </div>
+
+        <br>
+        <button id="button_show_color_mode_d">Dominant Color</button>
+        <button id="button_show_color_mode_s">Semicircle Color</button>
+        <button id="button_show_color_mode_x">Color Mode X</button>
+        <button id="button_show_color_mode_y">Color Mode Y</button>
+        <br><br>
+        <button id="showBaseGraph"></button>
+        <button id="showCircles"></button>
+        <button id="showCenters"></button>
+        <button id="showExtremaLines"></button>
+        </center>
+
+       
+        
+        <script>
+
+            function drawLoc() {
+                
+
+                if(gameCanvas.mouseIsPressed) {
+                    moveDots();
+                }
+
+                gameCanvas.clearCanvas();
+                gameCanvas.clearCanvasWhite();
+
+                drawDotsSimple();
+
+                var points = [];
+                for(dot of dots) {
+                    points.push(dot.x, dot.y);
+                }
+                shapeGraphMain(points, false, true, null, 1);
+                doPrint = false;
+            }
+
+            function mouseClickLoc() {
+                doPrint = true;
+            }
+
+            function mouseDownLoc() {
+                getClosestDot();
+            }
+
+            gameCanvas = new CanvasHelper("canvas", 750, 500, () => {mouseClickLoc();}, () => {mouseDownLoc();}, () => {drawLoc();});
+
+            showGraphForTeam = 1;
+
+            gameData = {};
+            gameData.team2 = {}
+            gameData.team1 = {}
+            gameData.team1.color = "#3395AB";
+            gameData.team2.color = "#B73B92";
+            
+            // =============== Setup Buttons ===============
+
+            $("#button_show_color_mode_x").click(function() {
+                showGraphColorMode = 1;
+            });
+            $("#button_show_color_mode_y").click(function() {
+                showGraphColorMode = 2; 
+            });
+            $("#button_show_color_mode_s").click(function() {
+                showGraphColorMode = 3;
+            });
+            $("#button_show_color_mode_d").click(function() {
+                showGraphColorMode = 0;
+            });
+
+
+            $("#showBaseGraph").click(function() {
+                showBaseGraph = !showBaseGraph;
+
+                if(showBaseGraph) $("#showBaseGraph").html("Hide Base Graph")
+                else    $("#showBaseGraph").html("Show Base Graph")
+            });
+
+            $("#showCircles").click(function() {
+                showCircles = !showCircles;
+
+                if(showCircles) $("#showCircles").html("Hide Circles")
+                else    $("#showCircles").html("Show Circles")
+            });
+
+            $("#showCenters").click(function() {
+                showCenters = !showCenters;
+
+                if(showCenters) $("#showCenters").html("Hide Centers")
+                else    $("#showCenters").html("Show Centers")
+            });
+
+            $("#showExtremaLines").click(function() {
+                if(!showExtremaLines) {
+                    showExtremaLines = true;
+                    showAxisType = 0;
+                    $("#showExtremaLines").html("Switch Axis")
+                }
+                else if(showExtremaLines && showAxisType == 0) {
+                    showAxisType = 1
+                    $("#showExtremaLines").html("Hide Lines")
+                }
+                else {
+                    showExtremaLines = false;
+                    $("#showExtremaLines").html("Show Lines")
+                }
+            });
+
+            showBaseGraph = false;
+            $("#showBaseGraph").click();
+            showCenters = true;
+            $("#showCenters").click();
+            showCircles = true;
+            $("#showCircles").click();
+            showExtremaLines = true; showAxisType = 1;
+            $("#showExtremaLines").click();
+
+        </script>
+    </body>
+</html>
+
+
+
+
+
+

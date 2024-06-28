@@ -10,323 +10,526 @@
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
 
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.7.1/jszip.min.js"></script> <!-- JS Zip -->
+        <!-- <script src="jszip/jszip.min.js"></script> -->
+
         <script src="https://cdn.jsdelivr.net/npm/d3@7"></script> <!-- D3 -->
         <script src="PapaParse-5.0.2/papaparse.js"></script>
+
         <script src="dataHandling.js"></script>
         <script src="priorityQueue.js"></script>
-        <script src="overview.js"></script>
-        <script src="helpers.js"></script>
+        <script src="overviewData.js"></script>
+        <script src="canvasHelper.js"></script>
         <script src="computations.js"></script>
         <script src="roles.js"></script>
         <script src="posession.js"></script>
         <script src="timeline.js"></script>
-        <script src="overviewDrawings.js"></script>
+        <script src="overviewCanvas.js"></script>
         <script src="drawGame.js"></script>
         <script src="uiElements.js"></script>
-        <script src="main.js"></script>
+        <script src="gameCanvas.js"></script>
 
         <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
 
 
         <link rel="stylesheet" href="jquery/jquery-ui.css">
         <link rel="stylesheet" type="text/css" href="styles.css" />
+
+        <title>Football Player Positions</title>
     </head>
     <body>
         <br>
-        <div class="container text-center">
-            <h1>Home 1 : 0 Away</h1>
-            <hr>
-            <div class="row">
-                <div class="col" id="main_div_diagram">
-                    <div class="row justify-content-center pb-2">
+        <div class="text-center p-4">
 
-                        <div class="col-md-auto">
-                            <div class="btn-group btn-group-sm" role="group" aria-label="Basic radio toggle button group" id="overview_select_group">
-                                <input type="radio" class="btn-check" name="overview_select" id="overview_select_btn_1" autocomplete="off" value="1" checked>
-                                <label class="btn btn-outline-primary" for="overview_select_btn_1">Home</label>
-                                
-                                <input type="radio" class="btn-check" name="overview_select" id="overview_select_btn_2" autocomplete="off" value="0">
-                                <label class="btn btn-outline-primary" for="overview_select_btn_2">Both Teams</label>
-                                
-                                <input type="radio" class="btn-check" name="overview_select" id="overview_select_btn_3" autocomplete="off" value="2">
-                                <label class="btn btn-outline-primary" for="overview_select_btn_3">Away</label>
-                            </div>
-                        </div>
+            <center>
 
-                        <div class="col-md-auto">
-                            <div class="dropdown">
-                                <button class="btn btn-primary btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                
-                                Overview Diagram
-
-                                </button>
-                                <ul class="dropdown-menu">
-                                <li><a class="dropdown-item">
-                                    <div class="form-check">
-                                        <input class="form-check-input" type="checkbox" value="checked" id="show_subs_btn" name="show_subs" onchange="viewSettingsOverviewChanged()"/>
-                                        <label class="form-check-label" for="show_subs_btn">Show Substituions</label>
-                                    </div>
-                                </a></li>
-                                <li><a class="dropdown-item">
-                                    <div class="form-check">
-                                        <input class="form-check-input" type="checkbox" value="checked" id="show_subs_minimal_btn" name="show_subs_minimal" onchange="viewSettingsOverviewChanged()" />
-                                        <label class="form-check-label" for="show_subs_minimal_btn">Team Substituion Only</label>
-                                    </div>
-                                </a></li>
-                                <li><a class="dropdown-item">
-                                    <div class="form-check">
-                                        <input class="form-check-input" type="checkbox" value="checked" id="show_posession_overview_btn" name="show_posession_overview" onchange="viewSettingsOverviewChanged()" />
-                                        <label class="form-check-label" for="show_posession_overview_btn">Show Posession</label>
-                                    </div>
-                                </a></li>
-                                </ul>
-                            </div>
-                        </div>
-
-                        <div class="col-md-auto">
-                            <div class="dropdown">
-                                <button class="btn btn-primary btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                
-                                Event Time Line
-
-                                </button>
-                                <ul class="dropdown-menu">
-                                <li><a class="dropdown-item">
-                                    <div class="form-check">
-                                        <input class="form-check-input" type="checkbox" value="checked" id="show_events_btn" name="show_events" onchange="viewSettingsTimelineChanged()"/>
-                                        <label class="form-check-label" for="show_events_btn">Show Events</label>
-                                    </div>
-                                </a></li>
-                                <li><a class="dropdown-item">
-                                    <div class="form-check">
-                                        <input class="form-check-input" type="checkbox" value="checked" id="show_posession_timeline_btn" name="show_posession_timeline" onchange="viewSettingsTimelineChanged()" />
-                                        <label class="form-check-label" for="show_posession_timeline_btn">Show Posession</label>
-                                    </div>
-                                </a></li>
-                                </ul>
-                            </div>
+            <noscript>
+                <div class="p-4" id="error message">
+                    <div class="alert alert-danger align-items-center" role="alert">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-exclamation-triangle-fill flex-shrink-0 me-2" viewBox="0 0 16 16" role="img" aria-label="Warning:">
+                            <path d="M8.982 1.566a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767L8.982 1.566zM8 5c.535 0 .954.462.9.995l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 5.995A.905.905 0 0 1 8 5zm.002 6a1 1 0 1 1 0 2 1 1 0 0 1 0-2z"/>
+                        </svg>
+                        <br>
+                        <br>
+                        <h5 id="dataErrorMessage">
+                            This website needs Java Script Enabled
+                        </h5>
+                        <p>
+                            Please activate this in you browser settings.
+                        </p>
+                        <div id="dataErrorMessageSecondary">
+                           
                         </div>
                     </div>
-                
-                    <div class="p-2">
-                        <div style="width: 750px; padding-left: 30px;">
-                            <div id="slider-range"></div>    
-                        </div>
-                    </div>
-            
+                </div>
+            </noscript>
 
-                    <div class="p-0" id="container2">
-                    
-                    </div>
+            <!-- Entry View --------------------------------------------------------------- -->
+            <div id="entry_view" style="max-width: 700px;">
 
-                    <div class="row">
-                        <div id="smoothing_text" class="d-flex flex-row">
-                            Smoothing
+                <h3>Interactive time-series exploration of football player positions</h3>
+                <hr>
+
+                <h5></h5>
+
+                <p>Please provide the data by entering a URL or uploading a file</p>
+                <br>
+                <div>
+                    <form class="form-inline" id="link_from" onsubmit="enteredLink()">
+                        <div class="row">
+                            <div class="col p-0.5 pb-2">
+                                <input type="text" class="form-control" id="link_input_field" placeholder="http://127.0.0.1:8125/data/data.json">
+                            </div>
+                            <div class="col-md-auto p-0 pr-1">
+                                <div class="form-group mb-2">
+                                    <button type="submit" class="btn btn-primary mb-1">Load</button>
+                                </div>
+                            </div>
                         </div>
-                        <div>
-                            <div class="slidecontainer pt-2 col" style="width:300px">
-                                <input type="range" min="1" max="100" value="1" class="form-range" id="smoothing_slider">
+                    </form>
+           
+                    <div
+                        id="drop_zone"
+                        ondrop="dropHandler(event);"
+                        ondragover="dragOverHandler(event);">
+
+                        <form action="">
+                            <input type="file" id="fileupload" style="display: none;" onchange="handleFileUpload(event)">
+                        </form>
+                        <br>
+                        <button type="submit" class="btn btn-primary mb-1" onclick="uploadFileButton()">Upload file</button>
+
+
+                    <p>or drag data file here</p>
+
+                  </div>
+                </div>
+            </div>
+            <!-- Data Error View --------------------------------------------------------------- -->
+            <div id="data_error_view"  style="display: none;">
+                <div id="error_div_tracking_data"  style="max-width: 700px;">
+                    <div class="p-4" id="error message">
+                        <div class="alert alert-danger align-items-center" role="alert">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-exclamation-triangle-fill flex-shrink-0 me-2" viewBox="0 0 16 16" role="img" aria-label="Warning:">
+                                <path d="M8.982 1.566a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767L8.982 1.566zM8 5c.535 0 .954.462.9.995l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 5.995A.905.905 0 0 1 8 5zm.002 6a1 1 0 1 1 0 2 1 1 0 0 1 0-2z"/>
+                            </svg>
+                            <br>
+                            <br>
+                            <h5 id="dataErrorMessage">
+                                Failed to load tracking data
+                            </h5>
+                            <div id="dataErrorMessageSecondary">
+                               
                             </div>
                         </div>
                     </div>
                 </div>
+            </div>
+            </center>
+            <!-- Data Loading View --------------------------------------------------------------- -->
+            <div id="data_loading_view"  style="display: none;">
+                <h3 id="dataLoadingTitle">Processing...</h3>
+                <p id="dataLoadingSubtitle"></p>
+                <div class="spinner-border m-5" role="status">
+                    <span class="sr-only"></span>
+                </div>
+            </div>
 
-                <div class="col-md-auto" id="main_div_pitch">
-                    <div class="row justify-content-center pb-2"> <!-- Button Selection 2&3 -->
-                        <div class="col-md-auto">
-                            <div class="btn-group btn-group-sm" role="group" aria-label="Basic radio toggle button group" id="graph_select_group">
-                                <input type="radio" class="btn-check" name="graph_select" id="graph_select_btn_1" autocomplete="off" value="1">
-                                <label class="btn btn-outline-primary" for="graph_select_btn_1">Home</label>
-                                
-                                <input type="radio" class="btn-check" name="graph_select" id="graph_select_btn_2" autocomplete="off" value="0" checked>
-                                <label class="btn btn-outline-primary" for="graph_select_btn_2">Both Teams</label>
-                                
-                                <input type="radio" class="btn-check" name="graph_select" id="graph_select_btn_3" autocomplete="off" value="2">
-                                <label class="btn btn-outline-primary" for="graph_select_btn_3">Away</label>
-                            </div>
+            <!-- Main Dashboard View --------------------------------------------------------------- -->
+            <div id="website_view" style="display: none;">
+
+                <h1><div id="title_text">Home 0 : 0 Away</div></h1>
+                <hr>
+                <div class="row d-flex align-items-center justify-content-center">
+                    <div id="error_div_possessions"  style="max-width: 700px;">
+                        <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                            No Possession Data Found
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                         </div>
-                        <div class="col-md-auto">
-                            <div class="dropdown">
-                                <button class="btn btn-primary btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                Color Mode
-                                </button>
-                                <ul class="dropdown-menu">
-                                <li><a class="dropdown-item" href="javascript:updateColor(0)">Dominant</a></li>
-                                <li><a class="dropdown-item" href="javascript:updateColor(1)">Attack / Defend</a></li>
-                                <li><a class="dropdown-item" href="javascript:updateColor(2)">Left / Right</a></li>
-                                <li><a class="dropdown-item" href="javascript:updateColor(3)">Semicircles</a></li>
-                                </ul>
-                            </div>
-                        </div>
-
-                        <div class="col-md-auto">
-                            <div class="dropdown">
-                                <button class="btn btn-primary btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                
-                                View Options
-
-                                </button>
-                                <ul class="dropdown-menu">
-                                <li><a class="dropdown-item">
-                                    <div class="form-check">
-                                        <input class="form-check-input" type="checkbox" value="checked" id="show_other_team_btn" name="show_other_team" onchange="viewSettingsPitchChanged()"/>
-                                        <label class="form-check-label" for="show_other_team_btn">Show Other Team</label>
-                                    </div>
-                                </a></li>
-                                <li><a class="dropdown-item">
-                                    <div class="form-check">
-                                        <input class="form-check-input" type="checkbox" value="checked" id="show_goal_keeper_btn" name="show_goal_keeper" onchange="viewSettingsPitchChanged()" />
-                                        <label class="form-check-label" for="show_goal_keeper_btn">Show Goal Keepers</label>
-                                    </div>
-                                </a></li>
-                                <li><a class="dropdown-item">
-                                    <div class="form-check">
-                                        <input class="form-check-input" type="checkbox" value="checked" id="show_shape_graph_btn" name="show_shape_graph" onchange="viewSettingsPitchChanged()" />
-                                        <label class="form-check-label" for="show_shape_graph_btn">Show Shape Graph</label>
-                                    </div>
-                                </a></li>
-                                </ul>
-                            </div>
-                        </div>
-
                     </div>
+                    <div id="error_div_events"  style="max-width: 700px;">
+                        <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                            No Event Data Found
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                    </div>
+        
+        
+                    <div id="main_div_error"  style="max-width: 700px;">
+                        <div class="p-4" id="error message">
+                            <div class="alert alert-warning align-items-center" role="alert">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-exclamation-triangle-fill flex-shrink-0 me-2" viewBox="0 0 16 16" role="img" aria-label="Warning:">
+                                    <path d="M8.982 1.566a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767L8.982 1.566zM8 5c.535 0 .954.462.9.995l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 5.995A.905.905 0 0 1 8 5zm.002 6a1 1 0 1 1 0 2 1 1 0 0 1 0-2z"/>
+                                </svg>
+                                <div>
+                                    Please select one of the views form below
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+    
+                <div class="row">
+                    <div class="col" id="main_div_diagram"> <!-- Position Plot / Overview Diagram + Buttons -->
+                        <div class="row justify-content-center pb-2">
 
-                    <div id="container"></div>
+                            <div class="col-md-auto pb-1">
+                                <div class="btn-group btn-group-sm" role="group" aria-label="Basic radio toggle button group" id="overview_select_group">
+                                    <input type="radio" class="btn-check" name="overview_select" id="overview_select_btn_1" autocomplete="off" value="1" checked>
+                                    <label class="btn btn-outline-primary" for="overview_select_btn_1"><div id="team1_name_label_1">Home</div></label>
+                                    
+                                    <input type="radio" class="btn-check" name="overview_select" id="overview_select_btn_2" autocomplete="off" value="0">
+                                    <label class="btn btn-outline-primary" for="overview_select_btn_2">Both Teams</label>
+                                    
+                                    <input type="radio" class="btn-check" name="overview_select" id="overview_select_btn_3" autocomplete="off" value="2">
+                                    <label class="btn btn-outline-primary" for="overview_select_btn_3"><div id="team2_name_label_1">Away</div></label>
+                                </div>
+                            </div>
 
-                    <div class="row">
-                        <div class="col-md-auto p-0">
-                            <div class="align-items-center justify-content-center">
-
-                                <div class="dropup">
-                                    <div class="btn-group">
-                                    <button type="button" class="btn btn-primary btn-sm">
-
-                                        <div id="button_play">
-                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-play-fill" viewBox="0 0 16 16">
-                                                <path d="m11.596 8.697-6.363 3.692c-.54.313-1.233-.066-1.233-.697V4.308c0-.63.692-1.01 1.233-.696l6.363 3.692a.802.802 0 0 1 0 1.393"/>
-                                            </svg>
-                                            </div>
-                                        <div id="button_pause">
-                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-pause" viewBox="0 0 16 16">
-                                                <path d="M6 3.5a.5.5 0 0 1 .5.5v8a.5.5 0 0 1-1 0V4a.5.5 0 0 1 .5-.5m4 0a.5.5 0 0 1 .5.5v8a.5.5 0 0 1-1 0V4a.5.5 0 0 1 .5-.5"/>
-                                            </svg>
-                                        </div>
-
-                                    </button>
+                            <div class="col-md-auto pb-1">
+                                <div class="dropdown">
                                     <button class="btn btn-primary btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                    </button>
+                                    
+                                    Position Plot
 
+                                    </button>
                                     <ul class="dropdown-menu">
-                                    <li><a class="dropdown-item" href="javascript:changePlaybackSpeed(0.5)">0.5x</a></li>
-                                    <li><a class="dropdown-item" href="javascript:changePlaybackSpeed(1)">1x</a></li>
-                                    <li><a class="dropdown-item" href="javascript:changePlaybackSpeed(2)">2x</a></li>
+                                    <li><a class="dropdown-item">
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" value="checked" id="show_subs_btn" name="show_subs" onchange="viewSettingsOverviewChanged()"/>
+                                            <label class="form-check-label" for="show_subs_btn">Show Substituions</label>
+                                        </div>
+                                    </a></li>
+                                    <li><a class="dropdown-item">
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" value="checked" id="show_subs_minimal_btn" name="show_subs_minimal" onchange="viewSettingsOverviewChanged()" />
+                                            <label class="form-check-label" for="show_subs_minimal_btn">Team Substituion Only</label>
+                                        </div>
+                                    </a></li>
+                                    <li><a class="dropdown-item">
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" value="checked" id="show_posession_overview_btn" name="show_posession_overview" onchange="viewSettingsOverviewChanged()" />
+                                            <label class="form-check-label" for="show_posession_overview_btn">Show Posession</label>
+                                        </div>
+                                    </a></li>
                                     </ul>
                                 </div>
-                                </div>
-                                
                             </div>
-                        </div>
-                        <div class="col d-flex">
-                            <!-- <div class="d-flex align-items-center justify-content-center" >
-                                <p style="margin: 0px;">Test</p>
-                            </div> -->
-                            <div class="d-flex container align-items-center justify-content-center">
-                                <input type="range" min="0" max="1000" value="50" class="form-range" id="duration_slider">
-                            </div>
-                        </div>
-                    </div>   
-                </div>
-            </div>
-            <hr>
-        
-            <div class="row">
-                <div class="col-4">
-                    <h3 class="pb-1">Player Roles</h3>
-                    <table class="table table-sm">
-                        <tr>
-                            <td style="background-color: #B7352D; width: 40px;"></td>
-                            <td>Front</td>
-                            <td style="background-color: #8E6713; width: 40px;"></td>
-                            <td>Left</td>
-                        </tr>
-                        <tr>
-                            <td style="background-color: #D48681; width: 40px;"></td>
-                            <td>Attacking Midfielder</td>
-                            <td style="background-color: #D2C2A1; width: 40px;"></td>
-                            <td>Left-Center</td>
-                        </tr>
-                        <tr>
-                            <td style="background-color: #E2E2E2; width: 40px;"></td>
-                            <td>Center</td>
-                            <td style="background-color: #E2E2E2; width: 40px;"></td>
-                            <td>Center</td>
-                        </tr>
-                        <tr>
-                            <td style="background-color: #7A9DCF; width: 40px;"></td>
-                            <td>Defensive Midfielder</td>
-                            <td style="background-color: #C0C7A1; width: 40px;"></td>
-                            <td>Right-Center</td>
-                        </tr>
-                        <tr>
-                            <td style="background-color: #215CAF; width: 40px;"></td>
-                            <td>Back</td>
-                            <td style="background-color: #627313; width: 40px;"></td>
-                            <td>Right</td>
-                        </tr>
-                    </table>
-                </div>
-                <div class="col">
-                    <h3 class="pb-1">Event Icons</h3>
-                    <div class="row">
-                        <div class="col-4 pb-2">
-                            <img class="icon" src="imgs/goal.png" alt="Icon for goal">
-                            Goal
-                        </div>
-                        <div class="col-4 pb-2">
-                            <img class="icon" src="imgs/corner.jpg" alt="Icon for corner">
-                            Corner
-                        </div>
-                        <div class="col-4 pb-2">
-                            <img class="icon" src="imgs/freekick.png" alt="Icon for goal kick">
-                            Goal Kick
-                        </div>
-                        <div class="col-4 pb-2">
-                            <img class="icon" src="imgs/yellowcard.png" alt="Icon for yellow card">
-                            Yellow Card
-                        </div>
-                        <div class="col-4 pb-2">
-                            <img class="icon" src="imgs/redcard.png" alt="Icon for red card">
-                            Red Card
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-auto">
-                    <div class="form-check">
-                        <input class="form-check-input" type="checkbox" value="checked" id="show_diagram_btn" name="show_diagram" onchange="globalViewSettingsChanged()" checked/>
-                        <label class="form-check-label text-left" for="show_diagram_btn">Show Diagram</label>
-                    </div>
-                    <div class="form-check">
-                        <input class="form-check-input" type="checkbox" value="checked" id="show_pitch_btn" name="show_pitch" onchange="globalViewSettingsChanged()" checked/>
-                        <label class="form-check-label text-left" for="show_pitch_btn">Show Pitch</label>
-                    </div>
-                </div>
 
+                            <div class="col-md-auto pb-1">
+                                <div class="dropdown">
+                                    <button class="btn btn-primary btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                    
+                                    Event Time Line
+
+                                    </button>
+                                    <ul class="dropdown-menu">
+                                    <li><a class="dropdown-item">
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" value="checked" id="show_events_btn" name="show_events" onchange="viewSettingsTimelineChanged()"/>
+                                            <label class="form-check-label" for="show_events_btn">Show Events</label>
+                                        </div>
+                                    </a></li>
+                                    <li><a class="dropdown-item">
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" value="checked" id="show_posession_timeline_btn" name="show_posession_timeline" onchange="viewSettingsTimelineChanged()" />
+                                            <label class="form-check-label" for="show_posession_timeline_btn">Show Posession</label>
+                                        </div>
+                                    </a></li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    
+
+                        <div id="time_duration_text">
+                            00:00 - 90:00
+                        </div>
+
+                        <div class="justify-content-center p-2">
+                            <div style="max-width: 800px; margin: auto;">
+                                <div style="padding-left: 30px; padding-right: 30px;">
+                                    <div id="slider-range"></div>    
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="p-0" id="container2">
+                            <canvas id="canvas2"></canvas>
+                        </div>
+
+                        <div class="row justify-content-center pb-2">
+                            <div class="col-md-auto">
+                                <div style="width: 20px;"></div>
+                            </div>
+                            <div class="col-md-auto d-flex justify-content-center align-items-center">
+                                <div id="smoothing_text">
+                                    Smoothing
+                                </div>
+                            </div>
+                            <div class="col-md-auto">
+                                <div class="slidecontainer pt-2 col" style="width:300px">
+                                    <input type="range" min="1" max="100" value="3" class="form-range" id="smoothing_slider">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col" id="main_div_pitch"> <!-- Pitch + Buttons -->
+                        <div class="row justify-content-center pb-2"> <!-- Button Selection 2&3 -->
+                            <div class="col-md-auto pb-1">
+                                <div class="btn-group btn-group-sm" role="group" aria-label="Basic radio toggle button group" id="graph_select_group">
+                                    <input type="radio" class="btn-check" name="graph_select" id="graph_select_btn_1" autocomplete="off" value="1">
+                                    <label class="btn btn-outline-primary" for="graph_select_btn_1"><div id="team1_name_label_2">Home</div></label>
+                                    
+                                    <input type="radio" class="btn-check" name="graph_select" id="graph_select_btn_2" autocomplete="off" value="0" checked>
+                                    <label class="btn btn-outline-primary" for="graph_select_btn_2">Default</label>
+                                    
+                                    <input type="radio" class="btn-check" name="graph_select" id="graph_select_btn_3" autocomplete="off" value="2">
+                                    <label class="btn btn-outline-primary" for="graph_select_btn_3"><div id="team2_name_label_2">Away</div></label>
+                                </div>
+                            </div>
+                            <div class="col-md-auto pb-1">
+                                <div class="dropdown">
+                                    <button class="btn btn-primary btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                    Color Mode
+                                    </button>
+                                    <ul class="dropdown-menu">
+                                    <li><a class="dropdown-item" href="javascript:updateColor(0)">Dominant</a></li>
+                                    <li><a class="dropdown-item" href="javascript:updateColor(1)">Attack / Defend</a></li>
+                                    <li><a class="dropdown-item" href="javascript:updateColor(2)">Left / Right</a></li>
+                                    <li><a class="dropdown-item" href="javascript:updateColor(3)">Semicircles</a></li>
+                                    </ul>
+                                </div>
+                            </div>
+
+                            <div class="col-md-auto pb-1">
+                                <div class="dropdown">
+                                    <button class="btn btn-primary btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                    
+                                    View Options
+
+                                    </button>
+                                    <ul class="dropdown-menu">
+                                    <li><a class="dropdown-item">
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" value="checked" id="show_other_team_btn" name="show_other_team" onchange="viewSettingsPitchChanged()"/>
+                                            <label class="form-check-label" for="show_other_team_btn">Show Other Team</label>
+                                        </div>
+                                    </a></li>
+                                    <li><a class="dropdown-item">
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" value="checked" id="show_goal_keeper_btn" name="show_goal_keeper" onchange="viewSettingsPitchChanged()" />
+                                            <label class="form-check-label" for="show_goal_keeper_btn">Show Goal Keepers</label>
+                                        </div>
+                                    </a></li>
+                                    <li><a class="dropdown-item">
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" value="checked" id="show_shape_graph_btn" name="show_shape_graph" onchange="viewSettingsPitchChanged()" />
+                                            <label class="form-check-label" for="show_shape_graph_btn">Show Shape Graph</label>
+                                        </div>
+                                    </a></li>
+                                    <li><a class="dropdown-item">
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" value="checked" id="show_shirt_number_btn" name="show_shirt_number" onchange="viewSettingsPitchChanged()" />
+                                            <label class="form-check-label" for="show_shirt_number_btn">Show Shirt Numbers</label>
+                                        </div>
+                                    </a></li>
+                                    </ul>
+                                </div>
+                            </div>
+
+                        </div>
+
+                        <div id="container">
+                            <canvas id="canvas1"></canvas>
+                        </div>
+
+                        <div class="row justify-content-center">
+                            <div class="col-md-auto p-0">
+                                <div class="align-items-center justify-content-center">
+
+                                    <div class="dropup">
+                                        <div class="btn-group">
+                                        <button type="button" class="btn btn-primary btn-sm">
+
+                                            <div id="button_play">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-play-fill" viewBox="0 0 16 16">
+                                                    <path d="m11.596 8.697-6.363 3.692c-.54.313-1.233-.066-1.233-.697V4.308c0-.63.692-1.01 1.233-.696l6.363 3.692a.802.802 0 0 1 0 1.393"/>
+                                                </svg>
+                                                </div>
+                                            <div id="button_pause">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-pause" viewBox="0 0 16 16">
+                                                    <path d="M6 3.5a.5.5 0 0 1 .5.5v8a.5.5 0 0 1-1 0V4a.5.5 0 0 1 .5-.5m4 0a.5.5 0 0 1 .5.5v8a.5.5 0 0 1-1 0V4a.5.5 0 0 1 .5-.5"/>
+                                                </svg>
+                                            </div>
+
+                                        </button>
+                                        <button class="btn btn-primary btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                        </button>
+
+                                        <ul class="dropdown-menu">
+                                        <li><a class="dropdown-item" href="javascript:changePlaybackSpeed(0.5)">0.5x</a></li>
+                                        <li><a class="dropdown-item" href="javascript:changePlaybackSpeed(1)">1x</a></li>
+                                        <li><a class="dropdown-item" href="javascript:changePlaybackSpeed(2)">2x</a></li>
+                                        </ul>
+                                    </div>
+                                    </div>
+                                    
+                                </div>
+                            </div>
+                            <div class="col p-0 d-flex" style="max-width: 500px;">
+                                <!-- <div class="d-flex align-items-center justify-content-center" >
+                                    <p style="margin: 0px;">Test</p>
+                                </div> -->
+                                <div class="d-flex container align-items-center justify-content-center">
+                                    <input type="range" min="0" max="1000" value="0" class="form-range" id="duration_slider">
+                                </div>
+                            </div>
+
+                            <div class="col-md-auto p-0 d-flex">
+                                <!-- <div class="d-flex align-items-center justify-content-center" >
+                                    <p style="margin: 0px;">Test</p>
+                                </div> -->
+                                <div class="d-flex container align-items-center justify-content-center">
+                                    <div id="time_label_text">
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>   
+                    </div>
+                </div>
+                <hr>
             
+                <div class="row justify-content-between">
+                    <div class="col-4">
+                        <h3 class="pb-1">Player Positions</h3>
+                        <table class="table table-sm">
+                            <tr>
+                                <td></td>
+                                <td style="width: 5px;"></td>
+                                <td style="background-color: #8E6713;" id="y-color-0">L</td>
+                                <td style="background-color: #D2C2A1;" id="y-color-1">LC</td>
+                                <td style="background-color: #E2E2E2;" id="y-color-2">C</td>
+                                <td style="background-color: #C0C7A1;" id="y-color-3">RC</td>
+                                <td style="background-color: #627313;" id="y-color-4">R</td>
+                            </tr>
+                            <tr style="height: 10px;"></tr>
+                            <tr>
+                                <td style="background-color: #B7352D;" id="x-color-0">F</td>
+                                <td style="width: 10px;"></td>
+
+                                <td rowspan="2" class="playerposition">LF</td>
+                                <td class="playerposition">LCF</td>
+                                <td class="playerposition">CF</td>
+                                <td class="playerposition">RCF</td>
+                                <td rowspan="2" class="playerposition">RF</td>
+                            </tr>
+                            <tr>
+                                <td style="background-color: #D48681;" id="x-color-1">AM</td>
+                                <td style="width: 5px;"></td>
+
+                                <td class="playerposition">LAM</td>
+                                <td class="playerposition">CAM</td>
+                                <td class="playerposition">RAM</td>
+                            </tr>
+                            <tr>
+                                <td style="background-color: #E2E2E2;" id="x-color-2">M</td>
+                                <td style="width: 10px;"></td>
+
+                                <td class="playerposition">LM</td>
+                                <td class="playerposition">LCM</td>
+                                <td class="playerposition">CM</td>
+                                <td class="playerposition">RCM</td>
+                                <td class="playerposition">RM</td>
+                            </tr>
+                            <tr>
+                                <td style="background-color: #7A9DCF;" id="x-color-3">DM</td>
+                                <td style="width: 10px;"></td>
+
+                                <td rowspan="2" class="playerposition">LB</td>
+                                <td class="playerposition">LDM</td>
+                                <td class="playerposition">CDM</td>
+                                <td class="playerposition">RDM</td>
+                                <td rowspan="2" class="playerposition">RB</td>
+                            </tr>
+                            <tr>
+                                <td style="background-color: #215CAF;" id="x-color-4">B</td>
+                                <td style="width: 10px;"></td>
+
+                                <td class="playerposition">LCB</td>
+                                <td class="playerposition">CB</td>
+                                <td class="playerposition">RCB</td>
+                            </tr>
+                        </table>
+                    </div>
+                    <div class="col-4">
+                        <h3 class="pb-1">Event Icons</h3>
+                        <div class="row d-flex justify-content-center">
+                            <div class="row d-flex justify-content-center">
+                                <div class="pb-2 text-start">
+                                    <img class="icon" src="imgs/goal.png" alt="Icon for goal">
+                                    Goal
+                                </div>
+                                <div class="pb-2 text-start">
+                                    <img class="icon" src="imgs/on_target.png" alt="Icon for yellow card">
+                                    Goal Shot - On Target
+                                </div>
+                                <div class="pb-2 text-start">
+                                    <img class="icon" src="imgs/off_target.png" alt="Icon for goal kick">
+                                    Goal Shot - Off Target
+                                </div>
+                                <div class="pb-2 text-start">
+                                    <img class="icon" src="imgs/corner.png" alt="Icon for corner">
+                                    Corner
+                                </div>
+                                <div class="pb-2 text-start">
+                                    <img class="icon" src="imgs/red.png" alt="Icon for red card">
+                                    Red Card
+                                </div>
+                                <div class="pb-2 text-start">
+                                    <img class="icon" src="imgs/yellow.png" alt="Icon for red card">
+                                    Yellow Card
+                                </div>
+                            </div>
+                        </div>
+                    </div>                
+                    <div class="col-md-auto">
+                        <div class="form-check text-start">
+                            <input class="form-check-input" type="checkbox" value="checked" id="show_diagram_btn" name="show_diagram" onchange="globalViewSettingsChanged()" checked/>
+                            <label class="form-check-label text-left" for="show_diagram_btn">Show Position Plot</label>
+                        </div>
+                        <div class="form-check text-start">
+                            <input class="form-check-input" type="checkbox" value="checked" id="show_pitch_btn" name="show_pitch" onchange="globalViewSettingsChanged()" checked/>
+                            <label class="form-check-label text-left" for="show_pitch_btn">Show Pitch</label>
+                        </div>
+                    </div>
+
+                
+                </div>
             </div>
-            
-            <hr>
-            <h1>Further Reading</h1>
-          </div>
         </div>
 
         <!-- <center>
             <button id="shape_mode">Change Shape Mode</button>
             <button id="dubug_button">Debug Button</button>
         </center> -->
+        
+  
+        
         <br><br><br>
        
+        <footer class="footer mt-auto">
+            <img src="imgs/background.png" alt="" class="footer-img">
+            <!-- <div class="container">
+            <span class="text-light">Place sticky footer content here.</span>
+          </div> -->
+        </footer>
+
         
-        <script>setup();</script>
+        <script>    setupUIElements();     checkUrlHeader();        </script>
+        <!-- <script>setup();</script> -->
     </body>
 </html>
 
