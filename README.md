@@ -1,6 +1,8 @@
 # Interactive time-series exploration of football player positions
 
-Open `index.html` and upload the JSON file.
+Open `website/index.html` and upload the JSON file.
+
+(Or open the online version at https://louiseppler.github.io/FootballPlayerPositions/index.html)
 
 The webpage accepts the file as a zip as well, but decompressing in the browser is slow and it is recommended to decompress the file before uploading
 
@@ -116,6 +118,6 @@ The field `colorPalette` is optional and takes the following fields:
 
 The data can be hosted on a server and the webpage can automatically load it from there. For this, the URL must be encoded with `encodeURIComponent()` function and then added to the `data` field. For example:
 ```
-https://www.linkToWebsite.com/index.html?data=https%3A%2F%2Fwww.linkToData.com 
+https://louiseppler.github.io/FootballPlayerPositions/website/index.html?data=https%3A%2F%2Fwww.linkToData.com 
 ```
 
