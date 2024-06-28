@@ -12,6 +12,8 @@ Open `delaunay.html` to view the delaunay playground (or online [here](https://l
 
 # Preparing the JSON file
 
+See `/data.json.zip` for an example
+
 The JSON file that is uploaded to the webpage must have the following format:
 
 ```
