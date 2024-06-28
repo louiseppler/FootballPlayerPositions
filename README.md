@@ -8,7 +8,7 @@ The webpage accepts the file as a zip as well, but decompressing in the browser 
 
 ### Delaunay Playground
 
-Open `delaunay.html` to view the delaunay playground
+Open `delaunay.html` to view the delaunay playground (or online [here](https://louiseppler.github.io/FootballPlayerPositions/website/delaunay.html))
 
 # Preparing the JSON file
 
