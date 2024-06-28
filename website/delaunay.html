@@ -27,7 +27,9 @@
 
         <p>Add and move points on canvas with your mouse</p>
 
-        <div id="container"></div>
+        <div id="container">
+            <canvas id="canvas"></canvas>
+        </div>
 
         <br>
         <button id="button_show_color_mode_d">Dominant Color</button>
@@ -73,7 +75,7 @@
                 getClosestDot();
             }
 
-            gameCanvas = new CanvasHelper("container", 750, 500, () => {mouseClickLoc();}, () => {mouseDownLoc();}, () => {drawLoc();});
+            gameCanvas = new CanvasHelper("canvas", 750, 500, () => {mouseClickLoc();}, () => {mouseDownLoc();}, () => {drawLoc();});
 
             showGraphForTeam = 1;
 
