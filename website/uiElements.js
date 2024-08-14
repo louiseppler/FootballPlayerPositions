@@ -69,6 +69,7 @@ function setupUIElements() {
       
       $("#button_play").click(function() {
         isPlaying = true;
+        setFrameNr(null);
         $("#button_pause").show();
         $("#button_play").hide();
       })
