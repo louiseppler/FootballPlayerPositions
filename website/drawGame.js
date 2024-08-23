@@ -14,11 +14,11 @@ var flipPitch = false;
 
 //converts between coordinate systems
 function convertX(x) {
-    return pitchOffsetX+((flipPitch*-2+1)*(+x)+gameData.pitch.height/2)*scaling
+    return pitchOffsetX+((flipPitch*-2+1)*(+x)+gameData.pitch.width/2)*scaling
 }
 
 function convertY(y) {
-    return pitchOffsetY+((flipPitch*-2+1)*(+y)+gameData.pitch.width/2)*scaling
+    return pitchOffsetY+((flipPitch*-2+1)*(+y)+gameData.pitch.length/2)*scaling
 }
 
 function convertDist(d) {
@@ -27,14 +27,14 @@ function convertDist(d) {
 
 function drawGameSetup() {
     console.log("draw game setup");    
-    //scaling = Math.min(gameCanvas.height/gameData.pitch.height*0.5, gameCanvas.width/gameData.pitch.width*0.5);
+    //scaling = Math.min(gameCanvas.height/gameData.pitch.width*0.5, gameCanvas.width/gameData.pitch.length*0.5);
 
-    var scalingA = (gameCanvas.height-30)/gameData.pitch.width
-    var scalingB = (gameCanvas.width-30)/gameData.pitch.height
+    var scalingA = (gameCanvas.height-30)/gameData.pitch.length
+    var scalingB = (gameCanvas.width-30)/gameData.pitch.width
     scaling = Math.min(scalingA,scalingB);
 
-    pitchOffsetX = (gameCanvas.width-convertDist(gameData.pitch.height))/2;
-    pitchOffsetY = (gameCanvas.height-convertDist(gameData.pitch.width))/2;
+    pitchOffsetX = (gameCanvas.width-convertDist(gameData.pitch.width))/2;
+    pitchOffsetY = (gameCanvas.height-convertDist(gameData.pitch.length))/2;
 
 }
 
@@ -222,8 +222,8 @@ function drawPitch() {
     gameCanvas.ctx.fillStyle = "#8C8C8C"
     gameCanvas.ctx.strokeStyle = "#8C8C8C"
 
-    var height = gameData.pitch.height;
-    var width = gameData.pitch.width;
+    var height = gameData.pitch.width;
+    var width = gameData.pitch.length;
 
     gameCanvas.drawLine(convertX(-height/2),convertY(0),convertX(height/2),convertY(0));
 

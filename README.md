@@ -28,8 +28,8 @@ The JSON file that is uploaded to the webpage must have the following format:
         ]
     }
     "pitch": {
-        "length": Number (in meters),
-        "width": Number (in meters)
+        "width": Number (in meters),
+        "length": Number (in meters)
     },
     "homeTeam": {
         "name": String (optional),

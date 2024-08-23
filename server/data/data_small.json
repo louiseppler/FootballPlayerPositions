@@ -1,8 +1,8 @@
 {
     "frameRate": 24,
     "pitch": {
-        "width": 105,
-        "height": 68
+        "width": 68,
+        "length": 105
     },
     "ballId": "-1",
     "homeTeam": {
