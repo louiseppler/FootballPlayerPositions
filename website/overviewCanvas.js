@@ -530,7 +530,7 @@ function displayEventList(x0, x1, y0) {
                 var direction = (showOverviewForTeam != 1)? +1 : -1;
                 var cornerIsFlipped = (showOverviewForTeam == 2)
 
-                if(event.team == 1) {
+                if(event.team == 1 || event.team == "home") {
                     drawEventIcon(pixel, y0+(15*direction), event.type, cornerIsFlipped);
                 }
                 else {

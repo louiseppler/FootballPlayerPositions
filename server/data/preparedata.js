@@ -102,8 +102,8 @@ fs.createReadStream("./tracking.csv")
   });
 
 function getType(data) {
-    var team = 1;
-    if(data.team.id == "FIFATMB") team = 2;
+    var team = "home";
+    if(data.team.id == "FIFATMB") team = "away";
 
     var time = data.start.frame;
 
@@ -208,12 +208,12 @@ function readPossession() {
         j += 2;
       }
 
-      var p = 0;
+      var p = null;
       if(poss1[i] <= frame && frame < poss1[i+1]) {
-        p = 1;
+        p = "home";
       }
       else if(poss2[j] <= frame && frame < poss2[j+1]) {
-        p = 2;
+        p = "away";
       }
 
       array[frame].possession = p;

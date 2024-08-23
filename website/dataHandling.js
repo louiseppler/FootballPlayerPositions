@@ -63,7 +63,8 @@ function dataLoaded() {
 	}
 
 	if(gameData.tracking[0].possession == null) {
-		$("#error_div_possessions").show();
+		//warning detection doesn't work any more, as if no team has possession entry is null 
+		//$("#error_div_possessions").show();
 	}
 	if(gameData.events == null) {
 		$("#error_div_events").show();

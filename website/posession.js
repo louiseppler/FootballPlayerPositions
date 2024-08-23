@@ -29,10 +29,10 @@ class Possession {
                 this.teamB.push(valB);
 
 
-                if(gameData.tracking[i].possession == 1) {
+                if(gameData.tracking[i].possession == 1 || gameData.tracking[i].possession == "home") {
                     valA += 1;
                 }
-                else if(gameData.tracking[i].possession == 2) {
+                else if(gameData.tracking[i].possession == 2 || gameData.tracking[i].possession == "away") {
                     valB += 1;
                 }
             }

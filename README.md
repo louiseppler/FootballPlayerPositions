@@ -56,7 +56,7 @@ The JSON file that is uploaded to the webpage must have the following format:
        (optional)
           {
                 type: String
-                team: Number (1 or 2)
+                team: Number ("home" or "away")
                 frame: Number
          }
     ],
@@ -64,7 +64,7 @@ The JSON file that is uploaded to the webpage must have the following format:
         {
                 frame: Number
                 timestamp: Number (in milliseconds of current period)
-                possession: Number (0,1 or 2) (optinal)
+                possession: Number (null, "home" or "away") (optional)
                 objects: [
                 {
                     id: String
@@ -85,9 +85,9 @@ The field `teamAway` follows the same format as `teamHome`. The `id` in the `obj
 
 The tracking fields contain a frame `timestamp` and a `frame` number. The timestamp expects the number indicating the time in the current period (in milliseconds). The frame number is used to sync up the events provided in the `events` field.
 
-In the array `tracking` the field `possession` takes either `0` for no team has possession, `1` if the home team has possession and `2` if the away team has possession.
+In the array `tracking` the field `possession` takes either `null` for no team has possession, `"home"` if the home team has possession and `"away"` if the away team has possession.
 
-In the `events` field, the team is represented with a number. `1` for the home team and `2` for the away team. The event type accepts the following types:
+In the `events` field, the team is represented with a string. `"home"` for the home team and `"away"` for the away team. The event type accepts the following types:
 - `"OFF_TARGET"`
 - `"ON_TARGET"`
 - `"GOAL"`
