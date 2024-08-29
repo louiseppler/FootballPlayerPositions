@@ -19,6 +19,7 @@ The JSON file that is uploaded to the webpage must have the following format:
 ```
 
 {
+    "version" : "1.0",
     "frameRate": Number,
     "periods": [
         {
@@ -79,6 +80,8 @@ For the optional fields, the website will provide a default value if they are no
 
 ```
 Colors are represented with a string in hex including a hashtag. For example (`#F8EBEA`).
+
+The field `version` must be set to `"1.0"`
 
 The field `teamAway` follows the same format as `teamHome`. The `id` in the `objects` of the tracking data must match either the `ballId` or the `id` of one of the players.
 

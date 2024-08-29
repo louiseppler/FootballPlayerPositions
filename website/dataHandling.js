@@ -56,6 +56,18 @@ function dataLoaded() {
 	console.log("Data loaded");
 	dataFinishedReading();
 
+	if(""+gameData.version != "1.0") {
+		var versionNr = gameData.version
+		gameData = null
+		if(versionNr == null) {
+			showDataError("Incompatible Version","Expected Version 1.0");
+		}
+		else {
+			showDataError("Incompatible Version","Expected Version 1.0, Uploaded Version " + versionNr);
+		}
+		return;
+	}
+
 	if(gameData.tracking == null) {
 		gameData = null
 		showDataError("No tracking data found", "JSON file dose not contain field 'tracking'")
