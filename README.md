@@ -17,16 +17,15 @@ See `/data.json.zip` for an example
 The JSON file that is uploaded to the webpage must have the following format:
 
 ```
+
 {
-    {
-        "frameRate": Number,
-        "periods": [
-            {
-                "startFrame": Number
-                "endFrame": Number
-            }
-        ]
-    }
+    "frameRate": Number,
+    "periods": [
+        {
+            "startFrame": Number
+            "endFrame": Number
+        }
+    ]
     "pitch": {
         "width": Number (in meters),
         "length": Number (in meters)
@@ -65,16 +64,17 @@ The JSON file that is uploaded to the webpage must have the following format:
                 frame: Number
                 timestamp: Number (in milliseconds of current period)
                 possession: Number (null, "home" or "away") (optional)
-                objects: [
-                {
-                    id: String
-                    h: Number
-                    v: Number
-                    z: Number
+                objects: {
+                    id (String) : {
+                        h: Number
+                        v: Number
+                        z: Number
+                    }
+                }
             }
         ]
     }
-]
+
 For the optional fields, the website will provide a default value if they are not defined (except for the events and possessions).
 
 ```
@@ -82,10 +82,9 @@ Colors are represented with a string in hex including a hashtag. For example (`#
 
 The field `teamAway` follows the same format as `teamHome`. The `id` in the `objects` of the tracking data must match either the `ballId` or the `id` of one of the players.
 
-
 The tracking fields contain a frame `timestamp` and a `frame` number. The timestamp expects the number indicating the time in the current period (in milliseconds). The frame number is used to sync up the events provided in the `events` field.
 
-In the array `tracking` the field `possession` takes either `null` for no team has possession, `"home"` if the home team has possession and `"away"` if the away team has possession.
+In the array `tracking` the field `possession` takes either `null` for no team has possession, `"home"` if the home team has possession and `"away"` if the away team has possession. The `objects` field is a dictionary with the ids as keys and coordinate object as values.
 
 In the `events` field, the team is represented with a string. `"home"` for the home team and `"away"` for the away team. The event type accepts the following types:
 - `"OFF_TARGET"`
