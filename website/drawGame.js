@@ -42,11 +42,11 @@ function drawPlayerLabels(frame) {
     var dataLine = gameData.tracking[frame];
     var dataLine2 = gameData.tracking[frame+1];
 
-    for(var i = 0; i < dataLine2.objects.length; i++) {
-        var object1 = dataLine.objects[i];
-        var object2 = dataLine2.objects[i];
+    for(var playerId in dataLine.objects) {
 
-        var playerId = object1.id;
+        var object1 = dataLine.objects[playerId];
+        var object2 = dataLine2.objects[playerId] ?? object1;
+
 
         var isInTeam1 = gameData.players.team1.includes(playerId);
         var isInTeam2 = gameData.players.team2.includes(playerId);
@@ -88,12 +88,11 @@ function drawBall(frame) {
     var dataLine = gameData.tracking[frame];
     var dataLine2 = gameData.tracking[frame+1];
 
-    for(var i = 0; i < dataLine2.objects.length; i++) {
-        var object1 = dataLine.objects[i];
-        var object2 = dataLine2.objects[i];
-        
-        var playerId = object1.id;
+    for(var playerId in dataLine.objects) {
 
+        var object1 = dataLine.objects[playerId];
+        var object2 = dataLine2.objects[playerId] ?? object1;
+        
         if(playerId != gameData.ballId) continue;
 
         var [h,v] = getCoordinates(object1, object2);
@@ -136,17 +135,29 @@ function getIsSecondHalf(frame) {
     //return (gameData.tracking[0+frame*23][TRACKING_HALF] != "One")
 }
 
+function getSecondObject(object1, dataLine2) {
+    for(var object in dataLine2.objects) {
+        if(object1.id == object.id) {
+            return;
+        }
+    }
+
+    //default case if no match found
+    return object1;
+}
+
 function getGoalKeepers(frame) {
     var points = [];
 
     var dataLine = gameData.tracking[frame];
     var dataLine2 = gameData.tracking[frame+1];
 
-    for(var i = 0; i < dataLine2.objects.length; i++) {
-        var object1 = dataLine.objects[i];
-        var object2 = dataLine2.objects[i];
+    for(var playerId in dataLine.objects) {
 
-        var playerId = object1.id;
+        var object1 = dataLine.objects[playerId];
+        var object2 = dataLine2.objects[playerId] ?? object1;
+        
+
         var [h,v] = getCoordinates(object1, object2);
 
         var isInTeam1 = gameData.players.team1.includes(playerId);
@@ -191,11 +202,11 @@ function getGamePoints(frame, team) {
     var dataLine = gameData.tracking[frame];
     var dataLine2 = gameData.tracking[frame+1];
 
-    for(var i = 0; i < dataLine2.objects.length; i++) {
-        var object1 = dataLine.objects[i];
-        var object2 = dataLine2.objects[i];
+    for(var playerId in dataLine.objects) {
 
-        var playerId = object1.id;
+        var object1 = dataLine.objects[playerId];
+        var object2 = dataLine2.objects[playerId] ?? object1;
+        
         var [h,v] = getCoordinates(object1, object2);
         if(gameData.players.goalKeepers.includes(playerId)) continue;
 

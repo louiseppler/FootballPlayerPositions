@@ -70,7 +70,7 @@ fs.createReadStream("./tracking.csv")
       frameObject.frame = frame;
       frameObject.timestamp = timestamp;
       frameObject.possession = 0;
-      frameObject.objects = [];
+      frameObject.objects = {};
     }
     else if(frameObject.frame != frame) {
       array.push(frameObject);
@@ -79,18 +79,18 @@ fs.createReadStream("./tracking.csv")
       frameObject.frame = frame;
       frameObject.timestamp = timestamp;
       frameObject.possession = 0;
-      frameObject.objects = [];
+      frameObject.objects = {};
     }
     
 
+    var id = row[5]
     var line = {
-      id: row[5],
       h: row[6],
       v: row[7],
       z: row[8]
     }
     //var lines = [row[3],row[2],row[5],row[6],row[7],row[8]]
-    frameObject.objects.push(line);
+    frameObject.objects[id] = line;
   })
   .on("end", function () {
     //console.log(JSON.stringify(array))
