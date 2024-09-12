@@ -96,8 +96,8 @@ function dataLoaded() {
 function setupDefaultColors() {
 
 	//Filling in default information if empty
-	if(gameData.team1 == null) gameData.team1 = {};
-	if(gameData.team2 == null) gameData.team2 = {};
+	if(gameData.homeTeam == null) gameData.homeTeam = {};
+	if(gameData.awayTeam == null) gameData.awayTeam = {};
 
 	if(gameData.homeTeam.colorShirt == null) {
 		gameData.homeTeam.colorShirt = "#3395AB";
@@ -162,7 +162,7 @@ function getPlayers() {
 
 function computeFinalScore() {
 	if(gameData.events == null) {
-		var text =  gameData.team1.name + " vs. " + gameData.team2.name;
+		var text =  gameData.homeTeam.name + " vs. " + gameData.awayTeam.name;
 		document.getElementById("title_text").innerHTML = text
 		return;
 	}
@@ -180,23 +180,23 @@ function computeFinalScore() {
 		}
 	}
 
-	var text =  gameData.team1.name + " " + score1 + " : " + score2 + " " + gameData.team2.name;
+	var text =  gameData.homeTeam.name + " " + score1 + " : " + score2 + " " + gameData.awayTeam.name;
 	document.getElementById("title_text").innerHTML = text
 
 }
 
 function setupTeamLabels() {
-	if(gameData.team1.name == null) {
-		gameData.team1.name = "Home";
+	if(gameData.homeTeam.name == null) {
+		gameData.homeTeam.name = "Home";
 	}
-	if(gameData.team2.name == null) {
-		gameData.team2.name = "Away";
+	if(gameData.awayTeam.name == null) {
+		gameData.awayTeam.name = "Away";
 	}
 
-	document.getElementById("team1_name_label_1").innerHTML = gameData.team1.name
-	document.getElementById("team2_name_label_1").innerHTML = gameData.team2.name
-	document.getElementById("team1_name_label_2").innerHTML = gameData.team1.name
-	document.getElementById("team2_name_label_2").innerHTML = gameData.team2.name
+	document.getElementById("team1_name_label_1").innerHTML = gameData.homeTeam.name
+	document.getElementById("team2_name_label_1").innerHTML = gameData.awayTeam.name
+	document.getElementById("team1_name_label_2").innerHTML = gameData.homeTeam.name
+	document.getElementById("team2_name_label_2").innerHTML = gameData.awayTeam.name
 }
 
 function createPositionTable() {
