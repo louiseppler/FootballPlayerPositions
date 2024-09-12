@@ -301,14 +301,14 @@ function drawDotsRoles(points, roles, team) {
 
         if(showGraphColorMode == 3) {
 
-            gameCanvas.ctx.fillStyle = roles[i].getColorX()
-            gameCanvas.ctx.strokeStyle = roles[i].getColorX()
+            gameCanvas.ctx.fillStyle = roles[i].getColorY()
+            gameCanvas.ctx.strokeStyle = roles[i].getColorY()
             
             if(team == showGraphForTeam) gameCanvas.drawDot(points[i*2],points[i*2+1], 8, 0, Math.PI);
             else gameCanvas.drawCircle(points[i*2],points[i*2+1], 8, 0, Math.PI);
 
-            gameCanvas.ctx.fillStyle = roles[i].getColorY()
-            gameCanvas.ctx.strokeStyle = roles[i].getColorY()
+            gameCanvas.ctx.fillStyle = roles[i].getColorX()
+            gameCanvas.ctx.strokeStyle = roles[i].getColorX()
 
             if(team == showGraphForTeam) gameCanvas.drawDot(points[i*2],points[i*2+1], 8, Math.PI, 2*Math.PI);
             else gameCanvas.drawCircle(points[i*2],points[i*2+1], 8, Math.PI, 2*Math.PI);
