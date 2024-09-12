@@ -60,8 +60,8 @@ function draw2() {
     
 
     if(showOverviewForTeam == 0) {
-        overviewCanvas.fillTextRight(gameData.team2.name, overviewCanvas.width-25, 20);
-        overviewCanvas.fillTextRight(gameData.team1.name, overviewCanvas.width-25, overviewCanvas.height-15);
+        overviewCanvas.fillTextRight(gameData.awayTeam.name, overviewCanvas.width-25, 20);
+        overviewCanvas.fillTextRight(gameData.awayTeam.name, overviewCanvas.width-25, overviewCanvas.height-15);
 
         drawOverviewFor(overviewTeamB, 25, 30, overviewCanvas.width-25, overviewCanvas.height*0.5-25, true);
         drawOverviewFor(overviewTeamA, 25, overviewCanvas.height*0.5+25, overviewCanvas.width-25, overviewCanvas.height-30, false);
@@ -69,12 +69,12 @@ function draw2() {
         displayEventList(25, overviewCanvas.width-25,  overviewCanvas.height*0.5);
     }
     else if(showOverviewForTeam == 1) {
-        overviewCanvas.fillTextRight(gameData.team1.name, overviewCanvas.width-25, 20);
+        overviewCanvas.fillTextRight(gameData.homeTeam.name, overviewCanvas.width-25, 20);
         drawOverviewFor(overviewTeamA, 25, 30, overviewCanvas.width-25, overviewCanvas.height*0.75, false);
         displayEventList(25, overviewCanvas.width-25,  overviewCanvas.height*0.75+30)
     }
     else if(showOverviewForTeam == 2) {
-        overviewCanvas.fillTextRight(gameData.team2.name, overviewCanvas.width-25, 20);
+        overviewCanvas.fillTextRight(gameData.awayTeam.name, overviewCanvas.width-25, 20);
         drawOverviewFor(overviewTeamB, 25, 30, overviewCanvas.width-25, overviewCanvas.height*0.75, false);
         displayEventList(25, overviewCanvas.width-25,  overviewCanvas.height*0.75+30)
     }
