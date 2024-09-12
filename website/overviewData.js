@@ -102,9 +102,10 @@ class OverviewData {
      * Computes `playerIndices` to determine in which order the players should be displayed
      * @param {*} substitutionFrames Array of all substitutionFrame numbers including 0, and maxFrame
      */
+
     computePlayerOrdering(substitutionFrames) {
 
-        if(this.readPlayerOrderingFromData()) return;
+        // if(this.readPlayerOrderingFromData()) return;
 
         var substitutionIndices = [];
         var playerPair = [];
@@ -121,6 +122,15 @@ class OverviewData {
 
         for(var i = 0; i < playerPair.length; i++) {
             this.playerIndices[playerPair[i][0]] = i;
+        }
+
+        // overwrite with rows explicitly set in data
+        var players = (this.team == 1)? gameData.homeTeam.players : gameData.awayTeam.players;
+
+        for(var player of players) {
+            if(player.row != null) {
+               this.playerIndices[player.id] = player.row;
+            }
         }
 
         // === for each substitution ===
@@ -215,6 +225,9 @@ class OverviewData {
      * return true if found data
      */
     readPlayerOrderingFromData() {
+
+        //BUG: only works if all players (including goal keeper as a row entry)
+
         var players = (this.team == 1)? gameData.homeTeam.players : gameData.awayTeam.players;
 
         if(players[0].row == null) {
